@@ -1,0 +1,2415 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot 1`] = `
+{
+  "Mappings": {
+    "ServiceprincipalMap": {
+      "af-south-1": {
+        "states": "states.af-south-1.amazonaws.com",
+      },
+      "ap-east-1": {
+        "states": "states.ap-east-1.amazonaws.com",
+      },
+      "ap-northeast-1": {
+        "states": "states.ap-northeast-1.amazonaws.com",
+      },
+      "ap-northeast-2": {
+        "states": "states.ap-northeast-2.amazonaws.com",
+      },
+      "ap-northeast-3": {
+        "states": "states.ap-northeast-3.amazonaws.com",
+      },
+      "ap-south-1": {
+        "states": "states.ap-south-1.amazonaws.com",
+      },
+      "ap-southeast-1": {
+        "states": "states.ap-southeast-1.amazonaws.com",
+      },
+      "ap-southeast-2": {
+        "states": "states.ap-southeast-2.amazonaws.com",
+      },
+      "ap-southeast-3": {
+        "states": "states.ap-southeast-3.amazonaws.com",
+      },
+      "ca-central-1": {
+        "states": "states.ca-central-1.amazonaws.com",
+      },
+      "cn-north-1": {
+        "states": "states.cn-north-1.amazonaws.com",
+      },
+      "cn-northwest-1": {
+        "states": "states.cn-northwest-1.amazonaws.com",
+      },
+      "eu-central-1": {
+        "states": "states.eu-central-1.amazonaws.com",
+      },
+      "eu-north-1": {
+        "states": "states.eu-north-1.amazonaws.com",
+      },
+      "eu-south-1": {
+        "states": "states.eu-south-1.amazonaws.com",
+      },
+      "eu-south-2": {
+        "states": "states.eu-south-2.amazonaws.com",
+      },
+      "eu-west-1": {
+        "states": "states.eu-west-1.amazonaws.com",
+      },
+      "eu-west-2": {
+        "states": "states.eu-west-2.amazonaws.com",
+      },
+      "eu-west-3": {
+        "states": "states.eu-west-3.amazonaws.com",
+      },
+      "me-south-1": {
+        "states": "states.me-south-1.amazonaws.com",
+      },
+      "sa-east-1": {
+        "states": "states.sa-east-1.amazonaws.com",
+      },
+      "us-east-1": {
+        "states": "states.us-east-1.amazonaws.com",
+      },
+      "us-east-2": {
+        "states": "states.us-east-2.amazonaws.com",
+      },
+      "us-gov-east-1": {
+        "states": "states.us-gov-east-1.amazonaws.com",
+      },
+      "us-gov-west-1": {
+        "states": "states.us-gov-west-1.amazonaws.com",
+      },
+      "us-iso-east-1": {
+        "states": "states.amazonaws.com",
+      },
+      "us-iso-west-1": {
+        "states": "states.amazonaws.com",
+      },
+      "us-isob-east-1": {
+        "states": "states.amazonaws.com",
+      },
+      "us-west-1": {
+        "states": "states.us-west-1.amazonaws.com",
+      },
+      "us-west-2": {
+        "states": "states.us-west-2.amazonaws.com",
+      },
+    },
+  },
+  "Outputs": {
+    "WalletConnectQueueProcessingSQSDeadLetterQueue094AA7B9": {
+      "Value": {
+        "Fn::GetAtt": [
+          "WalletConnectQueueProcessingEcsProcessingDeadLetterQueueEA1E82A9",
+          "QueueName",
+        ],
+      },
+    },
+    "WalletConnectQueueProcessingSQSDeadLetterQueueArnF2CC9BF7": {
+      "Value": {
+        "Fn::GetAtt": [
+          "WalletConnectQueueProcessingEcsProcessingDeadLetterQueueEA1E82A9",
+          "Arn",
+        ],
+      },
+    },
+    "WalletConnectQueueProcessingSQSQueue90866A80": {
+      "Value": {
+        "Fn::GetAtt": [
+          "WalletConnectQueueProcessingEcsProcessingQueue48AE116E",
+          "QueueName",
+        ],
+      },
+    },
+    "WalletConnectQueueProcessingSQSQueueArn6AACEFED": {
+      "Value": {
+        "Fn::GetAtt": [
+          "WalletConnectQueueProcessingEcsProcessingQueue48AE116E",
+          "Arn",
+        ],
+      },
+    },
+    "discordbotapiEndpoint66B0A069": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "discordbotapi5484B478",
+            },
+            ".execute-api.",
+            {
+              "Ref": "AWS::Region",
+            },
+            ".",
+            {
+              "Ref": "AWS::URLSuffix",
+            },
+            "/",
+            {
+              "Ref": "discordbotapiDeploymentStageprodE3B8CBF8",
+            },
+            "/",
+          ],
+        ],
+      },
+    },
+  },
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
+  "Resources": {
+    "DiscordInteractionResponseStateMachineE0027175": {
+      "DependsOn": [
+        "DiscordInteractionResponseStateMachineRoleDefaultPolicy0FAA80BB",
+        "DiscordInteractionResponseStateMachineRole48F8BCDE",
+      ],
+      "Properties": {
+        "DefinitionString": {
+          "Fn::Join": [
+            "",
+            [
+              "{"StartAt":"Verify Discord interaction payload","States":{"Verify Discord interaction payload":{"Next":"Is payload valid?","Retry":[{"ErrorEquals":["Lambda.ServiceException","Lambda.AWSLambdaException","Lambda.SdkClientException"],"IntervalSeconds":2,"MaxAttempts":6,"BackoffRate":2}],"Type":"Task","ResultPath":"$.validness","Resource":"",
+              {
+                "Fn::GetAtt": [
+                  "validationFA37DF24",
+                  "Arn",
+                ],
+              },
+              "","Parameters":"$"},"Is payload valid?":{"Type":"Choice","Choices":[{"Variable":"$.validness","BooleanEquals":true,"Next":"Send interaction to processing"}],"Default":"Respond with 401"},"Respond with 401":{"Type":"Pass","Result":{"statusCode":"401"},"End":true},"Send interaction to processing":{"Next":"Respond with 200","Type":"Task","OutputPath":"$.sqs","Resource":"arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":states:::sqs:sendMessage","Parameters":{"QueueUrl":"",
+              {
+                "Ref": "WalletConnectQueueProcessingEcsProcessingQueue48AE116E",
+              },
+              "","MessageBody.$":"$.body"}},"Respond with 200":{"Type":"Pass","Result":{"statusCode":"200"},"End":true}},"TimeoutSeconds":3}",
+            ],
+          ],
+        },
+        "LoggingConfiguration": {
+          "Destinations": [
+            {
+              "CloudWatchLogsLogGroup": {
+                "LogGroupArn": {
+                  "Fn::GetAtt": [
+                    "InteractionResponsesLogGroup038A1BE6",
+                    "Arn",
+                  ],
+                },
+              },
+            },
+          ],
+          "IncludeExecutionData": true,
+          "Level": "ERROR",
+        },
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "DiscordInteractionResponseStateMachineRole48F8BCDE",
+            "Arn",
+          ],
+        },
+        "StateMachineType": "EXPRESS",
+        "TracingConfiguration": {
+          "Enabled": true,
+        },
+      },
+      "Type": "AWS::StepFunctions::StateMachine",
+    },
+    "DiscordInteractionResponseStateMachineRole48F8BCDE": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": {
+                  "Fn::FindInMap": [
+                    "ServiceprincipalMap",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    "states",
+                  ],
+                },
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "DiscordInteractionResponseStateMachineRoleDefaultPolicy0FAA80BB": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogDelivery",
+                "logs:GetLogDelivery",
+                "logs:UpdateLogDelivery",
+                "logs:DeleteLogDelivery",
+                "logs:ListLogDeliveries",
+                "logs:PutResourcePolicy",
+                "logs:DescribeResourcePolicies",
+                "logs:DescribeLogGroups",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            {
+              "Action": [
+                "xray:PutTraceSegments",
+                "xray:PutTelemetryRecords",
+                "xray:GetSamplingRules",
+                "xray:GetSamplingTargets",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            {
+              "Action": "lambda:InvokeFunction",
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "validationFA37DF24",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "validationFA37DF24",
+                          "Arn",
+                        ],
+                      },
+                      ":*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": "sqs:SendMessage",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "WalletConnectQueueProcessingEcsProcessingQueue48AE116E",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "DiscordInteractionResponseStateMachineRoleDefaultPolicy0FAA80BB",
+        "Roles": [
+          {
+            "Ref": "DiscordInteractionResponseStateMachineRole48F8BCDE",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "EcsDefaultClusterMnL3mNNYN926A5246": {
+      "Type": "AWS::ECS::Cluster",
+    },
+    "EcsDefaultClusterMnL3mNNYNVpc7788A521": {
+      "Properties": {
+        "CidrBlock": "10.0.0.0/16",
+        "EnableDnsHostnames": true,
+        "EnableDnsSupport": true,
+        "InstanceTenancy": "default",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "test/EcsDefaultClusterMnL3mNNYN/Vpc",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::VPC",
+    },
+    "EcsDefaultClusterMnL3mNNYNVpcIGW9C2C2B8F": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "test/EcsDefaultClusterMnL3mNNYN/Vpc",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::InternetGateway",
+    },
+    "EcsDefaultClusterMnL3mNNYNVpcPrivateSubnet1DefaultRouteA5ADF694": {
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpcPublicSubnet1NATGateway5E3732C1",
+        },
+        "RouteTableId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpcPrivateSubnet1RouteTable4F1D2E36",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "EcsDefaultClusterMnL3mNNYNVpcPrivateSubnet1RouteTable4F1D2E36": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "test/EcsDefaultClusterMnL3mNNYN/Vpc/PrivateSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpc7788A521",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "EcsDefaultClusterMnL3mNNYNVpcPrivateSubnet1RouteTableAssociation34B92275": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpcPrivateSubnet1RouteTable4F1D2E36",
+        },
+        "SubnetId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpcPrivateSubnet1Subnet075EFF4C",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "EcsDefaultClusterMnL3mNNYNVpcPrivateSubnet1Subnet075EFF4C": {
+      "Properties": {
+        "AvailabilityZone": {
+          "Fn::Select": [
+            0,
+            {
+              "Fn::GetAZs": "",
+            },
+          ],
+        },
+        "CidrBlock": "10.0.128.0/18",
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Private",
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private",
+          },
+          {
+            "Key": "Name",
+            "Value": "test/EcsDefaultClusterMnL3mNNYN/Vpc/PrivateSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpc7788A521",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "EcsDefaultClusterMnL3mNNYNVpcPrivateSubnet2DefaultRoute20CE2D89": {
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpcPublicSubnet2NATGateway4C855E00",
+        },
+        "RouteTableId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpcPrivateSubnet2RouteTableDCE46591",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "EcsDefaultClusterMnL3mNNYNVpcPrivateSubnet2RouteTableAssociation111C622F": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpcPrivateSubnet2RouteTableDCE46591",
+        },
+        "SubnetId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpcPrivateSubnet2SubnetE4CEDF73",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "EcsDefaultClusterMnL3mNNYNVpcPrivateSubnet2RouteTableDCE46591": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "test/EcsDefaultClusterMnL3mNNYN/Vpc/PrivateSubnet2",
+          },
+        ],
+        "VpcId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpc7788A521",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "EcsDefaultClusterMnL3mNNYNVpcPrivateSubnet2SubnetE4CEDF73": {
+      "Properties": {
+        "AvailabilityZone": {
+          "Fn::Select": [
+            1,
+            {
+              "Fn::GetAZs": "",
+            },
+          ],
+        },
+        "CidrBlock": "10.0.192.0/18",
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Private",
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private",
+          },
+          {
+            "Key": "Name",
+            "Value": "test/EcsDefaultClusterMnL3mNNYN/Vpc/PrivateSubnet2",
+          },
+        ],
+        "VpcId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpc7788A521",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "EcsDefaultClusterMnL3mNNYNVpcPublicSubnet1DefaultRouteFF4E2178": {
+      "DependsOn": [
+        "EcsDefaultClusterMnL3mNNYNVpcVPCGW2447264E",
+      ],
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpcIGW9C2C2B8F",
+        },
+        "RouteTableId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpcPublicSubnet1RouteTableA1FD6ACC",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "EcsDefaultClusterMnL3mNNYNVpcPublicSubnet1EIP8704DB2F": {
+      "Properties": {
+        "Domain": "vpc",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "test/EcsDefaultClusterMnL3mNNYN/Vpc/PublicSubnet1",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::EIP",
+    },
+    "EcsDefaultClusterMnL3mNNYNVpcPublicSubnet1NATGateway5E3732C1": {
+      "Properties": {
+        "AllocationId": {
+          "Fn::GetAtt": [
+            "EcsDefaultClusterMnL3mNNYNVpcPublicSubnet1EIP8704DB2F",
+            "AllocationId",
+          ],
+        },
+        "SubnetId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpcPublicSubnet1Subnet3C273B99",
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "test/EcsDefaultClusterMnL3mNNYN/Vpc/PublicSubnet1",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::NatGateway",
+    },
+    "EcsDefaultClusterMnL3mNNYNVpcPublicSubnet1RouteTableA1FD6ACC": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "test/EcsDefaultClusterMnL3mNNYN/Vpc/PublicSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpc7788A521",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "EcsDefaultClusterMnL3mNNYNVpcPublicSubnet1RouteTableAssociation8B583A17": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpcPublicSubnet1RouteTableA1FD6ACC",
+        },
+        "SubnetId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpcPublicSubnet1Subnet3C273B99",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "EcsDefaultClusterMnL3mNNYNVpcPublicSubnet1Subnet3C273B99": {
+      "Properties": {
+        "AvailabilityZone": {
+          "Fn::Select": [
+            0,
+            {
+              "Fn::GetAZs": "",
+            },
+          ],
+        },
+        "CidrBlock": "10.0.0.0/18",
+        "MapPublicIpOnLaunch": true,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public",
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public",
+          },
+          {
+            "Key": "Name",
+            "Value": "test/EcsDefaultClusterMnL3mNNYN/Vpc/PublicSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpc7788A521",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "EcsDefaultClusterMnL3mNNYNVpcPublicSubnet2DefaultRouteB1375520": {
+      "DependsOn": [
+        "EcsDefaultClusterMnL3mNNYNVpcVPCGW2447264E",
+      ],
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpcIGW9C2C2B8F",
+        },
+        "RouteTableId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpcPublicSubnet2RouteTable263DEAA5",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "EcsDefaultClusterMnL3mNNYNVpcPublicSubnet2EIPF0764873": {
+      "Properties": {
+        "Domain": "vpc",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "test/EcsDefaultClusterMnL3mNNYN/Vpc/PublicSubnet2",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::EIP",
+    },
+    "EcsDefaultClusterMnL3mNNYNVpcPublicSubnet2NATGateway4C855E00": {
+      "Properties": {
+        "AllocationId": {
+          "Fn::GetAtt": [
+            "EcsDefaultClusterMnL3mNNYNVpcPublicSubnet2EIPF0764873",
+            "AllocationId",
+          ],
+        },
+        "SubnetId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpcPublicSubnet2Subnet95FF715A",
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "test/EcsDefaultClusterMnL3mNNYN/Vpc/PublicSubnet2",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::NatGateway",
+    },
+    "EcsDefaultClusterMnL3mNNYNVpcPublicSubnet2RouteTable263DEAA5": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "test/EcsDefaultClusterMnL3mNNYN/Vpc/PublicSubnet2",
+          },
+        ],
+        "VpcId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpc7788A521",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "EcsDefaultClusterMnL3mNNYNVpcPublicSubnet2RouteTableAssociation43E5803C": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpcPublicSubnet2RouteTable263DEAA5",
+        },
+        "SubnetId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpcPublicSubnet2Subnet95FF715A",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "EcsDefaultClusterMnL3mNNYNVpcPublicSubnet2Subnet95FF715A": {
+      "Properties": {
+        "AvailabilityZone": {
+          "Fn::Select": [
+            1,
+            {
+              "Fn::GetAZs": "",
+            },
+          ],
+        },
+        "CidrBlock": "10.0.64.0/18",
+        "MapPublicIpOnLaunch": true,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public",
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public",
+          },
+          {
+            "Key": "Name",
+            "Value": "test/EcsDefaultClusterMnL3mNNYN/Vpc/PublicSubnet2",
+          },
+        ],
+        "VpcId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpc7788A521",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "EcsDefaultClusterMnL3mNNYNVpcVPCGW2447264E": {
+      "Properties": {
+        "InternetGatewayId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpcIGW9C2C2B8F",
+        },
+        "VpcId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpc7788A521",
+        },
+      },
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+    },
+    "InteractionResponsesLogGroup038A1BE6": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "LogGroupName": "/aws/vendedLogs/states/discord-interaction-response-state-machine",
+        "RetentionInDays": 30,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "WalletConnectQueueProcessingEcsProcessingDeadLetterQueueEA1E82A9": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "MessageRetentionPeriod": 1209600,
+      },
+      "Type": "AWS::SQS::Queue",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "WalletConnectQueueProcessingEcsProcessingQueue48AE116E": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "RedrivePolicy": {
+          "deadLetterTargetArn": {
+            "Fn::GetAtt": [
+              "WalletConnectQueueProcessingEcsProcessingDeadLetterQueueEA1E82A9",
+              "Arn",
+            ],
+          },
+          "maxReceiveCount": 3,
+        },
+      },
+      "Type": "AWS::SQS::Queue",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "WalletConnectQueueProcessingQueueProcessingFargateService531BB2DB": {
+      "Properties": {
+        "Cluster": {
+          "Ref": "EcsDefaultClusterMnL3mNNYN926A5246",
+        },
+        "DeploymentConfiguration": {
+          "DeploymentCircuitBreaker": {
+            "Enable": true,
+            "Rollback": true,
+          },
+          "MaximumPercent": 200,
+          "MinimumHealthyPercent": 50,
+        },
+        "DeploymentController": {
+          "Type": "ECS",
+        },
+        "EnableECSManagedTags": false,
+        "LaunchType": "FARGATE",
+        "NetworkConfiguration": {
+          "AwsvpcConfiguration": {
+            "AssignPublicIp": "DISABLED",
+            "SecurityGroups": [
+              {
+                "Fn::GetAtt": [
+                  "WalletConnectQueueProcessingQueueProcessingFargateServiceSecurityGroup8D69AE46",
+                  "GroupId",
+                ],
+              },
+            ],
+            "Subnets": [
+              {
+                "Ref": "EcsDefaultClusterMnL3mNNYNVpcPrivateSubnet1Subnet075EFF4C",
+              },
+              {
+                "Ref": "EcsDefaultClusterMnL3mNNYNVpcPrivateSubnet2SubnetE4CEDF73",
+              },
+            ],
+          },
+        },
+        "TaskDefinition": {
+          "Ref": "WalletConnectQueueProcessingQueueProcessingTaskDefACEAA8B4",
+        },
+      },
+      "Type": "AWS::ECS::Service",
+    },
+    "WalletConnectQueueProcessingQueueProcessingFargateServiceSecurityGroup8D69AE46": {
+      "Properties": {
+        "GroupDescription": "test/WalletConnect Queue Processing/QueueProcessingFargateService/SecurityGroup",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "EcsDefaultClusterMnL3mNNYNVpc7788A521",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "WalletConnectQueueProcessingQueueProcessingFargateServiceTaskCountTarget9D9CF00A": {
+      "Properties": {
+        "MaxCapacity": 2,
+        "MinCapacity": 1,
+        "ResourceId": {
+          "Fn::Join": [
+            "",
+            [
+              "service/",
+              {
+                "Ref": "EcsDefaultClusterMnL3mNNYN926A5246",
+              },
+              "/",
+              {
+                "Fn::GetAtt": [
+                  "WalletConnectQueueProcessingQueueProcessingFargateService531BB2DB",
+                  "Name",
+                ],
+              },
+            ],
+          ],
+        },
+        "RoleARN": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":iam::",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService",
+            ],
+          ],
+        },
+        "ScalableDimension": "ecs:service:DesiredCount",
+        "ServiceNamespace": "ecs",
+      },
+      "Type": "AWS::ApplicationAutoScaling::ScalableTarget",
+    },
+    "WalletConnectQueueProcessingQueueProcessingFargateServiceTaskCountTargetCpuScaling2E0AAD2E": {
+      "Properties": {
+        "PolicyName": "testWalletConnectQueueProcessingQueueProcessingFargateServiceTaskCountTargetCpuScalingC7535638",
+        "PolicyType": "TargetTrackingScaling",
+        "ScalingTargetId": {
+          "Ref": "WalletConnectQueueProcessingQueueProcessingFargateServiceTaskCountTarget9D9CF00A",
+        },
+        "TargetTrackingScalingPolicyConfiguration": {
+          "PredefinedMetricSpecification": {
+            "PredefinedMetricType": "ECSServiceAverageCPUUtilization",
+          },
+          "TargetValue": 50,
+        },
+      },
+      "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+    },
+    "WalletConnectQueueProcessingQueueProcessingFargateServiceTaskCountTargetQueueMessagesVisibleScalingLowerAlarm2A12679F": {
+      "Properties": {
+        "AlarmActions": [
+          {
+            "Ref": "WalletConnectQueueProcessingQueueProcessingFargateServiceTaskCountTargetQueueMessagesVisibleScalingLowerPolicy7814ABF6",
+          },
+        ],
+        "AlarmDescription": "Lower threshold scaling alarm",
+        "ComparisonOperator": "LessThanOrEqualToThreshold",
+        "Dimensions": [
+          {
+            "Name": "QueueName",
+            "Value": {
+              "Fn::GetAtt": [
+                "WalletConnectQueueProcessingEcsProcessingQueue48AE116E",
+                "QueueName",
+              ],
+            },
+          },
+        ],
+        "EvaluationPeriods": 1,
+        "MetricName": "ApproximateNumberOfMessagesVisible",
+        "Namespace": "AWS/SQS",
+        "Period": 300,
+        "Statistic": "Maximum",
+        "Threshold": 0,
+      },
+      "Type": "AWS::CloudWatch::Alarm",
+    },
+    "WalletConnectQueueProcessingQueueProcessingFargateServiceTaskCountTargetQueueMessagesVisibleScalingLowerPolicy7814ABF6": {
+      "Properties": {
+        "PolicyName": "testWalletConnectQueueProcessingQueueProcessingFargateServiceTaskCountTargetQueueMessagesVisibleScalingLowerPolicy4E18D4FB",
+        "PolicyType": "StepScaling",
+        "ScalingTargetId": {
+          "Ref": "WalletConnectQueueProcessingQueueProcessingFargateServiceTaskCountTarget9D9CF00A",
+        },
+        "StepScalingPolicyConfiguration": {
+          "AdjustmentType": "ChangeInCapacity",
+          "MetricAggregationType": "Maximum",
+          "StepAdjustments": [
+            {
+              "MetricIntervalUpperBound": 0,
+              "ScalingAdjustment": -1,
+            },
+          ],
+        },
+      },
+      "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+    },
+    "WalletConnectQueueProcessingQueueProcessingFargateServiceTaskCountTargetQueueMessagesVisibleScalingUpperAlarmA4B63DEC": {
+      "Properties": {
+        "AlarmActions": [
+          {
+            "Ref": "WalletConnectQueueProcessingQueueProcessingFargateServiceTaskCountTargetQueueMessagesVisibleScalingUpperPolicy08CE136A",
+          },
+        ],
+        "AlarmDescription": "Upper threshold scaling alarm",
+        "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+        "Dimensions": [
+          {
+            "Name": "QueueName",
+            "Value": {
+              "Fn::GetAtt": [
+                "WalletConnectQueueProcessingEcsProcessingQueue48AE116E",
+                "QueueName",
+              ],
+            },
+          },
+        ],
+        "EvaluationPeriods": 1,
+        "MetricName": "ApproximateNumberOfMessagesVisible",
+        "Namespace": "AWS/SQS",
+        "Period": 300,
+        "Statistic": "Maximum",
+        "Threshold": 100,
+      },
+      "Type": "AWS::CloudWatch::Alarm",
+    },
+    "WalletConnectQueueProcessingQueueProcessingFargateServiceTaskCountTargetQueueMessagesVisibleScalingUpperPolicy08CE136A": {
+      "Properties": {
+        "PolicyName": "testWalletConnectQueueProcessingQueueProcessingFargateServiceTaskCountTargetQueueMessagesVisibleScalingUpperPolicyF36CC297",
+        "PolicyType": "StepScaling",
+        "ScalingTargetId": {
+          "Ref": "WalletConnectQueueProcessingQueueProcessingFargateServiceTaskCountTarget9D9CF00A",
+        },
+        "StepScalingPolicyConfiguration": {
+          "AdjustmentType": "ChangeInCapacity",
+          "MetricAggregationType": "Maximum",
+          "StepAdjustments": [
+            {
+              "MetricIntervalLowerBound": 0,
+              "MetricIntervalUpperBound": 400,
+              "ScalingAdjustment": 1,
+            },
+            {
+              "MetricIntervalLowerBound": 400,
+              "ScalingAdjustment": 5,
+            },
+          ],
+        },
+      },
+      "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+    },
+    "WalletConnectQueueProcessingQueueProcessingTaskDefACEAA8B4": {
+      "Properties": {
+        "ContainerDefinitions": [
+          {
+            "Environment": [
+              {
+                "Name": "AWS_REGION",
+                "Value": {
+                  "Ref": "AWS::Region",
+                },
+              },
+              {
+                "Name": "EVENT_BUS_NAME",
+                "Value": {
+                  "Ref": "bus707364D1",
+                },
+              },
+              {
+                "Name": "EVENT_NAME_SESSION_CREATED",
+                "Value": "wcSessionCreated",
+              },
+              {
+                "Name": "EVENT_NAME_CLIENT_CONNECTED",
+                "Value": "wcClientConnected",
+              },
+              {
+                "Name": "EVENT_NAME_RESPONSE_RECEIVED",
+                "Value": "wcResponseReceived",
+              },
+              {
+                "Name": "EVENT_NAME_ERROR_OCCURRED",
+                "Value": "wcError",
+              },
+              {
+                "Name": "APP_NAME",
+              },
+              {
+                "Name": "ACTION_ID",
+              },
+              {
+                "Name": "SIGNAL",
+              },
+              {
+                "Name": "SIGNAL_DESCRIPTION",
+              },
+              {
+                "Name": "QUEUE_NAME",
+                "Value": {
+                  "Fn::GetAtt": [
+                    "WalletConnectQueueProcessingEcsProcessingQueue48AE116E",
+                    "QueueName",
+                  ],
+                },
+              },
+            ],
+            "Essential": true,
+            "Image": {
+              "Fn::Sub": "\${AWS::AccountId}.dkr.ecr.\${AWS::Region}.\${AWS::URLSuffix}/cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}:b9fe22e088060cb2c34a16ad8de0a2ffeeedd38a23f276c74e19e1d045ea4005",
+            },
+            "LogConfiguration": {
+              "LogDriver": "awslogs",
+              "Options": {
+                "awslogs-group": {
+                  "Ref": "WalletConnectQueueProcessingQueueProcessingTaskDefQueueProcessingContainerLogGroupC81CB22A",
+                },
+                "awslogs-region": {
+                  "Ref": "AWS::Region",
+                },
+                "awslogs-stream-prefix": "WalletConnect Queue Processing",
+              },
+            },
+            "Name": "QueueProcessingContainer",
+          },
+          {
+            "Environment": [
+              {
+                "Name": "AWS_REGION",
+                "Value": {
+                  "Ref": "AWS::Region",
+                },
+              },
+            ],
+            "Essential": true,
+            "HealthCheck": {
+              "Command": [
+                "CMD-SHELL",
+                "curl -s http://localhost:2000",
+              ],
+              "Interval": 5,
+              "Retries": 3,
+              "StartPeriod": 10,
+              "Timeout": 2,
+            },
+            "Image": "public.ecr.aws/xray/aws-xray-daemon:latest",
+            "LogConfiguration": {
+              "LogDriver": "awslogs",
+              "Options": {
+                "awslogs-group": {
+                  "Ref": "WalletConnectQueueProcessingQueueProcessingTaskDefxrayDemonLogGroup4915B1F0",
+                },
+                "awslogs-region": {
+                  "Ref": "AWS::Region",
+                },
+                "awslogs-stream-prefix": "xray",
+              },
+            },
+            "MemoryReservation": 256,
+            "Name": "xrayDemon",
+            "PortMappings": [
+              {
+                "ContainerPort": 2000,
+                "Protocol": "udp",
+              },
+            ],
+            "User": "1337",
+          },
+        ],
+        "Cpu": "256",
+        "ExecutionRoleArn": {
+          "Fn::GetAtt": [
+            "WalletConnectQueueProcessingQueueProcessingTaskDefExecutionRole9EF4AE89",
+            "Arn",
+          ],
+        },
+        "Family": "testWalletConnectQueueProcessingQueueProcessingTaskDef684D6295",
+        "Memory": "512",
+        "NetworkMode": "awsvpc",
+        "RequiresCompatibilities": [
+          "FARGATE",
+        ],
+        "TaskRoleArn": {
+          "Fn::GetAtt": [
+            "WalletConnectQueueProcessingQueueProcessingTaskDefTaskRole9CBD3527",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ECS::TaskDefinition",
+    },
+    "WalletConnectQueueProcessingQueueProcessingTaskDefExecutionRole9EF4AE89": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "WalletConnectQueueProcessingQueueProcessingTaskDefExecutionRoleDefaultPolicyDD1E74C6": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":ecr:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":repository/",
+                    {
+                      "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
+                    },
+                  ],
+                ],
+              },
+            },
+            {
+              "Action": "ecr:GetAuthorizationToken",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            {
+              "Action": [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "WalletConnectQueueProcessingQueueProcessingTaskDefQueueProcessingContainerLogGroupC81CB22A",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "WalletConnectQueueProcessingQueueProcessingTaskDefxrayDemonLogGroup4915B1F0",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "WalletConnectQueueProcessingQueueProcessingTaskDefExecutionRoleDefaultPolicyDD1E74C6",
+        "Roles": [
+          {
+            "Ref": "WalletConnectQueueProcessingQueueProcessingTaskDefExecutionRole9EF4AE89",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "WalletConnectQueueProcessingQueueProcessingTaskDefQueueProcessingContainerLogGroupC81CB22A": {
+      "DeletionPolicy": "Retain",
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "WalletConnectQueueProcessingQueueProcessingTaskDefTaskRole9CBD3527": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/AWSXRayDaemonWriteAccess",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "WalletConnectQueueProcessingQueueProcessingTaskDefTaskRoleDefaultPolicy0ACF13E4": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "sqs:ReceiveMessage",
+                "sqs:ChangeMessageVisibility",
+                "sqs:GetQueueUrl",
+                "sqs:DeleteMessage",
+                "sqs:GetQueueAttributes",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "WalletConnectQueueProcessingEcsProcessingQueue48AE116E",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": "events:PutEvents",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "bus707364D1",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "WalletConnectQueueProcessingQueueProcessingTaskDefTaskRoleDefaultPolicy0ACF13E4",
+        "Roles": [
+          {
+            "Ref": "WalletConnectQueueProcessingQueueProcessingTaskDefTaskRole9CBD3527",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "WalletConnectQueueProcessingQueueProcessingTaskDefxrayDemonLogGroup4915B1F0": {
+      "DeletionPolicy": "Retain",
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "bus707364D1": {
+      "Properties": {
+        "Name": "DiscordBot",
+      },
+      "Type": "AWS::Events::EventBus",
+    },
+    "discordbotapi5484B478": {
+      "Properties": {
+        "Description": "Discord Bot Api Endpoint",
+        "Name": "discord-bot-api",
+      },
+      "Type": "AWS::ApiGateway::RestApi",
+    },
+    "discordbotapiAccount3F1EE700": {
+      "DependsOn": [
+        "discordbotapi5484B478",
+      ],
+      "Properties": {
+        "CloudWatchRoleArn": {
+          "Fn::GetAtt": [
+            "discordbotapiCloudWatchRoleB1A1160D",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ApiGateway::Account",
+    },
+    "discordbotapiCloudWatchRoleB1A1160D": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "apigateway.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "discordbotapiDeploymentFB90C3EC5a64e15ca52cc7aab1dd5c373a3c50fe": {
+      "DependsOn": [
+        "discordbotapiOPTIONS9B4E4ECB",
+        "discordbotapiPOSTA12D3063",
+      ],
+      "Properties": {
+        "Description": "Automatically created by the RestApi construct",
+        "RestApiId": {
+          "Ref": "discordbotapi5484B478",
+        },
+      },
+      "Type": "AWS::ApiGateway::Deployment",
+    },
+    "discordbotapiDeploymentStageprodE3B8CBF8": {
+      "DependsOn": [
+        "discordbotapiAccount3F1EE700",
+      ],
+      "Properties": {
+        "DeploymentId": {
+          "Ref": "discordbotapiDeploymentFB90C3EC5a64e15ca52cc7aab1dd5c373a3c50fe",
+        },
+        "RestApiId": {
+          "Ref": "discordbotapi5484B478",
+        },
+        "StageName": "prod",
+      },
+      "Type": "AWS::ApiGateway::Stage",
+    },
+    "discordbotapiOPTIONS9B4E4ECB": {
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "Integration": {
+          "IntegrationResponses": [
+            {
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+              },
+              "StatusCode": "204",
+            },
+          ],
+          "RequestTemplates": {
+            "application/json": "{ statusCode: 200 }",
+          },
+          "Type": "MOCK",
+        },
+        "MethodResponses": [
+          {
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Origin": true,
+            },
+            "StatusCode": "204",
+          },
+        ],
+        "ResourceId": {
+          "Fn::GetAtt": [
+            "discordbotapi5484B478",
+            "RootResourceId",
+          ],
+        },
+        "RestApiId": {
+          "Ref": "discordbotapi5484B478",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "discordbotapiPOSTA12D3063": {
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "POST",
+        "Integration": {
+          "Credentials": {
+            "Fn::GetAtt": [
+              "discordbotapiPOSTStartSyncExecutionRole3D6EFC21",
+              "Arn",
+            ],
+          },
+          "IntegrationHttpMethod": "POST",
+          "IntegrationResponses": [
+            {
+              "ResponseTemplates": {
+                "application/json": "#set($inputRoot = $input.path('$'))
+#if($input.path('$.status').toString().equals("FAILED"))
+#set($context.responseOverride.status = 500)
+{
+"error": "$input.path('$.error')",
+"cause": "$input.path('$.cause')"
+}
+#else
+$input.path('$.output')
+#end",
+              },
+              "StatusCode": "200",
+            },
+          ],
+          "PassthroughBehavior": "NEVER",
+          "RequestTemplates": {
+            "application/json": {
+              "Fn::Join": [
+                "",
+                [
+                  "## Velocity Template used for API Gateway request mapping template
+##
+## This template forwards the request body, header, path, and querystring
+## to the execution input of the state machine.
+##
+## "@@" is used here as a placeholder for '"' to avoid using escape characters.
+
+#set($inputString = '')
+#set($includeHeaders = true)
+#set($includeQueryString = false)
+#set($includePath = false)
+#set($includeAuthorizer = false)
+#set($allParams = $input.params())
+{
+    "stateMachineArn": "",
+                  {
+                    "Ref": "DiscordInteractionResponseStateMachineE0027175",
+                  },
+                  "",
+
+    #set($inputString = "$inputString,@@body@@: $input.body")
+
+    #if ($includeHeaders)
+        #set($inputString = "$inputString, @@header@@:{")
+        #foreach($paramName in $allParams.header.keySet())
+            #set($inputString = "$inputString @@$paramName@@: @@$util.escapeJavaScript($allParams.header.get($paramName))@@")
+            #if($foreach.hasNext)
+                #set($inputString = "$inputString,")
+            #end
+        #end
+        #set($inputString = "$inputString }")
+        
+    #end
+
+    #if ($includeQueryString)
+        #set($inputString = "$inputString, @@querystring@@:{")
+        #foreach($paramName in $allParams.querystring.keySet())
+            #set($inputString = "$inputString @@$paramName@@: @@$util.escapeJavaScript($allParams.querystring.get($paramName))@@")
+            #if($foreach.hasNext)
+                #set($inputString = "$inputString,")
+            #end
+        #end
+        #set($inputString = "$inputString }")
+    #end
+
+    #if ($includePath)
+        #set($inputString = "$inputString, @@path@@:{")
+        #foreach($paramName in $allParams.path.keySet())
+            #set($inputString = "$inputString @@$paramName@@: @@$util.escapeJavaScript($allParams.path.get($paramName))@@")
+            #if($foreach.hasNext)
+                #set($inputString = "$inputString,")
+            #end
+        #end
+        #set($inputString = "$inputString }")
+    #end
+    
+    #if ($includeAuthorizer)
+        #set($inputString = "$inputString, @@authorizer@@:{")
+        #foreach($paramName in $context.authorizer.keySet())
+            #set($inputString = "$inputString @@$paramName@@: @@$util.escapeJavaScript($context.authorizer.get($paramName))@@")
+            #if($foreach.hasNext)
+                #set($inputString = "$inputString,")
+            #end
+        #end
+        #set($inputString = "$inputString }")
+    #end
+
+    #set($requestContext = "")
+    ## Check if the request context should be included as part of the execution input
+    #if($requestContext && !$requestContext.empty)
+        #set($inputString = "$inputString,")
+        #set($inputString = "$inputString @@requestContext@@: $requestContext")
+    #end
+
+    #set($inputString = "$inputString}")
+    #set($inputString = $inputString.replaceAll("@@",'"'))
+    #set($len = $inputString.length() - 1)
+    "input": "{$util.escapeJavaScript($inputString.substring(1,$len))}"
+}
+",
+                ],
+              ],
+            },
+          },
+          "Type": "AWS",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ":states:action/StartSyncExecution",
+              ],
+            ],
+          },
+        },
+        "MethodResponses": [
+          {
+            "ResponseModels": {
+              "application/json": "Empty",
+            },
+            "StatusCode": "200",
+          },
+          {
+            "ResponseModels": {
+              "application/json": "Error",
+            },
+            "StatusCode": "400",
+          },
+          {
+            "ResponseModels": {
+              "application/json": "Error",
+            },
+            "StatusCode": "500",
+          },
+        ],
+        "ResourceId": {
+          "Fn::GetAtt": [
+            "discordbotapi5484B478",
+            "RootResourceId",
+          ],
+        },
+        "RestApiId": {
+          "Ref": "discordbotapi5484B478",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "discordbotapiPOSTStartSyncExecutionRole3D6EFC21": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "apigateway.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "discordbotapiPOSTStartSyncExecutionRoleDefaultPolicy304039E1": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "states:StartSyncExecution",
+              "Effect": "Allow",
+              "Resource": {
+                "Ref": "DiscordInteractionResponseStateMachineE0027175",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "discordbotapiPOSTStartSyncExecutionRoleDefaultPolicy304039E1",
+        "Roles": [
+          {
+            "Ref": "discordbotapiPOSTStartSyncExecutionRole3D6EFC21",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "onClientConnected08F2F10A": {
+      "Properties": {
+        "Description": "WalletConnect Client Connected",
+        "EventPattern": {
+          "detail-type": [
+            "wcClientConnected",
+          ],
+          "source": [
+            "walletconnect",
+          ],
+        },
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Arn": {
+              "Fn::GetAtt": [
+                "onClientConnectedLambda1CC46AFB",
+                "Arn",
+              ],
+            },
+            "Id": "Target0",
+            "InputPath": "$.detail",
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "onClientConnectedAllowEventRuletestonClientConnectedLambdaA094325F9D9D02DE": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "onClientConnectedLambda1CC46AFB",
+            "Arn",
+          ],
+        },
+        "Principal": "events.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "onClientConnected08F2F10A",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "onClientConnectedLambda1CC46AFB": {
+      "DependsOn": [
+        "onClientConnectedLambdaServiceRoleDefaultPolicy79BB1DA7",
+        "onClientConnectedLambdaServiceRole75ECE7CF",
+      ],
+      "Properties": {
+        "Architectures": [
+          "arm64",
+        ],
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "1fe7a117266f68aae58b265923966fafd597c3f49d4d98ff19bace19f85c09a5.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "NODE_OPtiONS": "--enable-source-maps --disable-proto=throw",
+          },
+        },
+        "Handler": "index.handler",
+        "Layers": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:lambda:",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ":580247275435:layer:LambdaInsightsExtension-Arm64:1",
+              ],
+            ],
+          },
+        ],
+        "Role": {
+          "Fn::GetAtt": [
+            "onClientConnectedLambdaServiceRole75ECE7CF",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs16.x",
+        "TracingConfig": {
+          "Mode": "Active",
+        },
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "onClientConnectedLambdaServiceRole75ECE7CF": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/CloudWatchLambdaInsightsExecutionRolePolicy",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "onClientConnectedLambdaServiceRoleDefaultPolicy79BB1DA7": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "xray:PutTraceSegments",
+                "xray:PutTelemetryRecords",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "onClientConnectedLambdaServiceRoleDefaultPolicy79BB1DA7",
+        "Roles": [
+          {
+            "Ref": "onClientConnectedLambdaServiceRole75ECE7CF",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "onClientResponse7F27E606": {
+      "Properties": {
+        "Description": "WalletConnect Client Responded",
+        "EventPattern": {
+          "detail-type": [
+            "wcResponseReceived",
+          ],
+          "source": [
+            "walletconnect",
+          ],
+        },
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Arn": {
+              "Fn::GetAtt": [
+                "onClientResponseLambdaD0E6BF68",
+                "Arn",
+              ],
+            },
+            "Id": "Target0",
+            "InputPath": "$.detail",
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "onClientResponseAllowEventRuletestonClientResponseLambda30B622F4BD0020F2": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "onClientResponseLambdaD0E6BF68",
+            "Arn",
+          ],
+        },
+        "Principal": "events.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "onClientResponse7F27E606",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "onClientResponseLambdaD0E6BF68": {
+      "DependsOn": [
+        "onClientResponseLambdaServiceRoleDefaultPolicyDBC10DE3",
+        "onClientResponseLambdaServiceRole62CC2A13",
+      ],
+      "Properties": {
+        "Architectures": [
+          "arm64",
+        ],
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "9150bf02bcf22d865c4e2d64267030655856cb17bc92a7f2599f25a536ad0b5b.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "NODE_OPtiONS": "--enable-source-maps --disable-proto=throw",
+          },
+        },
+        "Handler": "index.handler",
+        "Layers": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:lambda:",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ":580247275435:layer:LambdaInsightsExtension-Arm64:1",
+              ],
+            ],
+          },
+        ],
+        "Role": {
+          "Fn::GetAtt": [
+            "onClientResponseLambdaServiceRole62CC2A13",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs16.x",
+        "TracingConfig": {
+          "Mode": "Active",
+        },
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "onClientResponseLambdaServiceRole62CC2A13": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/CloudWatchLambdaInsightsExecutionRolePolicy",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "onClientResponseLambdaServiceRoleDefaultPolicyDBC10DE3": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "xray:PutTraceSegments",
+                "xray:PutTelemetryRecords",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "onClientResponseLambdaServiceRoleDefaultPolicyDBC10DE3",
+        "Roles": [
+          {
+            "Ref": "onClientResponseLambdaServiceRole62CC2A13",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "onFlowErrorAllowEventRuletestwalletConnectErrorHandlingLambdaE061693C9B88627C": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "walletConnectErrorHandlingLambda67D1F0DD",
+            "Arn",
+          ],
+        },
+        "Principal": "events.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "onFlowErrorF3B2F280",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "onFlowErrorF3B2F280": {
+      "Properties": {
+        "Description": "WalletConnect Flow Error Occurred",
+        "EventPattern": {
+          "detail-type": [
+            "wcError",
+          ],
+          "source": [
+            "walletconnect",
+          ],
+        },
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Arn": {
+              "Fn::GetAtt": [
+                "walletConnectErrorHandlingLambda67D1F0DD",
+                "Arn",
+              ],
+            },
+            "Id": "Target0",
+            "InputPath": "$.detail",
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "onSessionCreatedAllowEventRuletestonSessionCreatedLambdaE0E088682CE745C2": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "onSessionCreatedLambdaE7382898",
+            "Arn",
+          ],
+        },
+        "Principal": "events.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "onSessionCreatedB77486CD",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "onSessionCreatedB77486CD": {
+      "Properties": {
+        "Description": "WalletConnect Session Created",
+        "EventPattern": {
+          "detail-type": [
+            "wcSessionCreated",
+          ],
+          "source": [
+            "walletconnect",
+          ],
+        },
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Arn": {
+              "Fn::GetAtt": [
+                "onSessionCreatedLambdaE7382898",
+                "Arn",
+              ],
+            },
+            "Id": "Target0",
+            "InputPath": "$.detail",
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "onSessionCreatedLambdaE7382898": {
+      "DependsOn": [
+        "onSessionCreatedLambdaServiceRoleDefaultPolicy0D39678D",
+        "onSessionCreatedLambdaServiceRoleEB3441D0",
+      ],
+      "Properties": {
+        "Architectures": [
+          "arm64",
+        ],
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "74a4d70206e2d599c741af0115852e865aa1bb1773bf72023285d96e1a4c528f.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "NODE_OPtiONS": "--enable-source-maps --disable-proto=throw",
+          },
+        },
+        "Handler": "index.handler",
+        "Layers": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:lambda:",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ":580247275435:layer:LambdaInsightsExtension-Arm64:1",
+              ],
+            ],
+          },
+        ],
+        "Role": {
+          "Fn::GetAtt": [
+            "onSessionCreatedLambdaServiceRoleEB3441D0",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs16.x",
+        "TracingConfig": {
+          "Mode": "Active",
+        },
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "onSessionCreatedLambdaServiceRoleDefaultPolicy0D39678D": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "xray:PutTraceSegments",
+                "xray:PutTelemetryRecords",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "onSessionCreatedLambdaServiceRoleDefaultPolicy0D39678D",
+        "Roles": [
+          {
+            "Ref": "onSessionCreatedLambdaServiceRoleEB3441D0",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "onSessionCreatedLambdaServiceRoleEB3441D0": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/CloudWatchLambdaInsightsExecutionRolePolicy",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "validationFA37DF24": {
+      "DependsOn": [
+        "validationServiceRoleDefaultPolicyB3E75F98",
+        "validationServiceRoleBA4B090E",
+      ],
+      "Properties": {
+        "Architectures": [
+          "arm64",
+        ],
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "505a94db76343b06acb8b3b46295c5f71e21130566ba231b702420a732b15cf5.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "NODE_OPtiONS": "--enable-source-maps --disable-proto=throw",
+          },
+        },
+        "Handler": "index.handler",
+        "Layers": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:lambda:",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ":580247275435:layer:LambdaInsightsExtension-Arm64:1",
+              ],
+            ],
+          },
+        ],
+        "Role": {
+          "Fn::GetAtt": [
+            "validationServiceRoleBA4B090E",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs16.x",
+        "TracingConfig": {
+          "Mode": "Active",
+        },
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "validationServiceRoleBA4B090E": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/CloudWatchLambdaInsightsExecutionRolePolicy",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "validationServiceRoleDefaultPolicyB3E75F98": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "xray:PutTraceSegments",
+                "xray:PutTelemetryRecords",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "validationServiceRoleDefaultPolicyB3E75F98",
+        "Roles": [
+          {
+            "Ref": "validationServiceRoleBA4B090E",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "walletConnectErrorHandlingLambda67D1F0DD": {
+      "DependsOn": [
+        "walletConnectErrorHandlingLambdaServiceRoleDefaultPolicyD89FE6D9",
+        "walletConnectErrorHandlingLambdaServiceRoleA010288B",
+      ],
+      "Properties": {
+        "Architectures": [
+          "arm64",
+        ],
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "8a3c599305a09958b5bed23327c4a3540f7059dc6fe2d8c32bf38ad07446e35c.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "NODE_OPtiONS": "--enable-source-maps --disable-proto=throw",
+          },
+        },
+        "Handler": "index.handler",
+        "Layers": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:lambda:",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ":580247275435:layer:LambdaInsightsExtension-Arm64:1",
+              ],
+            ],
+          },
+        ],
+        "Role": {
+          "Fn::GetAtt": [
+            "walletConnectErrorHandlingLambdaServiceRoleA010288B",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs16.x",
+        "TracingConfig": {
+          "Mode": "Active",
+        },
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "walletConnectErrorHandlingLambdaServiceRoleA010288B": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/CloudWatchLambdaInsightsExecutionRolePolicy",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "walletConnectErrorHandlingLambdaServiceRoleDefaultPolicyD89FE6D9": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "xray:PutTraceSegments",
+                "xray:PutTelemetryRecords",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "walletConnectErrorHandlingLambdaServiceRoleDefaultPolicyD89FE6D9",
+        "Roles": [
+          {
+            "Ref": "walletConnectErrorHandlingLambdaServiceRoleA010288B",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;

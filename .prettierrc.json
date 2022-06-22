@@ -1,0 +1,26 @@
+{
+  "trailingComma": "all",
+  "plugins": [
+    "./node_modules/prettier-plugin-organize-imports",
+    "./node_modules/prettier-plugin-organize-attributes",
+    "./node_modules/prettier-plugin-jsdoc",
+    "./node_modules/@prettier/plugin-xml"
+  ],
+  "singleAttributePerLine": true,
+  "tsdoc": true,
+  "jsdocVerticalAlignment": true,
+  "jsdocSeparateReturnsFromParam": true,
+  "jsdocSeparateTagGroups": true,
+  "jsdocPreferCodeFences": true,
+  "overrides": [
+    {
+      "files": [
+        "*.svg"
+      ],
+      "options": {
+        "parser": "xml",
+        "xmlWhitespaceSensitivity": "ignore"
+      }
+    }
+  ]
+}

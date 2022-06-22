@@ -1,0 +1,12 @@
+#set($inputRoot = $input.path('$'))
+#if($input.path('$.status').toString().equals("FAILED"))
+  #set($context.responseOverride.status = 500)
+  {
+    "error": "$input.path('$.error')"
+    "cause": "$input.path('$.cause')"
+  }
+#else
+  #set($result = $util.parseJson($inputRoot.output))
+  #set($context.responseOverride.status = $result.statusCode)
+  $result.body
+#end
