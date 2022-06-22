@@ -31,21 +31,21 @@ You can deploy your own version in the meantime.
 
 1. Make sure you have [Node.js](https://nodejs.org) installed. Version **16.14.0** recommended (or above).
 
-1. Install project dependencies
+1. Install project dependencies:
 
    ```sh
    npm install
    npx projen
    ```
 
-1. Ensure you have latest version of [AWS CLI](https://aws.amazon.com/cli/) and configure your AWS CLI (we recommend you create a profile specific for your AWS account). If you create a named profile instead of using `default`, be sure to use that profile name in all `aws` or `cdk` commands below.
+1. Ensure you have latest version of [AWS CLI](https://aws.amazon.com/cli/) and configure your AWS CLI (we recommend you create a profile specific for your AWS account). If you create a named profile instead of using `default`, be sure to use that profile name in all `aws` or `cdk` commands below:
 
    ```sh
    brew update && brew upgrade awscli
    aws configure # or aws sso login (if applicable)
    ```
 
-1. If this is your first deployment using [AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/home.html), you'll need to bootstrap it in your AWS account,
+1. If this is your first deployment using [AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/home.html), you'll need to bootstrap it in your AWS account:
 
    ```sh
    cdk bootstrap
