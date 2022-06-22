@@ -8,7 +8,7 @@ Project is built using [AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/home.h
 
 ## 🚀 Using the bot
 
-**Coming soon!** We are working on publishing this bot on Discord so it can be installed in your own server with one-click.  
+> **Note** We are working on publishing this bot on Discord so it can be installed in your own server with one-click. **Coming soon!** 
 You can deploy your own version in the meantime.
 
 ## 🏆 Deploying your own bot
@@ -45,6 +45,12 @@ You can deploy your own version in the meantime.
    aws configure # or aws sso login (if applicable)
    ```
 
+1. If this is your first deployment using [AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/home.html), you'll need to bootstrap it in your AWS account,
+
+   ```sh
+   cdk bootstrap
+   ```
+
 1. Create relevant secrets.
 
    a) Create secret with name `WorldIdDiscordBotToken` and the bot token as the value:
@@ -59,7 +65,7 @@ You can deploy your own version in the meantime.
    aws secretsmanager create-secret --name WorldIdDiscordBotClientSecret --description "Client secret for World ID Discord Bot" --secret-string <your bot client secret> --profile default
    ```
 
-1. [_Optional, can be provided by CLI_] Set CDK Context values at `project.ts`
+1. _[Optional]_. Set CDK Context values at `project.ts` (or set them below using the CLI command)
 
 1. Install project dependencies:
 
@@ -67,7 +73,7 @@ You can deploy your own version in the meantime.
    npx projen
    ```
 
-1. Run CDK deployment (optionally overriding deployment values):
+1. Run CDK deployment (**set the proper deployment values if you didn't set them in `project.ts`**):
 
    ```sh
    npx cdk deploy
@@ -79,13 +85,18 @@ You can deploy your own version in the meantime.
      --profile=default
    ```
 
-1. Grab `WorldID-Discord-Bot.discordbotapiEndpoint<some hash>` output (it should be an url similar to `https://3dhsrvte6f.execute-api.us-east-1.amazonaws.com/prod/`) and save it into <b>INTERACTIONS ENDPOINT URL</b> on your Bot settings at Discord Developers Portal.
+1. Grab `WorldID-Discord-Bot.discordbotapiEndpoint<some hash>` output (it should be an url similar to `https://3dhsrvte6f.execute-api.us-east-1.amazonaws.com/prod/`) and save it into <b>Interactions endpoint URL</b> on your Bot settings at Discord Developers Portal.
 
    > If you are seeing `interactions_endpoint_url: The specified interactions endpoint url could not be verified` error during this step then make sure that you provided proper `bot_app_id` and `bot_public_key` CDK context values (carefully review steps above).
 
-1. Grab `OAuth2CallbackUrl` output (similar to `https://2rrg16x6qh.execute-api.us-east-1.amazonaws.com/prod/oauth2callback`) and save it into `Redirects` field on the bot `OAuth2` settings.
+1. Grab `OAuth2CallbackUrl` output (similar to `https://2rrg16x6qh.execute-api.us-east-1.amazonaws.com/prod/oauth2callback`) and save it into `Redirects` field on the bot `OAuth2` General settings.
 
-1. Install the app in your Discord server.
+1. Head over to the **URL Generator** tab of **OAuth2** and create a link with the following scopes:
+   - Scopes: `guilds`, `bot`, `applications.commands`
+   - Redirect URL: Select the URL you added in the previous step.
+   - Bot permissions: `Manage Roles`, `Send Messages`, `Embed Links`, `Attach Files`.
+
+2. Visit the generated URL to install the bot in your server.
 
 <!-- WORLD-ID-SHARED-README-TAG:START - Do not remove or modify this section directly -->
 <!-- WORLD-ID-SHARED-README-TAG:END -->
