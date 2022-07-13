@@ -20,12 +20,11 @@ export const Home = memo(function Home() {
         <CTA>
           <span>
             Welcome to the World ID Discord Bot, if you want to use this in your
-            server to verify humanness, follow these instructions to get
+            server to verify proof-of-personhood, follow these instructions to get
             started.
           </span>
 
-          {/* TODO: validate url */}
-          <a href="https://github.com/worldcoin/world-id-discord-bot">
+          <a href="https://github.com/worldcoin/world-id-discord-bot" target="_blank">
             <Icon
               className="w-6 h-6"
               name="github"
@@ -46,7 +45,7 @@ export const Home = memo(function Home() {
         </span>
 
         {/* TODO: validate url */}
-        <a href="https://github.com/worldcoin/world-id-discord-bot">
+        <a href="https://github.com/worldcoin/world-id-discord-bot" target="_blank">
           <Icon
             className="w-6 h-6"
             name="github"

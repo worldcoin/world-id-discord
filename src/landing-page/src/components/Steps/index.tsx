@@ -24,7 +24,7 @@ const steps = [
     title: "Visit an Orb Operator",
     content: (
       <span>
-        Verify you are a human at the Orb Operator to activate <br /> your World
+        Verify you are a human with an Orb Operator to activate <br /> your World
         ID. You’ll also get access to free airdrops!
       </span>
     ),
@@ -78,10 +78,10 @@ export const Steps = memo(function Steps() {
         </div>
 
         <div className="grid grid-flow-col auto-cols-min justify-self-center gap-x-6">
-          {/* FIXME: add real link */}
           <Link
             className="grid items-center bg-060816 border rounded-xl py-4"
-            href="#!"
+            href="https://apps.apple.com/no/app/worldcoin-claim-send/id1560859847"
+            target="_blank"
             variant="flat"
           >
             <Icon
@@ -91,10 +91,10 @@ export const Steps = memo(function Steps() {
             />
           </Link>
 
-          {/* FIXME: add real link */}
           <Link
             className="grid items-center bg-060816 border rounded-xl py-4"
-            href="#!"
+            href="https://play.google.com/store/apps/details?id=com.worldcoin"
+            target="_blank"
             variant="flat"
           >
             <Icon

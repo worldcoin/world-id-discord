@@ -39,7 +39,8 @@ export const Intro = memo(function Intro() {
           </p>
 
           <div className="mt-6">
-            <Button>Add Security</Button>
+            {/* FIXME: Redirect to bot installation page */}
+            <Button>Install now</Button>
 
             <Button
               variant="flat"

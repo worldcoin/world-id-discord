@@ -22,10 +22,10 @@ export const Header = memo(function Header() {
             About World ID Bot
           </a>
 
-          {/* FIXME: add link */}
           <a
             className="hover:opacity-75 transition-opacity"
-            href="#!"
+            href="https://github.com/worldcoin/world-id-discord-bot"
+            target="_blank"
           >
             Open source code
           </a>

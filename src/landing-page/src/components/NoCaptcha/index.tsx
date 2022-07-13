@@ -25,7 +25,7 @@ export const NoCaptcha = memo(function NoCaptcha() {
             href="#!"
           >
             <span className="bg-gradient-81.5 from-4940e0 to-a39dff bg-clip-text text-transparent">
-              Add Security
+              Install now
             </span>
           </Link>
         </div>

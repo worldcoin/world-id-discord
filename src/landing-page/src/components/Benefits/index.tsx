@@ -9,7 +9,7 @@ const items = [
   {
     title: "Complete flexibility",
     content:
-      "The Discord bot will assign a role to verified humans. You can choose what users can do with that role.",
+      "The Discord bot will assign a role(s) to verified humans. You can choose what users can do with that role.",
   },
   {
     title: "Anonymous and private",
@@ -17,7 +17,7 @@ const items = [
   },
   {
     title: "Better community controls",
-    content: "No personal information needed or shared. Just verify humans.",
+    content: "Now when you ban a user you can be sure they won’t return with another account. Prevent spam.",
   },
 ];
 
