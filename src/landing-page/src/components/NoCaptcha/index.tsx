@@ -1,6 +1,6 @@
 import cn from "classnames";
+import { Link } from "components/common/Button";
 import { memo } from "react";
-import { Link } from "../common/Button";
 
 export const NoCaptcha = memo(function NoCaptcha() {
   return (

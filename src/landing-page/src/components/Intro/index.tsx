@@ -1,7 +1,7 @@
 import cn from "classnames";
+import { Button } from "components/common/Button";
+import { Captcha } from "components/common/Catpcha";
 import { memo } from "react";
-import { Button } from "../common/Button";
-import { Captcha } from "../common/Catpcha";
 
 export const Intro = memo(function Intro() {
   return (

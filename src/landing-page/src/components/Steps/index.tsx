@@ -1,7 +1,7 @@
 import cn from "classnames";
+import { Link } from "components/common/Button";
+import { Icon } from "components/common/Icon";
 import { memo } from "react";
-import { Link } from "../common/Button";
-import { Icon } from "../common/Icon";
 
 const steps = [
   {

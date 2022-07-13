@@ -1,6 +1,6 @@
 import cn from "classnames";
+import { Icon } from "components/common/Icon";
 import { memo, useMemo, useState } from "react";
-import { Icon } from "../Icon";
 
 // FIXME: Implement real captcha
 export const Captcha = memo(function Captcha(props: {

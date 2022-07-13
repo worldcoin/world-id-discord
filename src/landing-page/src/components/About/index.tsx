@@ -1,6 +1,6 @@
 import cn from "classnames";
+import { Captcha } from "components/common/Catpcha";
 import { memo } from "react";
-import { Captcha } from "../common/Catpcha";
 
 export const About = memo(function About() {
   return (

@@ -1,14 +1,14 @@
+import { About } from "components/About";
+import { Benefits } from "components/Benefits";
+import { Footer } from "components/common/Footer";
+import { Header } from "components/common/Header";
+import { Icon } from "components/common/Icon";
+import { CTA } from "components/CTA";
+import { Intro } from "components/Intro";
+import { Join } from "components/Join";
+import { NoCaptcha } from "components/NoCaptcha";
+import { Steps } from "components/Steps";
 import { memo } from "react";
-import { About } from "../../components/About";
-import { Benefits } from "../../components/Benefits";
-import { Footer } from "../../components/common/Footer";
-import { Header } from "../../components/common/Header";
-import { Icon } from "../../components/common/Icon";
-import { CTA } from "../../components/CTA";
-import { Intro } from "../../components/Intro";
-import { Join } from "../../components/Join";
-import { NoCaptcha } from "../../components/NoCaptcha";
-import { Steps } from "../../components/Steps";
 
 export const Home = memo(function Home() {
   return (

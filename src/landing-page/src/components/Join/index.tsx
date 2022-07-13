@@ -1,7 +1,7 @@
 import cn from "classnames";
+import { Button } from "components/common/Button";
+import { Icon } from "components/common/Icon";
 import { memo } from "react";
-import { Button } from "../common/Button";
-import { Icon } from "../common/Icon";
 
 export const Join = memo(function Join() {
   return (
