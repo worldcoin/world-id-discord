@@ -10,13 +10,11 @@ const mirrorHexColors = (colors) =>
       }
 
       if (colors.indexOf(color) !== index) {
-        // FIXME: uncomment error
-        // throw new Error("Colors should be unique");
+        throw new Error("Colors should be unique");
       }
 
       if (colors[index - 1] > color) {
-        // FIXME: uncomment error
-        // throw new Error("Colors should be sorted alphabetically");
+        throw new Error("Colors should be sorted alphabetically");
       }
 
       return [color.substring(1), color];
