@@ -127,7 +127,7 @@
           "exec": "npx lint-staged --concurrent=false"
         }
       ],
-      "cwd": "/Users/otto/GitHub/worldcoin/dev-wld-id-discord-example"
+      "cwd": "/Users/denis/Projects/worldcoin/world-id-discord-bot"
     },
     "package": {
       "name": "package",
