@@ -4,34 +4,6 @@
 @tailwind variants;
 
 @font-face {
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 400;
-  font-display: block;
-  src: local(""),
-    url("/public/fonts/Inter/inter-v11-latin-regular.woff2") format("woff2"),
-    url("/public/fonts/Inter/inter-v11-latin-regular.woff") format("woff");
-}
-@font-face {
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 500;
-  font-display: block;
-  src: local(""),
-    url("/public/fonts/Inter/inter-v11-latin-500.woff2") format("woff2"),
-    url("/public/fonts/Inter/inter-v11-latin-500.woff") format("woff");
-}
-@font-face {
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 600;
-  font-display: block;
-  src: local(""),
-    url("/public/fonts/Inter/inter-v11-latin-600.woff2") format("woff2"),
-    url("/public/fonts/Inter/inter-v11-latin-600.woff") format("woff");
-}
-
-@font-face {
   src: url("/public/fonts/sora/Sora-SemiBold.woff2") format("woff2");
   font-display: swap;
   font-weight: 600;
