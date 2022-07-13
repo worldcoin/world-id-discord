@@ -85,6 +85,7 @@ module.exports = {
       },
       borderRadius: {
         32: "2rem",
+        64: "4rem",
       },
     },
   },

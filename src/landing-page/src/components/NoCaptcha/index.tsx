@@ -5,7 +5,7 @@ import { Link } from "../common/Button";
 export const NoCaptcha = memo(function NoCaptcha() {
   return (
     <div className="grid grid-cols-container px-8 mt-48">
-      <div className="relative rounded-32 bg-gradient-81.5 from-4940e0 to-a39dff col-start-2 py-[105px] px-20">
+      <div className="relative rounded-64 bg-gradient-81.5 from-4940e0 to-a39dff col-start-2 py-[105px] px-20">
         <div className="justify-items-start grid gap-y-12 max-w-[620px]">
           <div className="grid gap-y-4">
             <h2 className="font-semibold text-48">
