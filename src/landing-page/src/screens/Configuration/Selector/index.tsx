@@ -119,20 +119,28 @@ export const Selector = memo(function Selector(props: {
 
       <div
         className={cn(
-          "absolute z-10 top-full left-0 w-full rounded-xl overflow-hidden transition-all bg-0c0e10 border-2",
-          { "max-h-0 border-transparent": !expanded },
-          { "max-h-50 border-f9f9f9/20": expanded },
+          "absolute z-10 top-full left-0 w-full rounded-xl overflow-hidden transition-[max-height] bg-0c0e10 border-f9f9f9/20",
+          { "max-h-0 border-0": !expanded },
+          { "max-h-50 border-2": expanded },
         )}
       >
         <div className="py-3.5">
           <div className="max-h-[120px] overflow-y-auto">
             {props.options.map((option, index) => (
               <div
-                className="px-6 py-2.5 cursor-pointer hover:text-6673b9 transition-colors"
+                className={cn(
+                  "grid grid-flow-col auto-cols-max justify-between items-center px-6 py-2.5 cursor-pointer hover:text-6673b9 transition-colors",
+                )}
                 key={`${option.value}-${index}`}
                 onClick={() => toggleSelectOption(option)}
               >
                 {option.label}
+                {props.selected.includes(option) && (
+                  <Icon
+                    className="w-3 h-3"
+                    name="cross"
+                  />
+                )}
               </div>
             ))}
           </div>

@@ -51,7 +51,7 @@ export const Configuration = memo(function Configuration() {
 
       <div
         className={cn(
-          "w-full max-w-full grid items-center justify-center absolute px-2",
+          "w-full max-w-[660px] grid items-center justify-center absolute px-2",
           "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
         )}
       >
