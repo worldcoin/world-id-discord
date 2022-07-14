@@ -6,6 +6,14 @@ This project is a demonstration of serverless Discord Bot that uses [World ID](#
 
 Project is built using [AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/home.html) IaC and [projen](https://github.com/projen/projen#readme).
 
+## ⚙️ Running landing page development mod
+
+```sh
+   npx projen
+   cd src/landing-page
+   npm run src/dev
+```
+
 ## 🚀 Using the bot
 
 > **Note** We are working on publishing this bot on Discord so it can be installed in your own server with one-click. **Coming soon!**
@@ -98,14 +106,6 @@ Project is built using [AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/home.h
    - Bot permissions: `Manage Roles`, `Send Messages`, `Embed Links`, `Attach Files`.
 
 1. Visit the generated URL to install the bot in your server.
-
-### Run landing page (For development)
-
-```sh
-   npx projen
-   cd src/landing-page
-   npm run src/dev
-```
 
 <!-- WORLD-ID-SHARED-README-TAG:START - Do not remove or modify this section directly -->
 <!-- WORLD-ID-SHARED-README-TAG:END -->
