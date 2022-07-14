@@ -6,7 +6,7 @@ This project is a demonstration of serverless Discord Bot that uses [World ID](#
 
 Project is built using [AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/home.html) IaC and [projen](https://github.com/projen/projen#readme).
 
-## ⚙️ Running landing page development mod
+## ⚙️ Running frontend in development (landing & config page)
 
 ```sh
    npx projen
