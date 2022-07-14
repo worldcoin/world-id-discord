@@ -68,7 +68,7 @@ export const Selector = memo(function Selector(props: {
     >
       <div
         className={cn(
-          "flex items-center justify-between gap-x-4 px-6 py-3.5 pr-7.5 rounded-xl bg-0c0e10 border-2 border-f9f9f9/20",
+          "grid grid-cols-fr/auto items-center justify-between gap-x-4 px-6 py-3.5 pr-7.5 rounded-xl bg-0c0e10 border-2 border-f9f9f9/20",
           "text-14 font-semibold cursor-pointer select-none hover:border-6673b9/50 transition-colors",
           { "!border-6673b9": expanded },
         )}
@@ -108,7 +108,7 @@ export const Selector = memo(function Selector(props: {
 
         <Icon
           className={cn(
-            "w-6 h-3 md:w-3 md:h-1.5 transition-transform origin-center",
+            "w-4 h-2.5 md:w-3 md:h-1.5 transition-transform origin-center",
             {
               "rotate-180": expanded,
             },
