@@ -46,27 +46,18 @@ export const Configuration = memo(function Configuration() {
   }, [actionId?.length, active, discordRoles.length]);
 
   return (
-    <Layout className="min-h-screen">
+    <Layout className="grid grid-rows-auto/fr min-h-screen pb-8">
       <Header hideLinks />
 
-      <div
-        className={cn(
-          "w-full max-w-[660px] grid items-center justify-center absolute px-2",
-          "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-        )}
-      >
+      <div className="grid grid-cols-container place-items-center justify-center px-2">
         <div
           className={cn(
-            "relative border-2 border-f9f9f9/20 rounded-xl bg-0f1328 overflow-hidden",
+            "w-full md:w-[660px] col-start-2 relative border-2 border-f9f9f9/20 rounded-xl bg-0f1328 overflow-hidden",
             "before:absolute before:h-60 before:top-[calc(100%-20px)] before:left-0 before:right-0 before:blur-[360px]",
             "before:rounded-[100%] before:bg-gradient-81.5 before:from-4940e0 before:to-a39dff",
           )}
         >
-          <div
-            className={cn(
-              "grid grid-flow-col justify-between auto-cols-max items-center p-8 border-b border-[color:inherit]",
-            )}
-          >
+          <div className="grid grid-flow-col justify-between auto-cols-max items-center p-8 border-b border-[color:inherit]">
             <span className="text-20 font-semibold">
               World ID Bot Configuration
             </span>
