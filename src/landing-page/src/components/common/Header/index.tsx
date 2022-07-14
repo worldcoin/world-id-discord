@@ -31,6 +31,7 @@ export const Header = memo(function Header(props: { hideLinks?: boolean }) {
             Open source code
           </a>
         </div>
+      )}
       </div>
     </div>
   );
