@@ -3,7 +3,14 @@ import { Button } from "components/common/Button";
 import { Header } from "components/common/Header";
 import { Icon } from "components/common/Icon";
 import { Layout } from "components/common/Layout";
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  ChangeEventHandler,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { Selector } from "./Selector";
 import type { Option } from "./types/option";
 
@@ -18,6 +25,7 @@ const discordRolesList: Array<Option> = [
 
 export const Configuration = memo(function Configuration() {
   const [active, setActive] = useState(false);
+  const [actionId, setActionsId] = useState<string>();
   const toggleActive = useCallback(() => setActive((p) => !p), []);
   const [isStaging, setIsStaging] = useState(false);
   const [discordRoles, setDiscordRoles] = useState<Array<Option>>([]);
@@ -27,13 +35,15 @@ export const Configuration = memo(function Configuration() {
     setIsStaging(active);
   }, [active]);
 
+  const handleChangeActionId: ChangeEventHandler<HTMLInputElement> =
+    useCallback((e) => {
+      setActionsId(e.target.value);
+    }, []);
+
   // FIXME: mocked validation function
   const formValid = useMemo(() => {
-    if (active) {
-      return true;
-    }
-    return false;
-  }, [active]);
+    return active && actionId?.length && discordRoles.length;
+  }, [actionId?.length, active, discordRoles.length]);
 
   return (
     <Layout className="min-h-screen">
@@ -122,6 +132,8 @@ export const Configuration = memo(function Configuration() {
                 )}
                 type="text"
                 placeholder="wid_fb74a74cc94d3ffbe3f6669f556b36e4"
+                value={actionId}
+                onChange={handleChangeActionId}
               />
 
               {/* FIXME: add link */}
