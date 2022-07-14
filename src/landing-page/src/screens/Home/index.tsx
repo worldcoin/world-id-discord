@@ -3,6 +3,7 @@ import { Benefits } from "components/Benefits";
 import { Footer } from "components/common/Footer";
 import { Header } from "components/common/Header";
 import { Icon } from "components/common/Icon";
+import { Layout } from "components/common/Layout";
 import { CTA } from "components/CTA";
 import { Intro } from "components/Intro";
 import { Join } from "components/Join";
@@ -12,7 +13,7 @@ import { memo } from "react";
 
 export const Home = memo(function Home() {
   return (
-    <div className="bg-0d1020 text-ffffff">
+    <Layout>
       <div className="grid grid-rows-auto/fr/auto min-h-screen">
         <Header />
         <Intro />
@@ -53,6 +54,6 @@ export const Home = memo(function Home() {
         </a>
       </CTA>
       <Footer />
-    </div>
+    </Layout>
   );
 });

@@ -4,9 +4,14 @@ import "./icon.css";
 
 const iconNames = [
   "app-store",
+  "chart",
   "check",
+  "chevron",
+  "cross",
   "discord",
+  "external",
   "github",
+  "info",
   "logo",
   "play-market",
   "world-id",
