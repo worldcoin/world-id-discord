@@ -6,10 +6,18 @@ This project is a demonstration of serverless Discord Bot that uses [World ID](#
 
 Project is built using [AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/home.html) IaC and [projen](https://github.com/projen/projen#readme).
 
+## ⚙️ Running frontend in development (landing & config page)
+
+```sh
+   npx projen
+   cd src/landing-page
+   npm run src/dev
+```
+
 ## 🚀 Using the bot
 
-> **Note** We are working on publishing this bot on Discord so it can be installed in your own server with one-click. **Coming soon!** 
-You can deploy your own version in the meantime.
+> **Note** We are working on publishing this bot on Discord so it can be installed in your own server with one-click. **Coming soon!**
+> You can deploy your own version in the meantime.
 
 ## 🏆 Deploying your own bot
 
@@ -92,11 +100,12 @@ You can deploy your own version in the meantime.
 1. Grab `OAuth2CallbackUrl` output (similar to `https://2rrg16x6qh.execute-api.us-east-1.amazonaws.com/prod/oauth2callback`) and save it into `Redirects` field on the bot `OAuth2` General settings.
 
 1. Head over to the **URL Generator** tab of **OAuth2** and create a link with the following scopes:
+
    - Scopes: `guilds`, `bot`, `applications.commands`
    - Redirect URL: Select the URL you added in the previous step.
    - Bot permissions: `Manage Roles`, `Send Messages`, `Embed Links`, `Attach Files`.
 
-2. Visit the generated URL to install the bot in your server.
+1. Visit the generated URL to install the bot in your server.
 
 <!-- WORLD-ID-SHARED-README-TAG:START - Do not remove or modify this section directly -->
 <!-- WORLD-ID-SHARED-README-TAG:END -->
