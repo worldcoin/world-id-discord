@@ -140,7 +140,17 @@ const landingPageProject = new ReactTypeScriptProject({
   licensed: false,
   depsUpgrade: false,
   readme: { filename: ".gitignore" /* prevent creating README.md */ },
+  tsconfig: {
+    compilerOptions: {
+      baseUrl: "./src",
+    },
+  },
 });
+
+landingPageProject.addDevDeps("tailwindcss", "postcss", "autoprefixer");
+landingPageProject.addDeps("react-router-dom");
+landingPageProject.addDeps("classnames");
+
 landingPageProject
   .tryFindObjectFile("package.json")
   ?.addOverride("eslintConfig.root", true);

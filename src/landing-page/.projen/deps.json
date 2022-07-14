@@ -30,7 +30,19 @@
       "type": "build"
     },
     {
+      "name": "autoprefixer",
+      "type": "build"
+    },
+    {
+      "name": "postcss",
+      "type": "build"
+    },
+    {
       "name": "projen",
+      "type": "build"
+    },
+    {
+      "name": "tailwindcss",
       "type": "build"
     },
     {
@@ -39,11 +51,19 @@
       "type": "build"
     },
     {
+      "name": "classnames",
+      "type": "runtime"
+    },
+    {
       "name": "react",
       "type": "runtime"
     },
     {
       "name": "react-dom",
+      "type": "runtime"
+    },
+    {
+      "name": "react-router-dom",
       "type": "runtime"
     },
     {
