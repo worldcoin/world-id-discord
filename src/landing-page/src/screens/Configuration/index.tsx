@@ -9,7 +9,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
-  useState,
+  useState
 } from "react";
 import { Selector } from "./Selector";
 import type { Option } from "./types/option";
@@ -129,7 +129,9 @@ export const Configuration = memo(function Configuration() {
 
               {/* FIXME: add link */}
               <a
-                href="#!"
+                href="https://developer.worldcoin.org"
+                target="_blank"
+                rel="noopener"
                 className="block mt-3 text-6673b9 hover:opacity-70 transition-opacity"
               >
                 Get your Action ID from Worldcoin’s&nbsp;
