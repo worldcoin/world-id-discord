@@ -7,19 +7,11 @@ export const Intro = memo(function Intro() {
   return (
     <div
       className={cn(
-        "relative -z-1 grid grid-cols-container px-8 overflow-x-clip",
+        "relative -z-1 grid grid-cols-container px-8",
         "before:absolute before:w-52 before:h-52 before:-bottom-24 before:-left-10 before:blur-[500px]",
         "before:bg-gradient-to-r before:from-4940e0 before:to-a39dff ",
       )}
     >
-      <span
-        className={cn(
-          "absolute z-0 top-[-350px] right-0 w-[800px] h-[800px] bg-[url('/public/images/honeycombs.png')]",
-          "bg-center bg-contain bg-no-repeat",
-          "before:absolute before:z-[-1] before:inset-0 before:translate-x-[400px] before:bg-gradient-81.5",
-          "before:from-4940e0 before:to-a39dff before:blur-[180px]",
-        )}
-      />
       <div className="grid items-center grid-cols-auto/fr gap-x-40 justify-between col-start-2 z-10">
         <div className="grid gap-y-6">
           <div className="text-48">

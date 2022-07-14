@@ -37,12 +37,15 @@ module.exports = {
         ...mirrorHexColors([
           "#000000",
           "#060816",
+          "#0c0e10",
           "#0d1020",
           "#0f1328",
           "#183c4a",
           "#191c20",
           "#28282d",
+          "#3e4152",
           "#4940e0",
+          "#6673b9",
           "#938cfa",
           "#96a0db",
           "#a39dff",
@@ -104,6 +107,13 @@ module.exports = {
             "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
           webkitMaskComposite: "xor",
           maskComposite: "exclude",
+        },
+        ".scrollbar-hide": {
+          "-ms-overflow-style": "none",
+          "scrollbar-width": "none",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
         },
       }),
     plugin(function ({ matchUtilities, theme }) {

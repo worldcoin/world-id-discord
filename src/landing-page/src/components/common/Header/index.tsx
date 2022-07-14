@@ -1,7 +1,7 @@
 import { Icon } from "components/common/Icon";
 import { memo } from "react";
 
-export const Header = memo(function Header() {
+export const Header = memo(function Header(props: { hideLinks?: boolean }) {
   return (
     <div className="relative z-10 grid py-8 grid-cols-container-wide px-8">
       <div className="grid items-center justify-between grid-flow-col col-start-2">
@@ -13,14 +13,15 @@ export const Header = memo(function Header() {
           World ID Bot
         </span>
 
-        <div className="grid grid-flow-col auto-cols-max gap-x-6 text-13 font-medium">
-          {/* FIXME: add link */}
-          <a
-            className="hover:opacity-75 transition-opacity"
-            href="#!"
-          >
-            About World ID Bot
-          </a>
+        {!props.hideLinks && (
+          <div className="grid grid-flow-col auto-cols-max gap-x-6 text-13 font-medium">
+            {/* FIXME: add link */}
+            <a
+              className="hover:opacity-75 transition-opacity"
+              href="#!"
+            >
+              About World ID Bot
+            </a>
 
           <a
             className="hover:opacity-75 transition-opacity"
