@@ -7,14 +7,18 @@ export const Intro = memo(function Intro() {
   return (
     <div
       className={cn(
-        "relative -z-1 grid grid-cols-container px-8",
+        "relative -z-1 grid grid-cols-container px-4 md:px-8",
         "before:absolute before:w-52 before:h-52 before:-bottom-24 before:-left-10 before:blur-[500px]",
         "before:bg-gradient-to-r before:from-4940e0 before:to-a39dff ",
       )}
     >
-      <div className="grid items-center grid-cols-auto/fr gap-x-40 justify-between col-start-2 z-10">
+      <div
+        className={cn(
+          "grid gap-y-8 md:items-center md:grid-cols-auto/fr gap-x-40 justify-between col-start-2 z-10",
+        )}
+      >
         <div className="grid gap-y-6">
-          <div className="text-48">
+          <div className="text-32 md:text-48">
             <span className="bg-clip-text text-transparent bg-gradient-81.5 from-4940e0 to-a39dff inline-block">
               Improve your Discord&nbsp;
             </span>
@@ -30,7 +34,7 @@ export const Intro = memo(function Intro() {
             only humans to post or DM, or have humans-only channels.
           </p>
 
-          <div className="mt-6">
+          <div className="mt-6 grid md:block">
             {/* FIXME: Redirect to bot installation page */}
             <Button>Install now</Button>
 
@@ -45,7 +49,7 @@ export const Intro = memo(function Intro() {
 
         <div
           className={cn(
-            "justify-self-start relative p-6 z-0 rounded-32 w-min",
+            "justify-self-center md:justify-self-start relative p-6 z-0 rounded-32 w-min",
             "before:absolute before:-z-20 before:w-full before:h-full before:-left-1 before:-bottom-1",
             "before:bg-gradient-81.5 before:from-4940e0 before:to-a39dff before:rounded-32",
             "after:bg-ffffff after:-z-10 after:rounded-32 after:absolute after:inset-0",

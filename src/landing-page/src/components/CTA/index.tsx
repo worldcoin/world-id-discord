@@ -9,14 +9,14 @@ export const CTA = memo(function CTA(props: {
   return (
     <div
       className={cn(
-        "relative z-10 grid py-6 grid-cols-container-wide leading-[1.2] px-8",
+        "relative z-10 grid py-6 grid-cols-container-wide leading-[1.2] px-4 md:px-8",
         "bg-gradient-to-r from-4940e0 to-a39dff",
         props.wrapperClassName,
       )}
     >
       <div
         className={cn(
-          "col-start-2 items-center grid grid-flow-col auto-cols-max justify-between",
+          "col-start-2 grid gap-y-4 md:grid-flow-col md:auto-cols-max items-center md:justify-between",
           props.className,
         )}
       >

@@ -24,8 +24,8 @@ const steps = [
     title: "Visit an Orb Operator",
     content: (
       <span>
-        Verify you are a human with an Orb Operator to activate <br /> your World
-        ID. You’ll also get access to free airdrops!
+        Verify you are a human with an Orb Operator to activate <br /> your
+        World ID. You’ll also get access to free airdrops!
       </span>
     ),
   },
@@ -33,12 +33,12 @@ const steps = [
 
 export const Steps = memo(function Steps() {
   return (
-    <div className="grid grid-cols-container px-8 mt-64">
-      <div className="grid gap-y-24 col-start-2">
-        <div className="relative z-0 grid grid-flow-col gap-x-8">
+    <div className="grid grid-cols-container px-4 md:px-8 mt-32 md:mt-64">
+      <div className="grid gap-y-16 md:gap-y-24 col-start-2">
+        <div className="relative z-0 grid md:grid-flow-col gap-8">
           {steps.map((step, index) => (
             <div
-              className="relative grid grid-rows-auto/fr items-start justify-items-center text-center gap-y-12"
+              className="relative grid grid-rows-auto/fr items-start justify-items-center text-center gap-y-6 md:gap-y-12"
               key={index}
             >
               <span
@@ -68,7 +68,7 @@ export const Steps = memo(function Steps() {
               {index < steps.length - 1 && (
                 <span
                   className={cn(
-                    "absolute -z-10 w-full h-0.5 top-[53px] left-1/2 border border-dashed border-0d1020",
+                    "hidden md:block absolute -z-10 w-full h-0.5 top-[53px] left-1/2 border border-dashed border-0d1020",
                     "[background:linear-gradient(#fff_0_0)_padding-box,_linear-gradient(90deg,_#4940e0,_#a39dff)_border-box]",
                   )}
                 />
@@ -77,7 +77,7 @@ export const Steps = memo(function Steps() {
           ))}
         </div>
 
-        <div className="grid grid-flow-col auto-cols-min justify-self-center gap-x-6">
+        <div className="grid md:grid-flow-col md:auto-cols-min justify-self-center gap-6">
           <Link
             className="grid items-center bg-060816 border rounded-xl py-4"
             href="https://apps.apple.com/no/app/worldcoin-claim-send/id1560859847"

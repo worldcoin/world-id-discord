@@ -4,8 +4,8 @@ import { memo } from "react";
 
 export const About = memo(function About() {
   return (
-    <div className="grid grid-cols-container mt-52 px-8">
-      <div className="grid grid-cols-auto/fr gap-x-40 col-start-2">
+    <div className="grid grid-cols-container mt-24 md:mt-52 px-4 md:px-8">
+      <div className="grid md:grid-cols-[auto_400px] gap-y-16 gap-x-40 col-start-2">
         <div className="grid content-start items-start justify-items-start">
           <span className="uppercase text-14 font-bold text-96a0db">
             how to get verified
@@ -13,7 +13,7 @@ export const About = memo(function About() {
 
           <h2
             className={cn(
-              "font-semibold text-48 bg-clip-text text-transparent bg-gradient-81.5 from-4940e0 to-a39dff mt-4",
+              "font-semibold text-32 md:text-48 bg-clip-text text-transparent bg-gradient-81.5 from-4940e0 to-a39dff mt-4",
             )}
           >
             What is World ID
@@ -47,12 +47,13 @@ export const About = memo(function About() {
         <div className="relative">
           <span
             className={cn(
-              "absolute -left-12 w-[360px] h-[380px] bg-[url('/public/images/dots.png')] bg-contain bg-no-repeat",
+              "absolute md:-left-12 w-full md:w-[90%] aspect-square bg-[url('/public/images/dots.png')]",
+              "bg-contain bg-no-repeat",
             )}
           />
 
           <img
-            className="mt-40 relative max-w-[400px]"
+            className="mt-40 relative aspect-square"
             src="/images/orb.png"
             alt="Orb"
           />

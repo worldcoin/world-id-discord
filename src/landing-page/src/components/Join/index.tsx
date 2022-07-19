@@ -7,14 +7,16 @@ export const Join = memo(function Join() {
   return (
     <div
       className={cn(
-        "relative grid grid-cols-container-wide px-8 mt-64 overflow-x-clip",
+        "relative grid grid-cols-container-wide px-4 md:px-8 mt-32 md:mt-64 overflow-x-clip",
         "before:absolute before:-inset-y-24 before:-inset-x-24 before:rounded-[100%] before:blur-[360px]",
         "before:bg-gradient-81.5 before:from-4940e0 before:to-a39dff",
       )}
     >
       <div className="relative col-start-2 text-center">
-        <h3 className="font-medium text-48">Ready to join our community?</h3>
-        <Button className="mt-10">
+        <h3 className="font-medium text-32 md:text-48">
+          Ready to join our community?
+        </h3>
+        <Button className="mt-6 md:mt-10">
           <span className="grid grid-flow-col justify-center auto-cols-max gap-x-4">
             <Icon
               className="h-full w-4"
