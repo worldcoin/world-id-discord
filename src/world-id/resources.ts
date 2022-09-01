@@ -152,6 +152,9 @@ export class WorldIdVerifier extends Construct {
         APP_NAME: this.node.tryGetContext("app_name"),
         ACTION_ID: this.node.tryGetContext("action_id"),
         SIGNAL: this.node.tryGetContext("signal"),
+
+        //@REVIEW Added the 'ROLES_TO_ASSIGN' variable here so that it was possible to get it in 'resources.queue-processing.ts'
+        ROLES_TO_ASSIGN: props.rolesToAssignToVerifiedUsers.join(","),
         SIGNAL_DESCRIPTION: this.node.tryGetContext("signal_description"),
       },
     });

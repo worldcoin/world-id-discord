@@ -11,13 +11,17 @@ import {
 import { REST } from "@discordjs/rest";
 import WalletConnect from "@walletconnect/client";
 import type { Context, SQSHandler } from "aws-lambda";
-import type { APIApplicationCommandInteraction } from "discord-api-types/v10";
 
 import { getEnv } from "@/utils/get-env";
 import { arrayify, concat, hexlify } from "@ethersproject/bytes";
+
+import type { APIApplicationCommandInteraction } from "discord-api-types/v10";
+
 import sha3 from "js-sha3";
+import { checkIsUserAlreadyVerified } from "./check-is-user-verified";
 import type { UserCompletedVerification } from "./events";
 import { ON_VERIFIED_EVENT, WORLD_ID_EVENTS_SOURCE } from "./events";
+import { sendAlreadyVerifiedErrorMessage } from "./followup-messages/already-verified";
 import { sendErrorOccurredMessage } from "./followup-messages/error";
 import { sendProofReceivedMessage } from "./followup-messages/proof-received";
 import { sendStartingValidationMessage } from "./followup-messages/session-created";
@@ -30,6 +34,7 @@ import { verifyVerificationResponseStructure } from "./verify-response";
 const signal = getEnv("SIGNAL");
 const action_id = getEnv("ACTION_ID");
 const appName = getEnv("APP_NAME");
+const ROLES_TO_ASSIGN = getEnv("ROLES_TO_ASSIGN").split(",");
 
 const EventBusName = getEnv("EVENT_BUS_NAME");
 
@@ -214,5 +219,19 @@ export const handler: SQSHandler = async (event, context) => {
 
   const rest = new REST({ version: "10" }).setToken(botToken);
 
-  await walletConnectFlow(message, rest, context);
+  const isUserAlreadyValidated = await checkIsUserAlreadyVerified({
+    message,
+    rest,
+    ROLES_TO_ASSIGN,
+  });
+
+  if (isUserAlreadyValidated) {
+    await sendAlreadyVerifiedErrorMessage({
+      rest,
+      applicationId: message.application_id,
+      interactionToken: message.token,
+    });
+  } else {
+    await walletConnectFlow(message, rest, context);
+  }
 };
