@@ -19,7 +19,7 @@ export async function sendAlreadyVerifiedErrorMessage({
     .setColor([222, 84, 78])
     .setTitle("Hmm... looks like you already verified with this server before")
     .setDescription(
-      "A single person can only verify once with each server to ensure everyone who is verified is human.",
+      "A single person can only verify once with each server to ensure everyone who is verified is human. A server admin may have manually verified you.",
     )
     .setTimestamp();
 
