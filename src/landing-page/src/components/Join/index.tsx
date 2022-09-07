@@ -1,5 +1,5 @@
 import cn from "classnames";
-import { Button } from "components/common/Button";
+import { Link } from "components/common/Button";
 import { Icon } from "components/common/Icon";
 import { memo } from "react";
 
@@ -12,11 +12,14 @@ export const Join = memo(function Join() {
         "before:bg-gradient-81.5 before:from-4940e0 before:to-a39dff",
       )}
     >
-      <div className="relative col-start-2 text-center">
+      <div className="relative col-start-2 text-center grid gap-y-6 justify-items-center">
         <h3 className="font-medium text-32 md:text-48">
           Ready to join our community?
         </h3>
-        <Button className="mt-6 md:mt-10">
+        <Link
+          href={process.env?.REACT_APP_DISCORD_LOGIN_AUTH_URL || "#"}
+          className="max-w-sm"
+        >
           <span className="grid grid-flow-col justify-center auto-cols-max gap-x-4">
             <Icon
               className="h-full w-4"
@@ -24,7 +27,7 @@ export const Join = memo(function Join() {
             />
             Add to Discord
           </span>
-        </Button>
+        </Link>
       </div>
     </div>
   );

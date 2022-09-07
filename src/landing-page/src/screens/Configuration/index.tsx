@@ -9,26 +9,46 @@ import {
   useCallback,
   useEffect,
   useMemo,
-  useState
+  useState,
 } from "react";
+import { useLocation } from "react-router-dom";
+import { Guild } from "types";
+import { saveBotConfig } from "utils";
 import { Selector } from "./Selector";
 import type { Option } from "./types/option";
 
 const discordRolesList: Array<Option> = [
-  { label: "Moderator", value: "moderator" },
-  { label: "Server admin", value: "server admin" },
-  { label: "Community MVP", value: "community mvp" },
-  { label: "Community MVP 2", value: "community mvp 2" },
-  { label: "Community MVP 3", value: "community mvp 3" },
-  { label: "Community MVP 4", value: "community mvp 4" },
+  { label: "Moderator", value: "Moderator" },
+  { label: "Server admin", value: "Server admin" },
+  { label: "Community MVP", value: "Community mvp" },
+  { label: "Verified Human", value: "Verified Human" },
 ];
 
+type LocationState = {
+  administeredGuilds?: Array<Guild>;
+};
+
 export const Configuration = memo(function Configuration() {
+  const location = useLocation();
+
+  const administratedGuilds: Array<Option> | undefined = (
+    location.state as LocationState
+  ).administeredGuilds?.map((guild) => ({
+    label: guild.name,
+    value: guild.id,
+  }));
+
   const [active, setActive] = useState(false);
-  const [actionId, setActionsId] = useState<string>();
+  const [actionId, setActionsId] = useState<string>("");
   const toggleActive = useCallback(() => setActive((p) => !p), []);
   const [isStaging, setIsStaging] = useState(false);
-  const [discordRoles, setDiscordRoles] = useState<Array<Option>>([]);
+  const [selectedRoles, setSelectedRoles] = useState<Array<Option>>([]);
+  const [roles, setRoles] = useState<Array<Option>>(discordRolesList);
+  const [savingInProgress, setSavingInProgress] = useState(false);
+  const [savedSuccessfully, setSavedSuccessfully] = useState<boolean | null>(
+    null,
+  );
+  const [selectedGuild, setSelectedGuild] = useState<Option | null>(null);
 
   // FIXME: mocked staging status
   useEffect(() => {
@@ -42,8 +62,46 @@ export const Configuration = memo(function Configuration() {
 
   // FIXME: mocked validation function
   const formValid = useMemo(() => {
-    return active && actionId?.length && discordRoles.length;
-  }, [actionId?.length, active, discordRoles.length]);
+    return active && selectedGuild && actionId?.length && selectedRoles.length;
+  }, [actionId?.length, active, selectedGuild, selectedRoles.length]);
+
+  const hideStatus = useCallback(() => {
+    const timer = setTimeout(() => {
+      setSavedSuccessfully(null);
+      clearTimeout(timer);
+    }, 2000);
+  }, []);
+
+  const saveChanges = useCallback(async () => {
+    if (!selectedGuild || !actionId || selectedRoles.length === 0) {
+      setSavedSuccessfully(false);
+      return hideStatus();
+    }
+
+    setSavingInProgress(true);
+
+    const success = await saveBotConfig({
+      guild_id: selectedGuild.value,
+      action_id: actionId,
+      roles: selectedRoles.map((role) => role.value),
+    });
+
+    if (!success) {
+      setSavedSuccessfully(false);
+      setSavingInProgress(false);
+      hideStatus();
+    }
+
+    if (success) {
+      setActionsId("");
+      setSelectedRoles([]);
+      setSelectedGuild(null);
+      setActive(false);
+      setSavingInProgress(false);
+      setSavedSuccessfully(true);
+      hideStatus();
+    }
+  }, [actionId, hideStatus, selectedGuild, selectedRoles]);
 
   return (
     <Layout className="grid grid-rows-auto/fr min-h-screen pb-8">
@@ -73,7 +131,7 @@ export const Configuration = memo(function Configuration() {
             </a>
           </div>
 
-          <div className="grid grid-cols-[100%] gap-y-8.5 px-8 py-12">
+          <div className="grid grid-cols-[100%] gap-y-8.5 px-8 pt-12 pb-4">
             <div className="grid grid-flow-col justify-between">
               <span>Bot Status</span>
               <span
@@ -89,6 +147,22 @@ export const Configuration = memo(function Configuration() {
                 )}
                 onClick={toggleActive}
               />
+            </div>
+
+            <div className="mt-6">
+              <span>Server</span>
+
+              <Selector
+                className="mt-4"
+                options={administratedGuilds || []}
+                selected={selectedGuild}
+                onChange={setSelectedGuild}
+                placeholder="Choose a server"
+              />
+
+              <span className="block mt-3 text-6673b9">
+                The server to which the changes will be applied
+              </span>
             </div>
 
             <div className="mt-8">
@@ -131,7 +205,7 @@ export const Configuration = memo(function Configuration() {
               <a
                 href="https://developer.worldcoin.org"
                 target="_blank"
-                rel="noopener"
+                rel="noopener noreferrer"
                 className="block mt-3 text-6673b9 hover:opacity-70 transition-opacity"
               >
                 Get your Action ID from Worldcoin’s&nbsp;
@@ -148,9 +222,15 @@ export const Configuration = memo(function Configuration() {
 
               <Selector
                 className="mt-4"
-                options={discordRolesList}
-                selected={discordRoles}
-                onChange={setDiscordRoles}
+                options={roles}
+                setOptions={setRoles}
+                selected={selectedRoles}
+                onChange={setSelectedRoles}
+                withInput
+                inputPlaceholder="Enter role name"
+                placeholder="Choose a role"
+                info="You can create more roles in your Discord server settings"
+                multiple
               />
 
               <span className="block mt-3 text-6673b9">
@@ -158,12 +238,35 @@ export const Configuration = memo(function Configuration() {
               </span>
             </div>
 
-            <Button
-              className="w-full disabled:opacity-20 mt-12"
-              disabled={!formValid}
-            >
-              Save changes
-            </Button>
+            <div className="grid justify-items-center gap-y-4 mt-12">
+              <Button
+                className="w-full disabled:opacity-20"
+                disabled={!formValid || savingInProgress}
+                onClick={saveChanges}
+              >
+                {savingInProgress ? "Saving..." : "Save changes"}
+              </Button>
+
+              <span
+                className={cn(
+                  "transition-visibility/opacity col-start-1 row-start-2",
+                  { "visible opacity-100": savedSuccessfully === true },
+                  { "invisible opacity-0": savedSuccessfully !== true },
+                )}
+              >
+                Your changes successfully saved!
+              </span>
+
+              <span
+                className={cn(
+                  "transition-visibility/opacity col-start-1 row-start-2 text-red-500",
+                  { "visible opacity-100": savedSuccessfully === false },
+                  { "invisible opacity-0": savedSuccessfully !== false },
+                )}
+              >
+                Something wrong. Try again, please.
+              </span>
+            </div>
           </div>
         </div>
       </div>

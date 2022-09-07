@@ -99,6 +99,10 @@ module.exports = {
           "0px 10px 32px rgba(37, 57, 129, 0.04)",
         ],
       },
+
+      transitionProperty: {
+        "visibility/opacity": "visibility, opacity",
+      },
     },
   },
 

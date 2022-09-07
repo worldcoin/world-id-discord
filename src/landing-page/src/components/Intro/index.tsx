@@ -1,5 +1,5 @@
 import cn from "classnames";
-import { Button } from "components/common/Button";
+import { Button, Link } from "components/common/Button";
 import { Captcha } from "components/common/Catpcha";
 import { memo } from "react";
 
@@ -34,9 +34,11 @@ export const Intro = memo(function Intro() {
             only humans to post or DM, or have humans-only channels.
           </p>
 
-          <div className="mt-6 grid md:block">
+          <div className="mt-6 grid md:grid-flow-col justify-start">
             {/* FIXME: Redirect to bot installation page */}
-            <Button>Install now</Button>
+            <Link href={process.env.REACT_APP_DISCORD_LOGIN_AUTH_URL}>
+              Install now
+            </Link>
 
             <Button
               variant="flat"

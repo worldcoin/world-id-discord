@@ -2,6 +2,7 @@ import cn from "classnames";
 import { Icon } from "components/common/Icon";
 import {
   Dispatch,
+  FormEvent,
   memo,
   SetStateAction,
   useCallback,
@@ -12,12 +13,28 @@ import {
 import type { Option } from "screens/Configuration/types/option";
 
 /** Multiple selector with dropdown menu */
-export const Selector = memo(function Selector(props: {
-  className?: string;
-  options: Array<Option>;
-  selected: Array<Option>;
-  onChange?: Dispatch<SetStateAction<Array<Option>>>;
-}) {
+export const Selector = memo(function Selector(
+  props: {
+    className?: string;
+    options: Array<Option>;
+    setOptions?: Dispatch<SetStateAction<Array<Option>>>;
+    withInput?: boolean;
+    inputPlaceholder?: string;
+    placeholder?: string;
+    info?: string;
+  } & (
+    | {
+        multiple: true;
+        onChange: Dispatch<SetStateAction<Array<Option>>>;
+        selected: Array<Option>;
+      }
+    | {
+        multiple?: false | never;
+        onChange: Dispatch<React.SetStateAction<Option | null>>;
+        selected: Option | null;
+      }
+  ),
+) {
   const ref = useRef<HTMLDivElement>(null);
   const [expanded, setExpanded] = useState(false);
   const toggleExpand = useCallback(() => {
@@ -30,11 +47,26 @@ export const Selector = memo(function Selector(props: {
         return;
       }
 
-      props.onChange((prevValues) => {
-        if (prevValues.includes(value))
-          return prevValues.filter((prevValue) => prevValue !== value);
-        return [...prevValues, value];
-      });
+      if (props.multiple) {
+        props.onChange((prevValues) => {
+          if (prevValues.includes(value)) {
+            return prevValues.filter((prevValue) => prevValue !== value);
+          }
+
+          return [...prevValues, value];
+        });
+      }
+    },
+    [props],
+  );
+
+  const selectOption = useCallback(
+    (value: Option) => {
+      if (props.multiple) {
+        return;
+      }
+      props.onChange(value);
+      setExpanded(false);
     },
     [props],
   );
@@ -61,6 +93,30 @@ export const Selector = memo(function Selector(props: {
     };
   }, []);
 
+  const addNewRole = useCallback(
+    (
+      event: FormEvent<HTMLFormElement> & {
+        target: FormEvent<HTMLFormElement> & { firstChild: HTMLInputElement };
+      },
+    ) => {
+      event.preventDefault();
+
+      if (!props.setOptions) {
+        return console.error("pass setOption into selector");
+      }
+
+      const roleName = event.target.firstChild.value;
+
+      props.setOptions([
+        { label: roleName, value: roleName },
+        ...props.options,
+      ]);
+
+      event.target.firstChild.value = "";
+    },
+    [props],
+  );
+
   return (
     <div
       className={cn("relative", props.className)}
@@ -77,13 +133,23 @@ export const Selector = memo(function Selector(props: {
         <div className="grid grid-flow-col auto-cols-max gap-x-3 overflow-x-auto scrollbar-hide max-w-full">
           <span
             className={cn("text-ffffff/20 py-2.5", {
-              hidden: props.selected.length > 0,
+              hidden:
+                (Array.isArray(props.selected) && props.selected.length > 0) ||
+                (!Array.isArray(props.selected) && props.selected?.value),
             })}
           >
-            Choose a role
+            {props.placeholder ?? ""}
           </span>
 
-          {props.selected?.length > 0 &&
+          {!props.multiple && (
+            <span className="py-2.5">
+              {!Array.isArray(props.selected) && props.selected?.label}
+            </span>
+          )}
+
+          {Array.isArray(props.selected) &&
+            props.selected?.length > 0 &&
+            props.multiple &&
             props.selected.map((option, index) => (
               <span
                 className={cn(
@@ -119,23 +185,39 @@ export const Selector = memo(function Selector(props: {
 
       <div
         className={cn(
-          "absolute z-10 top-full left-0 w-full rounded-xl overflow-hidden transition-[max-height] bg-0c0e10 border-f9f9f9/20",
+          "absolute z-10 top-[calc(100%+4px)] left-0 w-full rounded-xl overflow-hidden transition-[max-height] bg-0c0e10 border-f9f9f9/20",
           { "max-h-0 border-0": !expanded },
           { "max-h-50 border-2": expanded },
         )}
       >
         <div className="py-3.5">
           <div className="max-h-[120px] overflow-y-auto">
+            {props.withInput && (
+              <form
+                onSubmit={addNewRole}
+                className="px-6 py-0.5"
+              >
+                <input
+                  placeholder={props.inputPlaceholder || ""}
+                  className="w-full bg-transparent border-b-2 border-ffffff/50 outline-none py-2"
+                />
+              </form>
+            )}
             {props.options.map((option, index) => (
               <div
                 className={cn(
                   "grid grid-flow-col auto-cols-max justify-between items-center px-6 py-2.5 cursor-pointer hover:text-6673b9 transition-colors",
                 )}
                 key={`${option.value}-${index}`}
-                onClick={() => toggleSelectOption(option)}
+                onClick={() =>
+                  props.multiple
+                    ? toggleSelectOption(option)
+                    : selectOption(option)
+                }
               >
                 {option.label}
-                {props.selected.includes(option) && (
+
+                {props.multiple && props.selected.includes(option) && (
                   <Icon
                     className="w-3 h-3"
                     name="cross"
@@ -145,13 +227,15 @@ export const Selector = memo(function Selector(props: {
             ))}
           </div>
 
-          <span className="grid grid-flow-col gap-x-2 opacity-40 mt-2.5 px-6">
-            <Icon
-              className="w-3 h-3"
-              name="info"
-            />
-            You can create more roles in your Discord server settings
-          </span>
+          {props.info && (
+            <span className="grid grid-flow-col gap-x-2 opacity-40 mt-2.5 px-6">
+              <Icon
+                className="w-3 h-3"
+                name="info"
+              />
+              {props.info}
+            </span>
+          )}
         </div>
       </div>
     </div>
