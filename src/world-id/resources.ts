@@ -1,6 +1,7 @@
 import { Duration, RemovalPolicy } from "aws-cdk-lib";
 import { EventBus, Rule, RuleTargetInput } from "aws-cdk-lib/aws-events";
 import * as eventsTargets from "aws-cdk-lib/aws-events-targets";
+import * as iam from "aws-cdk-lib/aws-iam";
 import {
   Architecture,
   FunctionUrlAuthType,
@@ -29,7 +30,7 @@ export class WorldIdVerifier extends Construct {
     props: {
       defaultLambdaProps?: Partial<NodejsFunctionProps>;
       botToken: ISecret;
-      rolesToAssignToVerifiedUsers: string[];
+      tableName: string;
     },
   ) {
     super(scope, "World ID Verification Resources");
@@ -109,15 +110,23 @@ export class WorldIdVerifier extends Construct {
         entry: require.resolve("./assign-roles-on-verified.lambda.ts"),
       },
     );
-    rolesAssigningLambda.addEnvironment(
-      "ROLES_TO_ASSIGN",
-      props.rolesToAssignToVerifiedUsers.join(","),
-    );
+
+    rolesAssigningLambda.addEnvironment("DYNAMODB_TABLE_NAME", props.tableName);
+
     rolesAssigningLambda.addEnvironment(
       "TOKEN_SECRET_ARN",
       props.botToken.secretArn,
     );
     props.botToken.grantRead(rolesAssigningLambda);
+
+    const dynamodbManagedReadonlyPolicy =
+      iam.ManagedPolicy.fromManagedPolicyArn(
+        this,
+        this.node.id,
+        "arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess",
+      );
+
+    rolesAssigningLambda.role?.addManagedPolicy(dynamodbManagedReadonlyPolicy);
 
     new Rule(this, "On Verification Success", {
       description:
@@ -150,15 +159,15 @@ export class WorldIdVerifier extends Construct {
 
         // Worldcoin ID related settings
         APP_NAME: this.node.tryGetContext("app_name"),
-        ACTION_ID: this.node.tryGetContext("action_id"),
         SIGNAL: this.node.tryGetContext("signal"),
-        ROLES_TO_ASSIGN: props.rolesToAssignToVerifiedUsers.join(","),
         SIGNAL_DESCRIPTION: this.node.tryGetContext("signal_description"),
+        DYNAMODB_TABLE_NAME: props.tableName,
       },
     });
     this.processor.addEventSource(
       new SqsEventSource(this.queue, { batchSize: 1 }),
     );
+    this.processor.role?.addManagedPolicy(dynamodbManagedReadonlyPolicy);
     props.botToken.grantRead(this.processor);
     eventBus.grantPutEventsTo(this.processor);
   }

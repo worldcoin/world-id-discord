@@ -1,10 +1,9 @@
 {
   "app": "npx ts-node -P tsconfig.json --prefer-ts-exts src/app.ts",
   "context": {
-    "roles_for_verified_user": "Verified human",
     "signal": "<none>",
-    "action_id": "wid_fb74a74cc94d3ffbe3f6669f556b36e4",
     "app_name": "World ID Discord Bot",
+    "bot_configs_table_name": "discord-bot-configs",
     "bot_public_key": "aa4f7f5e1affd2c054ca07a2733007d44775826c821f6c0ddc3d3826a54eeb1a",
     "bot_app_id": "984381699360161823"
   },

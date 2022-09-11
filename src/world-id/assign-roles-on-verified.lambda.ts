@@ -6,16 +6,34 @@ import type { Handler } from "aws-lambda";
 
 import { getEnv } from "@/utils/get-env";
 
+import { getBotConfig } from "@/utils/get-bot-config";
 import { REST } from "@discordjs/rest";
 import type { RESTGetAPIGuildRolesResult } from "discord-api-types/v10";
 import { Routes } from "discord-api-types/v10";
 import type { UserCompletedVerification } from "./events";
 
-const ROLES_TO_ASSIGN = getEnv("ROLES_TO_ASSIGN").split(",");
 const secretManager = new SecretsManagerClient({});
 
 export const handler: Handler<UserCompletedVerification> = async (event) => {
   console.log("User completed verification", event);
+  let guildBotConfig;
+
+  try {
+    guildBotConfig = await getBotConfig(event.guild_id);
+    console.log("DynamoDB response: ", guildBotConfig);
+  } catch (error) {
+    console.log(error);
+
+    throw Error(
+      "An error occurred while fetching the bot configuration from dynamodb",
+    );
+  }
+
+  if (!guildBotConfig) {
+    throw Error(`No bot config for guild ${event.guild_id}`);
+  }
+
+  const ROLES_TO_ASSIGN = guildBotConfig.roles;
 
   const botToken = (
     await secretManager.send(

@@ -133,11 +133,19 @@
       "type": "build"
     },
     {
+      "name": "@aws-sdk/client-dynamodb",
+      "type": "runtime"
+    },
+    {
       "name": "@aws-sdk/client-eventbridge",
       "type": "runtime"
     },
     {
       "name": "@aws-sdk/client-secrets-manager",
+      "type": "runtime"
+    },
+    {
+      "name": "@aws-sdk/util-dynamodb",
       "type": "runtime"
     },
     {

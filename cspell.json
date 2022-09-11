@@ -31,6 +31,7 @@
     "testdir",
     "tsdoc",
     "undici",
+    "unmarshall",
     "vendedlogs",
     "walletconnect"
   ]

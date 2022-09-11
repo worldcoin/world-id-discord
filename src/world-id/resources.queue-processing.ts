@@ -17,6 +17,7 @@ import { arrayify, concat, hexlify } from "@ethersproject/bytes";
 
 import type { APIApplicationCommandInteraction } from "discord-api-types/v10";
 
+import { getBotConfig } from "@/utils/get-bot-config";
 import sha3 from "js-sha3";
 import { checkIsUserAlreadyVerified } from "./check-is-user-verified";
 import type { UserCompletedVerification } from "./events";
@@ -32,9 +33,7 @@ import { verifyVerificationValidness } from "./validate-proof";
 import { verifyVerificationResponseStructure } from "./verify-response";
 
 const signal = getEnv("SIGNAL");
-const action_id = getEnv("ACTION_ID");
 const appName = getEnv("APP_NAME");
-const ROLES_TO_ASSIGN = getEnv("ROLES_TO_ASSIGN").split(",");
 
 const EventBusName = getEnv("EVENT_BUS_NAME");
 
@@ -55,6 +54,7 @@ async function walletConnectFlow(
   message: APIApplicationCommandInteraction,
   rest: REST,
   lambdaContext: Context,
+  action_id: string,
 ) {
   const connector = new WalletConnect({
     bridge: "https://bridge.walletconnect.org",
@@ -125,6 +125,7 @@ async function walletConnectFlow(
 
     // FIXME: Export payload generation function from World ID JS SDK and reuse here
 
+    console.log(`Starting verification with action_id: ${action_id}`);
     const verificationResponse = await connector.sendCustomRequest({
       id: randomInt(100000, 9999999),
       jsonrpc: "2.0",
@@ -219,10 +220,32 @@ export const handler: SQSHandler = async (event, context) => {
 
   const rest = new REST({ version: "10" }).setToken(botToken);
 
+  let guildBotConfig;
+
+  try {
+    if (!message.guild_id) {
+      throw Error("guild_id should be provided");
+    }
+    guildBotConfig = await getBotConfig(message.guild_id);
+    console.log("DynamoDB response: ", guildBotConfig);
+  } catch (error) {
+    console.log(error);
+
+    throw Error(
+      "An error occurred while fetching the bot configuration from dynamodb",
+    );
+  }
+
+  if (!guildBotConfig) {
+    throw Error(`No bot config for guild ${message.guild_id}`);
+  }
+
+  const { action_id, roles } = guildBotConfig;
+
   const isUserAlreadyValidated = await checkIsUserAlreadyVerified({
     message,
     rest,
-    ROLES_TO_ASSIGN,
+    ROLES_TO_ASSIGN: roles,
   });
 
   if (isUserAlreadyValidated) {
@@ -232,6 +255,6 @@ export const handler: SQSHandler = async (event, context) => {
       interactionToken: message.token,
     });
   } else {
-    await walletConnectFlow(message, rest, context);
+    await walletConnectFlow(message, rest, context, action_id);
   }
 };

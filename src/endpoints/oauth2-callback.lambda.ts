@@ -14,6 +14,7 @@ import {
   type RESTPostOAuth2ClientCredentialsResult,
 } from "discord-api-types/v10";
 
+import { getBotConfig } from "@/utils/get-bot-config";
 import { getEnv } from "@/utils/get-env";
 import { commands } from "@/world-id/slash-commands";
 
@@ -32,6 +33,23 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       statusCode: 422,
       body: `guild_id is required but wasn't provided in querystring`,
     };
+
+  let guildBotConfig;
+
+  try {
+    guildBotConfig = await getBotConfig(guild_id);
+    console.log("DynamoDB response: ", guildBotConfig);
+  } catch (error) {
+    console.log(error);
+  }
+
+  if (!guildBotConfig) {
+    return {
+      statusCode: 422,
+      // @FIXME add correct url for configuration page.
+      body: `Please configure your bot settings first. You can update your configuration here: <Configuration Landing page>`,
+    };
+  }
 
   const CLIENT_SECRET = (
     await secretManager.send(
@@ -125,7 +143,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   console.log("Added commands: %d", commands.length);
 
   // Create roles
-  const ROLES_TO_ASSIGN = getEnv("ROLES_TO_ASSIGN").split(",");
+  const ROLES_TO_ASSIGN = guildBotConfig.roles;
   if (ROLES_TO_ASSIGN.length) {
     const existingRoles = (await rest.get(
       Routes.guildRoles(guild_id),

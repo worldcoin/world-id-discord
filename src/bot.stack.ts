@@ -10,6 +10,8 @@ import {
   RestApi,
   StepFunctionsIntegration,
 } from "aws-cdk-lib/aws-apigateway";
+import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
+import * as iam from "aws-cdk-lib/aws-iam";
 import {
   Architecture,
   LambdaInsightsVersion,
@@ -60,18 +62,44 @@ export class WorldIdDiscordBotStack extends Stack {
         "WorldIdDiscordBotClientSecret",
     );
 
-    const ROLES_TO_ASSIGN = (
-      (this.node.tryGetContext("roles_for_verified_user") as
-        | string
-        | undefined) ?? ""
-    )
-      .split(/\s*,\s*/g)
-      .filter((v) => v.trim());
+    let TABLE_NAME = "";
+
+    try {
+      const table = new dynamodb.Table(
+        this,
+        scope.node.tryGetContext("bot_configs_table_name") as string,
+        {
+          partitionKey: {
+            name: "guild_id",
+            type: dynamodb.AttributeType.STRING,
+          },
+        },
+      );
+
+      TABLE_NAME = table.tableName;
+
+      // @REVIEW not sure what is correct values for write/read capacity
+      table
+        .autoScaleReadCapacity({
+          minCapacity: 1,
+          maxCapacity: 600,
+        })
+        .scaleOnUtilization({ targetUtilizationPercent: 75 });
+
+      table
+        .autoScaleWriteCapacity({
+          minCapacity: 1,
+          maxCapacity: 1200,
+        })
+        .scaleOnUtilization({ targetUtilizationPercent: 75 });
+    } catch (error) {
+      console.log(error);
+    }
 
     const worldIdVerification = new WorldIdVerifier(this, {
       defaultLambdaProps: COMMON_LAMBDAS_PROPS,
       botToken,
-      rolesToAssignToVerifiedUsers: ROLES_TO_ASSIGN,
+      tableName: TABLE_NAME,
     });
 
     // Create our API Gateway
@@ -162,6 +190,20 @@ export class WorldIdDiscordBotStack extends Stack {
       "BOT_APP_ID",
       this.node.tryGetContext("bot_app_id") as string,
     );
+
+    discordServerConfigurationLambda.addEnvironment(
+      "DYNAMODB_TABLE_NAME",
+      TABLE_NAME,
+    );
+
+    discordServerConfigurationLambda.role?.addManagedPolicy(
+      iam.ManagedPolicy.fromManagedPolicyArn(
+        this,
+        this.node.id,
+        "arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess",
+      ),
+    );
+
     discordServerConfigurationLambda.addEnvironment(
       "TOKEN_SECRET_ARN",
       botToken.secretArn,
@@ -172,10 +214,7 @@ export class WorldIdDiscordBotStack extends Stack {
       botClientSecret.secretArn,
     );
     botClientSecret.grantRead(discordServerConfigurationLambda);
-    discordServerConfigurationLambda.addEnvironment(
-      "ROLES_TO_ASSIGN",
-      ROLES_TO_ASSIGN.join(","),
-    );
+
     oauth2callback.addMethod(
       "GET",
       new LambdaIntegration(discordServerConfigurationLambda),

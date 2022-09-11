@@ -29,10 +29,9 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   minNodeVersion: "16.14.0", // this version is on AWS Lambda Node 16.x runtime
   appEntrypoint: "app.ts",
   context: {
-    roles_for_verified_user: "Verified human",
     signal: "<none>", // this should be the user's Discord ID
-    action_id: "wid_fb74a74cc94d3ffbe3f6669f556b36e4",
     app_name: "World ID Discord Bot",
+    bot_configs_table_name: "discord-bot-configs",
     bot_public_key:
       "aa4f7f5e1affd2c054ca07a2733007d44775826c821f6c0ddc3d3826a54eeb1a",
     bot_app_id: "984381699360161823",
@@ -48,6 +47,8 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   deps: [
     "@aws-sdk/client-secrets-manager",
     "@aws-sdk/client-eventbridge",
+    "@aws-sdk/client-dynamodb",
+    "@aws-sdk/util-dynamodb",
     "@discordjs/builders",
     "@discordjs/rest",
     "@walletconnect/client",
@@ -145,7 +146,10 @@ const landingPageProject = new ReactTypeScriptProject({
       baseUrl: "./src",
     },
   },
+  deps: ["@aws-sdk/client-dynamodb", "@aws-sdk/util-dynamodb"],
 });
+
+landingPageProject.gitignore.addPatterns(".env.local");
 
 landingPageProject.addDevDeps("tailwindcss", "postcss", "autoprefixer");
 landingPageProject.addDeps("react-router-dom");
