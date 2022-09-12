@@ -22,10 +22,10 @@ export const handler: Handler<UserCompletedVerification> = async (event) => {
     guildBotConfig = await getBotConfig(event.guild_id);
     console.log("DynamoDB response: ", guildBotConfig);
   } catch (error) {
-    console.log(error);
+    console.error("Error from DynamoDB on `getBotConfig`: ", error);
 
     throw Error(
-      "An error occurred while fetching the bot configuration from dynamodb",
+      "An error occurred while fetching the bot configuration from DynamoDB.",
     );
   }
 

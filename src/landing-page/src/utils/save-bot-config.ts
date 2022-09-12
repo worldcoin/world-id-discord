@@ -23,7 +23,7 @@ export const saveBotConfig = async (bogConfig: BotConfig) => {
     );
 
     if (response["$metadata"].httpStatusCode !== 200) {
-      throw new Error("Error while adding bot config into database");
+      throw new Error("Error while saving bot config to DB.");
     }
 
     success = true;

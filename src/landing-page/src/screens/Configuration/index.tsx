@@ -18,10 +18,8 @@ import { Selector } from "./Selector";
 import type { Option } from "./types/option";
 
 const discordRolesList: Array<Option> = [
-  { label: "Moderator", value: "Moderator" },
-  { label: "Server admin", value: "Server admin" },
-  { label: "Community MVP", value: "Community mvp" },
   { label: "Verified Human", value: "Verified Human" },
+  { label: "Moderator", value: "Moderator" },
 ];
 
 type LocationState = {
@@ -227,7 +225,7 @@ export const Configuration = memo(function Configuration() {
                 selected={selectedRoles}
                 onChange={setSelectedRoles}
                 withInput
-                inputPlaceholder="Enter role name"
+                inputPlaceholder="Add a role..."
                 placeholder="Choose a role"
                 info="You can create more roles in your Discord server settings"
                 multiple
@@ -254,7 +252,7 @@ export const Configuration = memo(function Configuration() {
                   { "invisible opacity-0": savedSuccessfully !== true },
                 )}
               >
-                Your changes successfully saved!
+                Your changes have been successfully saved!
               </span>
 
               <span
@@ -264,7 +262,7 @@ export const Configuration = memo(function Configuration() {
                   { "invisible opacity-0": savedSuccessfully !== false },
                 )}
               >
-                Something wrong. Try again, please.
+                Something went wrong. Try again, please.
               </span>
             </div>
           </div>
