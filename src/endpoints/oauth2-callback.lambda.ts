@@ -34,16 +34,11 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       body: `guild_id is required but wasn't provided in querystring`,
     };
 
-  let guildBotConfig;
+  const guildBotConfig = await getBotConfig(guild_id);
 
-  try {
-    guildBotConfig = await getBotConfig(guild_id);
-    console.log("DynamoDB response: ", guildBotConfig);
-  } catch (error) {
-    console.log(error);
-  }
+  if (guildBotConfig.error) {
+    console.error(guildBotConfig.error);
 
-  if (!guildBotConfig) {
     return {
       statusCode: 422,
       // @FIXME add correct url for configuration page.
@@ -143,7 +138,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   console.log("Added commands: %d", commands.length);
 
   // Create roles
-  const ROLES_TO_ASSIGN = guildBotConfig.roles;
+  const ROLES_TO_ASSIGN = guildBotConfig.data.roles;
   if (ROLES_TO_ASSIGN.length) {
     const existingRoles = (await rest.get(
       Routes.guildRoles(guild_id),

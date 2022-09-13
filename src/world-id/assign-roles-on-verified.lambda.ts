@@ -16,24 +16,14 @@ const secretManager = new SecretsManagerClient({});
 
 export const handler: Handler<UserCompletedVerification> = async (event) => {
   console.log("User completed verification", event);
-  let guildBotConfig;
 
-  try {
-    guildBotConfig = await getBotConfig(event.guild_id);
-    console.log("DynamoDB response: ", guildBotConfig);
-  } catch (error) {
-    console.error("Error from DynamoDB on `getBotConfig`: ", error);
+  const guildBotConfig = await getBotConfig(event.guild_id);
 
-    throw Error(
-      "An error occurred while fetching the bot configuration from DynamoDB.",
-    );
-  }
-
-  if (!guildBotConfig) {
+  if (guildBotConfig.error) {
     throw Error(`No bot config for guild ${event.guild_id}`);
   }
 
-  const ROLES_TO_ASSIGN = guildBotConfig.roles;
+  const ROLES_TO_ASSIGN = guildBotConfig.data.roles;
 
   const botToken = (
     await secretManager.send(

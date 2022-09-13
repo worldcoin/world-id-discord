@@ -220,27 +220,33 @@ export const handler: SQSHandler = async (event, context) => {
 
   const rest = new REST({ version: "10" }).setToken(botToken);
 
-  let guildBotConfig;
+  if (!message.guild_id) {
+    console.error("guild_id should be provided");
 
-  try {
-    if (!message.guild_id) {
-      throw Error("guild_id should be provided");
-    }
-    guildBotConfig = await getBotConfig(message.guild_id);
-    console.log("DynamoDB response: ", guildBotConfig);
-  } catch (error) {
-    console.log(error);
+    await sendErrorOccurredMessage({
+      rest,
+      applicationId: message.application_id,
+      interactionToken: message.token,
+    }).catch(console.error.bind(console));
 
-    throw Error(
-      "An error occurred while fetching the bot configuration from dynamodb",
-    );
+    return;
   }
 
-  if (!guildBotConfig) {
-    throw Error(`No bot config for guild ${message.guild_id}`);
+  const guildBotConfig = await getBotConfig(message.guild_id);
+
+  if (guildBotConfig.error) {
+    console.error(guildBotConfig.error);
+
+    await sendErrorOccurredMessage({
+      rest,
+      applicationId: message.application_id,
+      interactionToken: message.token,
+    }).catch(console.error.bind(console));
+
+    return;
   }
 
-  const { action_id, roles } = guildBotConfig;
+  const { action_id, roles } = guildBotConfig.data;
 
   const isUserAlreadyValidated = await checkIsUserAlreadyVerified({
     message,

@@ -8,12 +8,25 @@ type BotConfig = {
   roles: Array<string>;
 };
 
+type GetBotConfigResult =
+  | {
+      data: BotConfig;
+      error?: never;
+    }
+  | {
+      data?: null;
+      error: Error;
+    };
+
 export const getBotConfig = async (guild_id: string) => {
   const client = new DynamoDBClient({ region: getEnv("AWS_DEFAULT_REGION") });
 
   const key = { guild_id };
 
-  let result: BotConfig | null | undefined = undefined;
+  let result: GetBotConfigResult = {
+    data: undefined,
+    error: new Error("Data was never fetched"),
+  };
 
   try {
     const data = await client.send(
@@ -24,14 +37,23 @@ export const getBotConfig = async (guild_id: string) => {
     );
 
     if (!data.Item) {
-      result = null;
+      result = {
+        data: null,
+        error: new Error("There is no data for this guild in DB"),
+      };
     }
 
     if (data.Item) {
-      result = unmarshall(data.Item) as BotConfig;
+      const item = unmarshall(data.Item);
+      console.log("DynamoDB response: ", item);
+      result = { data: item as BotConfig, error: undefined };
     }
   } catch (error) {
-    console.log(error);
+    result = {
+      error: new Error("There is no data for this guild in DB", {
+        cause: error,
+      }),
+    };
   }
 
   return result;
