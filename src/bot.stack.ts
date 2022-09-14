@@ -11,7 +11,6 @@ import {
   StepFunctionsIntegration,
 } from "aws-cdk-lib/aws-apigateway";
 import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
-import * as iam from "aws-cdk-lib/aws-iam";
 import {
   Architecture,
   LambdaInsightsVersion,
@@ -62,44 +61,31 @@ export class WorldIdDiscordBotStack extends Stack {
         "WorldIdDiscordBotClientSecret",
     );
 
-    let TABLE_NAME = "";
+    const table = new dynamodb.Table(this, "discord-bot-configs", {
+      partitionKey: {
+        name: "guild_id",
+        type: dynamodb.AttributeType.STRING,
+      },
+    });
 
-    try {
-      const table = new dynamodb.Table(
-        this,
-        scope.node.tryGetContext("bot_configs_table_name") as string,
-        {
-          partitionKey: {
-            name: "guild_id",
-            type: dynamodb.AttributeType.STRING,
-          },
-        },
-      );
+    table
+      .autoScaleReadCapacity({
+        minCapacity: 10,
+        maxCapacity: 600,
+      })
+      .scaleOnUtilization({ targetUtilizationPercent: 40 });
 
-      TABLE_NAME = table.tableName;
-
-      // @REVIEW not sure what is correct values for write/read capacity
-      table
-        .autoScaleReadCapacity({
-          minCapacity: 1,
-          maxCapacity: 600,
-        })
-        .scaleOnUtilization({ targetUtilizationPercent: 75 });
-
-      table
-        .autoScaleWriteCapacity({
-          minCapacity: 1,
-          maxCapacity: 1200,
-        })
-        .scaleOnUtilization({ targetUtilizationPercent: 75 });
-    } catch (error) {
-      console.log(error);
-    }
+    table
+      .autoScaleWriteCapacity({
+        minCapacity: 10,
+        maxCapacity: 1200,
+      })
+      .scaleOnUtilization({ targetUtilizationPercent: 40 });
 
     const worldIdVerification = new WorldIdVerifier(this, {
       defaultLambdaProps: COMMON_LAMBDAS_PROPS,
       botToken,
-      tableName: TABLE_NAME,
+      table: table,
     });
 
     // Create our API Gateway
@@ -193,16 +179,10 @@ export class WorldIdDiscordBotStack extends Stack {
 
     discordServerConfigurationLambda.addEnvironment(
       "DYNAMODB_TABLE_NAME",
-      TABLE_NAME,
+      table.tableName,
     );
 
-    discordServerConfigurationLambda.role?.addManagedPolicy(
-      iam.ManagedPolicy.fromManagedPolicyArn(
-        this,
-        this.node.id,
-        "arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess",
-      ),
-    );
+    table.grantReadData(discordServerConfigurationLambda);
 
     discordServerConfigurationLambda.addEnvironment(
       "TOKEN_SECRET_ARN",

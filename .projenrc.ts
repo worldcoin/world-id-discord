@@ -31,7 +31,6 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   context: {
     signal: "<none>", // this should be the user's Discord ID
     app_name: "World ID Discord Bot",
-    bot_configs_table_name: "discord-bot-configs",
     bot_public_key:
       "aa4f7f5e1affd2c054ca07a2733007d44775826c821f6c0ddc3d3826a54eeb1a",
     bot_app_id: "984381699360161823",

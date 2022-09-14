@@ -1,7 +1,7 @@
 import { Duration, RemovalPolicy } from "aws-cdk-lib";
+import type { ITable } from "aws-cdk-lib/aws-dynamodb";
 import { EventBus, Rule, RuleTargetInput } from "aws-cdk-lib/aws-events";
 import * as eventsTargets from "aws-cdk-lib/aws-events-targets";
-import * as iam from "aws-cdk-lib/aws-iam";
 import {
   Architecture,
   FunctionUrlAuthType,
@@ -30,7 +30,7 @@ export class WorldIdVerifier extends Construct {
     props: {
       defaultLambdaProps?: Partial<NodejsFunctionProps>;
       botToken: ISecret;
-      tableName: string;
+      table: ITable;
     },
   ) {
     super(scope, "World ID Verification Resources");
@@ -111,22 +111,17 @@ export class WorldIdVerifier extends Construct {
       },
     );
 
-    rolesAssigningLambda.addEnvironment("DYNAMODB_TABLE_NAME", props.tableName);
+    rolesAssigningLambda.addEnvironment(
+      "DYNAMODB_TABLE_NAME",
+      props.table.tableName,
+    );
 
     rolesAssigningLambda.addEnvironment(
       "TOKEN_SECRET_ARN",
       props.botToken.secretArn,
     );
     props.botToken.grantRead(rolesAssigningLambda);
-
-    const dynamodbManagedReadonlyPolicy =
-      iam.ManagedPolicy.fromManagedPolicyArn(
-        this,
-        this.node.id,
-        "arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess",
-      );
-
-    rolesAssigningLambda.role?.addManagedPolicy(dynamodbManagedReadonlyPolicy);
+    props.table.grantReadData(rolesAssigningLambda);
 
     new Rule(this, "On Verification Success", {
       description:
@@ -161,13 +156,13 @@ export class WorldIdVerifier extends Construct {
         APP_NAME: this.node.tryGetContext("app_name"),
         SIGNAL: this.node.tryGetContext("signal"),
         SIGNAL_DESCRIPTION: this.node.tryGetContext("signal_description"),
-        DYNAMODB_TABLE_NAME: props.tableName,
+        DYNAMODB_TABLE_NAME: props.table.tableName,
       },
     });
     this.processor.addEventSource(
       new SqsEventSource(this.queue, { batchSize: 1 }),
     );
-    this.processor.role?.addManagedPolicy(dynamodbManagedReadonlyPolicy);
+    props.table.grantReadData(this.processor);
     props.botToken.grantRead(this.processor);
     eventBus.grantPutEventsTo(this.processor);
   }
