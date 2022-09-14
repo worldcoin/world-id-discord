@@ -14,6 +14,7 @@ import {
 import { useLocation } from "react-router-dom";
 import { Guild } from "types";
 import { saveBotConfig } from "utils";
+import { getBotConfig, GetBotConfigResult } from "utils/get-bot-config";
 import { Selector } from "./Selector";
 import type { Option } from "./types/option";
 
@@ -101,6 +102,72 @@ export const Configuration = memo(function Configuration() {
     }
   }, [actionId, hideStatus, selectedGuild, selectedRoles]);
 
+  const toggleRoles = useCallback((value: Option) => {
+    setSelectedRoles((prevValues) => {
+      if (prevValues.includes(value)) {
+        return prevValues.filter((prevValue) => prevValue !== value);
+      }
+
+      return [...prevValues, value];
+    });
+  }, []);
+
+  const prefillFrom = useCallback(
+    (data: GetBotConfigResult["data"]) => {
+      if (!data) {
+        return;
+      }
+
+      setActionsId(data.action_id);
+      setRoles([
+        ...data.roles.map((role) => ({ label: role, value: role })),
+        ...roles.filter(
+          (role) =>
+            !data.roles.some((fetchedRole) => fetchedRole === role.value),
+        ),
+      ]);
+      setSelectedRoles(
+        data.roles.map((role) => ({ label: role, value: role })),
+      );
+    },
+    [roles],
+  );
+
+  const clearForm = useCallback(() => {
+    setActionsId("");
+    setSelectedRoles([]);
+  }, []);
+
+  const selectGuild = useCallback(
+    (value: Option) => {
+      clearForm();
+      setSelectedGuild(value);
+
+      const configFromStorage = sessionStorage.getItem(value.value);
+
+      if (configFromStorage) {
+        return prefillFrom(
+          JSON.parse(configFromStorage) as GetBotConfigResult["data"],
+        );
+      }
+
+      getBotConfig(value.value)
+        .then((config) => {
+          if (config.error) {
+            return;
+          }
+
+          sessionStorage.setItem(
+            config.data.guild_id,
+            JSON.stringify(config.data),
+          );
+          prefillFrom(config.data);
+        })
+        .catch((error) => console.log(error));
+    },
+    [clearForm, prefillFrom],
+  );
+
   return (
     <Layout className="grid grid-rows-auto/fr min-h-screen pb-8">
       <Header hideLinks />
@@ -154,7 +221,7 @@ export const Configuration = memo(function Configuration() {
                 className="mt-4"
                 options={administratedGuilds || []}
                 selected={selectedGuild}
-                onChange={setSelectedGuild}
+                onChange={selectGuild}
                 placeholder="Choose a server"
               />
 
@@ -223,7 +290,7 @@ export const Configuration = memo(function Configuration() {
                 options={roles}
                 setOptions={setRoles}
                 selected={selectedRoles}
-                onChange={setSelectedRoles}
+                onChange={toggleRoles}
                 withInput
                 inputPlaceholder="Add a role..."
                 placeholder="Choose a role"

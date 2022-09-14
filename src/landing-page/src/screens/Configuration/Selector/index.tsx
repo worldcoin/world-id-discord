@@ -22,15 +22,14 @@ export const Selector = memo(function Selector(
     inputPlaceholder?: string;
     placeholder?: string;
     info?: string;
+    onChange: (value: Option) => void;
   } & (
     | {
         multiple: true;
-        onChange: Dispatch<SetStateAction<Array<Option>>>;
         selected: Array<Option>;
       }
     | {
         multiple?: false | never;
-        onChange: Dispatch<React.SetStateAction<Option | null>>;
         selected: Option | null;
       }
   ),
@@ -40,36 +39,6 @@ export const Selector = memo(function Selector(
   const toggleExpand = useCallback(() => {
     setExpanded((p) => !p);
   }, []);
-
-  const toggleSelectOption = useCallback(
-    (value: Option) => {
-      if (!props.onChange) {
-        return;
-      }
-
-      if (props.multiple) {
-        props.onChange((prevValues) => {
-          if (prevValues.includes(value)) {
-            return prevValues.filter((prevValue) => prevValue !== value);
-          }
-
-          return [...prevValues, value];
-        });
-      }
-    },
-    [props],
-  );
-
-  const selectOption = useCallback(
-    (value: Option) => {
-      if (props.multiple) {
-        return;
-      }
-      props.onChange(value);
-      setExpanded(false);
-    },
-    [props],
-  );
 
   // Click outside
   useEffect(() => {
@@ -113,6 +82,17 @@ export const Selector = memo(function Selector(
       ]);
 
       event.target.firstChild.value = "";
+    },
+    [props],
+  );
+
+  const onClick = useCallback(
+    (option: Option) => {
+      props.onChange(option);
+
+      if (!props.multiple) {
+        setExpanded(false);
+      }
     },
     [props],
   );
@@ -161,7 +141,7 @@ export const Selector = memo(function Selector(
                 {option.label}
                 <button
                   className="grid hover:opacity-70 transition-opacity"
-                  onClick={() => toggleSelectOption(option)}
+                  onClick={() => onClick(option)}
                 >
                   <Icon
                     className="w-3 h-3"
@@ -209,11 +189,7 @@ export const Selector = memo(function Selector(
                   "grid grid-flow-col auto-cols-max justify-between items-center px-6 py-2.5 cursor-pointer hover:text-6673b9 transition-colors",
                 )}
                 key={`${option.value}-${index}`}
-                onClick={() =>
-                  props.multiple
-                    ? toggleSelectOption(option)
-                    : selectOption(option)
-                }
+                onClick={() => onClick(option)}
               >
                 {option.label}
 
