@@ -23,8 +23,6 @@ export const handler: Handler<UserCompletedVerification> = async (event) => {
     throw Error(`No bot config for guild ${event.guild_id}`);
   }
 
-  const ROLES_TO_ASSIGN = guildBotConfig.data.roles;
-
   const botToken = (
     await secretManager.send(
       new GetSecretValueCommand({ SecretId: getEnv("TOKEN_SECRET_ARN") }),
@@ -37,7 +35,7 @@ export const handler: Handler<UserCompletedVerification> = async (event) => {
   const rest = new REST({ version: "10" }).setToken(botToken);
 
   // trying to assign a role
-  if (ROLES_TO_ASSIGN.length) {
+  if (guildBotConfig.data.roles.length) {
     const existingRoles = (await rest.get(
       Routes.guildRoles(event.guild_id),
     )) as RESTGetAPIGuildRolesResult;
@@ -47,7 +45,7 @@ export const handler: Handler<UserCompletedVerification> = async (event) => {
       (roleId) => existingRoles.find((r) => r.id === roleId)?.name ?? [],
     );
 
-    const rolesToAssign = ROLES_TO_ASSIGN.filter(
+    const rolesToAssign = guildBotConfig.data.roles.filter(
       (roleName) => !userRolesName.includes(roleName),
     );
     const rolesIds = rolesToAssign.flatMap(

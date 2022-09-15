@@ -14,7 +14,8 @@ import {
 import { useLocation } from "react-router-dom";
 import { Guild } from "types";
 import { saveBotConfig } from "utils";
-import { getBotConfig, GetBotConfigResult } from "utils/get-bot-config";
+import { getBotConfig } from "utils/get-bot-config";
+import type { GetBotConfigResult } from "~/types";
 import { Selector } from "./Selector";
 import type { Option } from "./types/option";
 

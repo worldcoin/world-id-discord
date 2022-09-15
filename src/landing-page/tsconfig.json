@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "rootDir": "src",
+    "rootDir": "../../",
     "outDir": "lib",
     "alwaysStrict": true,
     "declaration": true,
@@ -35,7 +35,15 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "~/*": [
+        "../../*"
+      ]
+    }
   },
   "include": [
     "src/**/*.ts",

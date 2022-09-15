@@ -33,7 +33,16 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+    "rootDir": "../../",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "~/*": [
+        "../../*"
+      ]
+    }
   },
   "include": [
     ".projenrc.js",

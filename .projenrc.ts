@@ -143,6 +143,11 @@ const landingPageProject = new ReactTypeScriptProject({
   tsconfig: {
     compilerOptions: {
       baseUrl: "./src",
+      rootDir: "../../",
+      paths: {
+        "@/*": ["./src/*"],
+        "~/*": ["../../*"],
+      },
     },
   },
   deps: ["@aws-sdk/client-dynamodb", "@aws-sdk/util-dynamodb"],
