@@ -47,7 +47,7 @@
     "jest": "^28",
     "jest-extended": "^2.0.0",
     "lint-staged": "^13",
-    "npm-check-updates": "^12",
+    "npm-check-updates": "^16",
     "prettier": "^2.6.2",
     "prettier-plugin-jsdoc": "^0.3.38",
     "prettier-plugin-organize-attributes": "^0.0.5",
