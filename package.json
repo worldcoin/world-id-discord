@@ -70,7 +70,7 @@
     "constructs": "^10.1.42",
     "discord-api-types": "~0",
     "js-sha3": "^0.8.0",
-    "node-fetch": "^3",
+    "node-fetch": "^3.2.10",
     "parse-data-url": "^4.0.1",
     "qr-code-styling-node": "^1.5.0",
     "qrcode": "^1.5.0",
