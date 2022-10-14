@@ -9,8 +9,6 @@ import type { APIGatewayProxyHandler } from "aws-lambda";
 import {
   Routes,
   type RESTGetAPIApplicationCommandsResult,
-  type RESTGetAPIGuildRolesResult,
-  type RESTPatchAPIGuildRoleJSONBody,
   type RESTPostOAuth2ClientCredentialsResult,
 } from "discord-api-types/v10";
 
@@ -136,34 +134,6 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     ),
   );
   console.log("Added commands: %d", commands.length);
-
-  // Create roles
-  const ROLES_TO_ASSIGN = guildBotConfig.data.roles;
-  if (ROLES_TO_ASSIGN.length) {
-    const existingRoles = (await rest.get(
-      Routes.guildRoles(guild_id),
-    )) as RESTGetAPIGuildRolesResult;
-    console.log("Server existing roles:", existingRoles);
-
-    const rolesToCreate = ROLES_TO_ASSIGN.filter(
-      (r) => !existingRoles.some((role) => role.name === r),
-    );
-    if (rolesToCreate.length)
-      await Promise.all(
-        rolesToCreate
-          .map(
-            (name): RESTPatchAPIGuildRoleJSONBody => ({
-              name,
-              color: 0x5a42f5,
-            }),
-          )
-          .map((body) =>
-            rest.post(Routes.guildRoles(guild_id), {
-              body,
-            }),
-          ),
-      );
-  }
 
   return {
     statusCode: 302,
