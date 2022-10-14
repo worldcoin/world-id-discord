@@ -161,6 +161,17 @@ export class WorldIdDiscordBotStack extends Stack {
         ),
       },
     );
+    const getRoles = discordBotAPI.root.addResource("get-roles");
+
+    const getRolesLambda = new NodejsFunction(this, "Get Server Roles", {
+      ...COMMON_LAMBDAS_PROPS,
+      entry: require.resolve("./endpoints/get-roles.lambda.ts"),
+      timeout: Duration.minutes(1),
+    });
+
+    getRolesLambda.addEnvironment("TOKEN_SECRET_ARN", botToken.secretArn);
+
+    botToken.grantRead(getRolesLambda);
 
     const oauth2callback = discordBotAPI.root.addResource("oauth2callback");
     const discordServerConfigurationLambda = new NodejsFunction(
@@ -212,6 +223,19 @@ export class WorldIdDiscordBotStack extends Stack {
         ),
       },
     );
+
+    getRoles.addMethod("GET", new LambdaIntegration(getRolesLambda), {
+      operationName: "DiscordBotGetGuildRoles",
+      requestParameters: {
+        "method.request.querystring.guild_id": true,
+      },
+      requestValidator: new RequestValidator(
+        this,
+        "Get Roles Request Validator",
+        { restApi: discordBotAPI, validateRequestParameters: true },
+      ),
+    });
+
     new CfnOutput(this, "OAuth2 Callback Url", {
       value: Fn.join("", [discordBotAPI.url, oauth2callback.path]),
     });

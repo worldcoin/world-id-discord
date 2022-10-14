@@ -168,7 +168,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   return {
     statusCode: 302,
     headers: {
-      location: `https://discord.com/channels/${guild_id}`,
+      // @FIXME update to production landing-page url
+      location: `http://localhost:3000/auth#token_type=${token.token_type}&access_token=${token.access_token}`,
     },
     body: "",
     isBase64Encoded: false,

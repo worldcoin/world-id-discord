@@ -26,7 +26,7 @@ export const NoCaptcha = memo(function NoCaptcha() {
           <Link
             variant="flat"
             className="justify-self-stretch md:justify-self-start bg-ffffff"
-            href="#!"
+            href={process.env.REACT_APP_ADD_BOT_URL || "#"}
           >
             <span className="bg-gradient-81.5 from-4940e0 to-a39dff bg-clip-text text-transparent">
               Install now

@@ -17,7 +17,7 @@ export const Join = memo(function Join() {
           Ready to join our community?
         </h3>
         <Link
-          href={process.env?.REACT_APP_DISCORD_LOGIN_AUTH_URL || "#"}
+          href={process.env?.REACT_APP_ADD_BOT_URL || "#"}
           className="max-w-sm"
         >
           <span className="grid grid-flow-col justify-center auto-cols-max gap-x-4">

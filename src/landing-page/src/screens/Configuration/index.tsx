@@ -11,18 +11,14 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Guild } from "types";
 import { saveBotConfig } from "utils";
 import { getBotConfig } from "utils/get-bot-config";
+import { getGuildRoles } from "utils/get-guild-roles";
 import type { GetBotConfigResult } from "~/types";
 import { Selector } from "./Selector";
 import type { Option } from "./types/option";
-
-const discordRolesList: Array<Option> = [
-  { label: "Verified Human", value: "Verified Human" },
-  { label: "Moderator", value: "Moderator" },
-];
 
 type LocationState = {
   administeredGuilds?: Array<Guild>;
@@ -30,20 +26,28 @@ type LocationState = {
 
 export const Configuration = memo(function Configuration() {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const administratedGuilds: Array<Option> | undefined = (
     location.state as LocationState
-  ).administeredGuilds?.map((guild) => ({
+  )?.administeredGuilds?.map((guild) => ({
     label: guild.name,
     value: guild.id,
   }));
+
+  // @NOTE redirects to /auth in case user skips bot installation
+  useEffect(() => {
+    if (!administratedGuilds) {
+      navigate("/auth");
+    }
+  }, [administratedGuilds, navigate]);
 
   const [active, setActive] = useState(false);
   const [actionId, setActionsId] = useState<string>("");
   const toggleActive = useCallback(() => setActive((p) => !p), []);
   const [isStaging, setIsStaging] = useState(false);
   const [selectedRoles, setSelectedRoles] = useState<Array<Option>>([]);
-  const [roles, setRoles] = useState<Array<Option>>(discordRolesList);
+  const [roles, setRoles] = useState<Array<Option>>([]);
   const [savingInProgress, setSavingInProgress] = useState(false);
   const [savedSuccessfully, setSavedSuccessfully] = useState<boolean | null>(
     null,
@@ -140,28 +144,26 @@ export const Configuration = memo(function Configuration() {
   }, []);
 
   const selectGuild = useCallback(
-    (value: Option) => {
+    (guild: Option) => {
+      getGuildRoles(guild.value)
+        .then((fetchedRoles) =>
+          setRoles(
+            fetchedRoles
+              .filter((role) => role.name !== "@everyone")
+              .map((role) => ({ label: role.name, value: role.id })),
+          ),
+        )
+        .catch((error) => console.error(error));
+
       clearForm();
-      setSelectedGuild(value);
+      setSelectedGuild(guild);
 
-      const configFromStorage = sessionStorage.getItem(value.value);
-
-      if (configFromStorage) {
-        return prefillFrom(
-          JSON.parse(configFromStorage) as GetBotConfigResult["data"],
-        );
-      }
-
-      getBotConfig(value.value)
+      getBotConfig(guild.value)
         .then((config) => {
           if (config.error) {
             return;
           }
 
-          sessionStorage.setItem(
-            config.data.guild_id,
-            JSON.stringify(config.data),
-          );
           prefillFrom(config.data);
         })
         .catch((error) => console.log(error));

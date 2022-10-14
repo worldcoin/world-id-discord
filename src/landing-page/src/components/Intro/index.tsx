@@ -36,7 +36,7 @@ export const Intro = memo(function Intro() {
 
           <div className="mt-6 grid md:grid-flow-col justify-start">
             {/* FIXME: Redirect to bot installation page */}
-            <Link href={process.env.REACT_APP_DISCORD_LOGIN_AUTH_URL}>
+            <Link href={process.env.REACT_APP_ADD_BOT_URL || "#"}>
               Install now
             </Link>
 
