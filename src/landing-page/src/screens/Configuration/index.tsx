@@ -53,6 +53,8 @@ export const Configuration = memo(function Configuration() {
     null,
   );
   const [selectedGuild, setSelectedGuild] = useState<Option | null>(null);
+  const [fetchRolesError, setFetchRolesError] = useState("");
+  const [formDataLoading, setFormDataLoading] = useState(false);
 
   // FIXME: mocked staging status
   useEffect(() => {
@@ -118,24 +120,25 @@ export const Configuration = memo(function Configuration() {
   }, []);
 
   const prefillFrom = useCallback(
-    (data: GetBotConfigResult["data"]) => {
-      if (!data) {
+    (props: {
+      botConfigData: GetBotConfigResult["data"];
+      existingRoles: Array<{ label: string; value: string }>;
+    }) => {
+      if (!props.botConfigData) {
         return;
       }
 
-      setActionsId(data.action_id);
-      setRoles([
-        ...data.roles.map((role) => ({ label: role, value: role })),
-        ...roles.filter(
-          (role) =>
-            !data.roles.some((fetchedRole) => fetchedRole === role.value),
-        ),
-      ]);
+      setActionsId(props.botConfigData.action_id);
+
       setSelectedRoles(
-        data.roles.map((role) => ({ label: role, value: role })),
+        props.existingRoles.filter((role) =>
+          props.botConfigData?.roles.find(
+            (fetchedRole) => fetchedRole === role.value,
+          ),
+        ),
       );
     },
-    [roles],
+    [],
   );
 
   const clearForm = useCallback(() => {
@@ -144,29 +147,44 @@ export const Configuration = memo(function Configuration() {
   }, []);
 
   const selectGuild = useCallback(
-    (guild: Option) => {
-      getGuildRoles(guild.value)
-        .then((fetchedRoles) =>
-          setRoles(
-            fetchedRoles
-              .filter((role) => role.name !== "@everyone")
-              .map((role) => ({ label: role.name, value: role.id })),
-          ),
-        )
-        .catch((error) => console.error(error));
+    async (guild: Option) => {
+      setFormDataLoading(true);
+      try {
+        const guildRoles = await getGuildRoles(guild.value);
+        clearForm();
 
-      clearForm();
-      setSelectedGuild(guild);
+        if (!Array.isArray(guildRoles)) {
+          throw guildRoles;
+        }
 
-      getBotConfig(guild.value)
-        .then((config) => {
-          if (config.error) {
-            return;
-          }
+        setFetchRolesError("");
+        const existingRoles = guildRoles
+          .filter((role) => role.name !== "@everyone")
+          .map((role) => ({ label: role.name, value: role.id }));
 
-          prefillFrom(config.data);
-        })
-        .catch((error) => console.log(error));
+        setRoles(existingRoles);
+
+        const botConfig = await getBotConfig(guild.value);
+
+        if (botConfig.error) {
+          return;
+        }
+
+        prefillFrom({
+          botConfigData: botConfig.data,
+          existingRoles,
+        });
+
+        setSelectedGuild(guild);
+      } catch (error: any) {
+        setFormDataLoading(false);
+        if (!error.message) {
+          return console.log(error);
+        }
+
+        setFetchRolesError(error.message);
+      }
+      setFormDataLoading(false);
     },
     [clearForm, prefillFrom],
   );
@@ -183,6 +201,15 @@ export const Configuration = memo(function Configuration() {
             "before:rounded-[100%] before:bg-gradient-81.5 before:from-4940e0 before:to-a39dff",
           )}
         >
+          {formDataLoading && (
+            <div className="z-50 flex items-center justify-center absolute inset-0 bg-000000/80">
+              <Icon
+                className="w-16 h-16 animate animate-ping"
+                name="logo"
+              />
+            </div>
+          )}
+
           <div className="grid grid-flow-col justify-between auto-cols-max items-center p-8 border-b border-[color:inherit]">
             <span className="text-20 font-semibold">
               World ID Bot Configuration
@@ -228,8 +255,14 @@ export const Configuration = memo(function Configuration() {
                 placeholder="Choose a server"
               />
 
-              <span className="block mt-3 text-6673b9">
-                The server to which the changes will be applied
+              <span
+                className={cn("block mt-3", {
+                  "text-6673b9": !fetchRolesError,
+                  "text-red-500": fetchRolesError,
+                })}
+              >
+                {fetchRolesError ||
+                  "The server to which the changes will be applied"}
               </span>
             </div>
 

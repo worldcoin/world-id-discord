@@ -14,6 +14,7 @@ const TABLE_NAME = process.env.REACT_APP_AWS_DYNAMODB_TABLE_NAME;
 
 export const saveBotConfig = async (bogConfig: BotConfig) => {
   let success: boolean;
+  console.log(bogConfig);
   try {
     const response = await client.send(
       new PutItemCommand({

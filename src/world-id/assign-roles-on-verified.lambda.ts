@@ -39,21 +39,17 @@ export const handler: Handler<UserCompletedVerification> = async (event) => {
     const existingRoles = (await rest.get(
       Routes.guildRoles(event.guild_id),
     )) as RESTGetAPIGuildRolesResult;
-    console.log("Server existing roles:", existingRoles);
 
-    const userRolesName = event.user.roles.flatMap(
-      (roleId) => existingRoles.find((r) => r.id === roleId)?.name ?? [],
+    const userRolesIds = event.user.roles.flatMap(
+      (roleId) => existingRoles.find((r) => r.id === roleId)?.id ?? [],
     );
 
     const rolesToAssign = guildBotConfig.data.roles.filter(
-      (roleName) => !userRolesName.includes(roleName),
-    );
-    const rolesIds = rolesToAssign.flatMap(
-      (name) => existingRoles.find((r) => r.name === name)?.id ?? [],
+      (roleId) => !userRolesIds.includes(roleId),
     );
 
     await Promise.all(
-      rolesIds.map((roleId) =>
+      rolesToAssign.map((roleId) =>
         rest.put(
           Routes.guildMemberRole(event.guild_id, event.user.id, roleId),
           { reason: "User successfully passed World ID verification" },

@@ -5,6 +5,7 @@ import {
 } from "@aws-sdk/client-secrets-manager";
 import { REST } from "@discordjs/rest";
 import type { APIGatewayProxyHandler } from "aws-lambda";
+import type { RESTGetAPIGuildRolesResult } from "discord-api-types/v10";
 import { Routes } from "discord-api-types/v10";
 
 const secretManager = new SecretsManagerClient({});
@@ -33,10 +34,26 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   }
 
   const rest = new REST({ version: "10" }).setToken(botToken);
-  const roles = await rest.get(Routes.guildRoles(guild_id));
+
+  let existingRoles: RESTGetAPIGuildRolesResult | null = null;
+
+  try {
+    existingRoles = (await rest.get(
+      Routes.guildRoles(guild_id),
+    )) as RESTGetAPIGuildRolesResult;
+  } catch (error) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        message:
+          "Error while getting roles from guild. Probably bot is not installed on this guild",
+        error,
+      }),
+    };
+  }
 
   return {
     statusCode: 200,
-    body: JSON.stringify(roles),
+    body: JSON.stringify(existingRoles),
   };
 };
