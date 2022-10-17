@@ -6,7 +6,7 @@ import type { Handler } from "aws-lambda";
 
 import { getEnv } from "@/utils/get-env";
 
-import { getBotConfig } from "@/utils/get-bot-config";
+import { fetchBotConfig } from "@/utils/fetch-bot-config";
 import { REST } from "@discordjs/rest";
 import type { RESTGetAPIGuildRolesResult } from "discord-api-types/v10";
 import { Routes } from "discord-api-types/v10";
@@ -17,7 +17,7 @@ const secretManager = new SecretsManagerClient({});
 export const handler: Handler<UserCompletedVerification> = async (event) => {
   console.log("User completed verification", event);
 
-  const guildBotConfig = await getBotConfig(event.guild_id);
+  const guildBotConfig = await fetchBotConfig(event.guild_id);
 
   if (guildBotConfig.error) {
     throw Error(`No bot config for guild ${event.guild_id}`);

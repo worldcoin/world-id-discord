@@ -150,7 +150,6 @@ const landingPageProject = new ReactTypeScriptProject({
       },
     },
   },
-  deps: ["@aws-sdk/client-dynamodb", "@aws-sdk/util-dynamodb"],
 });
 
 landingPageProject.gitignore.addPatterns(".env.local");

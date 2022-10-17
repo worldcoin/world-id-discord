@@ -13,7 +13,7 @@ type GetBotConfigResult =
       error: Error;
     };
 
-export const getBotConfig = async (
+export const fetchBotConfig = async (
   guild_id: string,
 ): Promise<GetBotConfigResult> => {
   const client = new DynamoDBClient({ region: getEnv("AWS_DEFAULT_REGION") });

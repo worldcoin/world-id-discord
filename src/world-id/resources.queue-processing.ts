@@ -17,7 +17,7 @@ import { arrayify, concat, hexlify } from "@ethersproject/bytes";
 
 import type { APIApplicationCommandInteraction } from "discord-api-types/v10";
 
-import { getBotConfig } from "@/utils/get-bot-config";
+import { fetchBotConfig } from "@/utils/fetch-bot-config";
 import sha3 from "js-sha3";
 import { checkIsUserAlreadyVerified } from "./check-is-user-verified";
 import type { UserCompletedVerification } from "./events";
@@ -232,7 +232,7 @@ export const handler: SQSHandler = async (event, context) => {
     return;
   }
 
-  const guildBotConfig = await getBotConfig(message.guild_id);
+  const guildBotConfig = await fetchBotConfig(message.guild_id);
 
   if (guildBotConfig.error) {
     console.error(guildBotConfig.error);

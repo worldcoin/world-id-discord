@@ -13,9 +13,7 @@ import {
 } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Guild } from "types";
-import { saveBotConfig } from "utils";
-import { getBotConfig } from "utils/get-bot-config";
-import { getGuildRoles } from "utils/get-guild-roles";
+import { getBotConfig, getGuildRoles, saveBotConfig } from "utils";
 import type { GetBotConfigResult } from "~/types";
 import { Selector } from "./Selector";
 import type { Option } from "./types/option";
@@ -165,6 +163,7 @@ export const Configuration = memo(function Configuration() {
         setRoles(existingRoles);
 
         const botConfig = await getBotConfig(guild.value);
+        console.log("botConfig: ", botConfig);
 
         if (botConfig.error) {
           return;

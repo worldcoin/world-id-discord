@@ -170,8 +170,61 @@ export class WorldIdDiscordBotStack extends Stack {
     });
 
     getRolesLambda.addEnvironment("TOKEN_SECRET_ARN", botToken.secretArn);
-
     botToken.grantRead(getRolesLambda);
+
+    getRoles.addMethod("GET", new LambdaIntegration(getRolesLambda), {
+      operationName: "DiscordBotGetGuildRoles",
+      requestParameters: {
+        "method.request.querystring.guild_id": true,
+      },
+      requestValidator: new RequestValidator(
+        this,
+        "Get Roles Request Validator",
+        { restApi: discordBotAPI, validateRequestParameters: true },
+      ),
+    });
+
+    const getBotConfig = discordBotAPI.root.addResource("get-bot-config");
+
+    const getBotConfigLambda = new NodejsFunction(this, "Get Bot Config", {
+      ...COMMON_LAMBDAS_PROPS,
+      entry: require.resolve("./endpoints/get-bot-config.lambda.ts"),
+      timeout: Duration.minutes(1),
+    });
+
+    getBotConfigLambda.addEnvironment("DYNAMODB_TABLE_NAME", table.tableName);
+    table.grantReadData(getBotConfigLambda);
+
+    getBotConfig.addMethod("GET", new LambdaIntegration(getBotConfigLambda), {
+      operationName: "DiscordBotGetConfig",
+      requestParameters: {
+        "method.request.querystring.guild_id": true,
+      },
+      requestValidator: new RequestValidator(
+        this,
+        "Get Bot Config Request Validator",
+        { restApi: discordBotAPI, validateRequestParameters: true },
+      ),
+    });
+
+    const saveBotConfig = discordBotAPI.root.addResource("save-bot-config");
+
+    const saveBotConfigLambda = new NodejsFunction(this, "Save Bot Config", {
+      ...COMMON_LAMBDAS_PROPS,
+      entry: require.resolve("./endpoints/save-bot-config.lambda.ts"),
+      timeout: Duration.minutes(1),
+    });
+
+    saveBotConfigLambda.addEnvironment("DYNAMODB_TABLE_NAME", table.tableName);
+    table.grantWriteData(saveBotConfigLambda);
+
+    saveBotConfig.addMethod(
+      "POST",
+      new LambdaIntegration(saveBotConfigLambda),
+      {
+        operationName: "DiscordBotSaveConfig",
+      },
+    );
 
     const oauth2callback = discordBotAPI.root.addResource("oauth2callback");
     const discordServerConfigurationLambda = new NodejsFunction(
@@ -223,18 +276,6 @@ export class WorldIdDiscordBotStack extends Stack {
         ),
       },
     );
-
-    getRoles.addMethod("GET", new LambdaIntegration(getRolesLambda), {
-      operationName: "DiscordBotGetGuildRoles",
-      requestParameters: {
-        "method.request.querystring.guild_id": true,
-      },
-      requestValidator: new RequestValidator(
-        this,
-        "Get Roles Request Validator",
-        { restApi: discordBotAPI, validateRequestParameters: true },
-      ),
-    });
 
     new CfnOutput(this, "OAuth2 Callback Url", {
       value: Fn.join("", [discordBotAPI.url, oauth2callback.path]),

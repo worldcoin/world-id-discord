@@ -12,7 +12,7 @@ import {
   type RESTPostOAuth2ClientCredentialsResult,
 } from "discord-api-types/v10";
 
-import { getBotConfig } from "@/utils/get-bot-config";
+import { fetchBotConfig } from "@/utils/fetch-bot-config";
 import { getEnv } from "@/utils/get-env";
 import { commands } from "@/world-id/slash-commands";
 
@@ -32,7 +32,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       body: `guild_id is required but wasn't provided in querystring`,
     };
 
-  const guildBotConfig = await getBotConfig(guild_id);
+  const guildBotConfig = await fetchBotConfig(guild_id);
 
   if (guildBotConfig.error) {
     console.error(guildBotConfig.error);
