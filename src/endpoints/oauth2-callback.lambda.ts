@@ -139,7 +139,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     statusCode: 302,
     headers: {
       // @FIXME update to production landing-page url
-      location: `http://localhost:3000/auth#token_type=${token.token_type}&access_token=${token.access_token}`,
+      location: `https://staging-wld-id-bot.vercel.app/auth#token_type=${token.token_type}&access_token=${token.access_token}`,
     },
     body: "",
     isBase64Encoded: false,
