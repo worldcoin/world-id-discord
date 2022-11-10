@@ -23,6 +23,7 @@ export const Selector = memo(function Selector(
     placeholder?: string;
     info?: string;
     onChange: (value: Option) => void;
+    disabled?: boolean;
   } & (
     | {
         multiple: true;
@@ -107,6 +108,7 @@ export const Selector = memo(function Selector(
           "grid grid-cols-fr/auto items-center justify-between gap-x-4 px-6 py-3.5 pr-7.5 rounded-xl bg-0c0e10 border-2 border-f9f9f9/20",
           "text-14 font-semibold cursor-pointer select-none hover:border-6673b9/50 transition-colors",
           { "!border-6673b9": expanded },
+          { "bg-0c0e10/50 pointer-events-none select-none": props.disabled },
         )}
         onClick={toggleExpand}
       >
@@ -204,7 +206,7 @@ export const Selector = memo(function Selector(
           </div>
 
           {props.info && (
-            <span className="grid grid-flow-col gap-x-2 opacity-40 mt-2.5 px-6">
+            <span className="grid grid-cols-auto/fr items-center gap-x-2 opacity-40 mt-2.5 px-6">
               <Icon
                 className="w-3 h-3"
                 name="info"

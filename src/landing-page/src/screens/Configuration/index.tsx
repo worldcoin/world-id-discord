@@ -291,14 +291,15 @@ export const Configuration = memo(function Configuration() {
 
               <input
                 className={cn(
-                  "w-full mt-4 p-6 border-2 bg-transparent border-f9f9f9/20 rounded-xl outline-none bg-0c0e10",
+                  "w-full mt-4 p-6 border-2 border-f9f9f9/20 rounded-xl outline-none bg-0c0e10",
                   "text-14 font-semibold placeholder:text-ffffff/20 hover:border-6673b9/50 focus:border-6673b9",
-                  "transition-colors",
+                  "transition-colors disabled:bg-0c0e10/50",
                 )}
                 type="text"
                 placeholder="wid_fb74a74cc94d3ffbe3f6669f556b36e4"
                 value={actionId}
                 onChange={handleChangeActionId}
+                disabled={!selectedGuild}
               />
 
               {/* FIXME: add link */}
@@ -326,11 +327,10 @@ export const Configuration = memo(function Configuration() {
                 setOptions={setRoles}
                 selected={selectedRoles}
                 onChange={toggleRoles}
-                withInput
-                inputPlaceholder="Add a role..."
                 placeholder="Choose a role"
                 info="You can create more roles in your Discord server settings"
                 multiple
+                disabled={!selectedGuild}
               />
 
               <span className="block mt-3 text-6673b9">
