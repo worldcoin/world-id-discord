@@ -77,5 +77,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   return {
     statusCode: data.$metadata.httpStatusCode ?? 200,
     body: JSON.stringify(result),
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
   };
 };
