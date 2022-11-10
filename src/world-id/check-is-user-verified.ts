@@ -25,7 +25,7 @@ export const checkIsUserAlreadyVerified = async ({
   )) as RESTGetAPIGuildRolesResult;
 
   const userRoles = message.member?.roles.flatMap(
-    (roleId) => existingRoles.find((r) => r.id === roleId)?.name ?? [],
+    (roleId) => existingRoles.find((r) => r.id === roleId)?.id ?? [],
   );
 
   const isUserAlreadyValidated =
