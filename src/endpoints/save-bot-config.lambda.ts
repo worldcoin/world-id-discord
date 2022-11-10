@@ -29,10 +29,15 @@ type SaveBotConfigError = {
 export const handler: APIGatewayProxyHandler = async (event) => {
   const { item } = JSON.parse(event.body ?? "{}") as Body;
 
+  const headers = {
+    "Access-Control-Allow-Origin": "*",
+  };
+
   if (!item) {
     return {
       statusCode: 400,
       body: JSON.stringify({ error: new Error("Data Item wasn't provided") }),
+      headers,
     };
   }
 
@@ -67,6 +72,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     return {
       statusCode: error.$metadata.httpStatusCode ?? 400,
       body: JSON.stringify(result),
+      headers,
     };
   }
 
@@ -77,8 +83,6 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   return {
     statusCode: data.$metadata.httpStatusCode ?? 200,
     body: JSON.stringify(result),
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-    },
+    headers,
   };
 };

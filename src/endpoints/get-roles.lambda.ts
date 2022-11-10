@@ -13,6 +13,10 @@ const secretManager = new SecretsManagerClient({});
 export const handler: APIGatewayProxyHandler = async (event) => {
   const { guild_id } = event.queryStringParameters ?? {};
 
+  const headers = {
+    "Access-Control-Allow-Origin": "*",
+  };
+
   const botToken = (
     await secretManager.send(
       new GetSecretValueCommand({ SecretId: getEnv("TOKEN_SECRET_ARN") }),
@@ -23,6 +27,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     return {
       statusCode: 400,
       body: "Internal error. Can't receive bot token",
+      headers,
     };
   }
 
@@ -30,6 +35,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     return {
       statusCode: 422,
       body: `guild_id is required but wasn't provided in querystring`,
+      headers,
     };
   }
 
@@ -49,14 +55,13 @@ export const handler: APIGatewayProxyHandler = async (event) => {
           "Error while getting roles from guild. Probably bot is not installed on this guild",
         error,
       }),
+      headers,
     };
   }
 
   return {
     statusCode: 200,
     body: JSON.stringify(existingRoles),
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-    },
+    headers,
   };
 };
