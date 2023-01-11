@@ -13,6 +13,8 @@ const iconNames = [
   'github',
   'info',
   'logo',
+  'mobile-device',
+  'orb',
   'play-market',
   'world-id',
 ] as const
