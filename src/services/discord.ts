@@ -1,11 +1,11 @@
-import fetch from 'node-fetch'
-import { verifyKey } from 'discord-interactions'
 import {
   APIApplicationCommand,
   APIApplicationCommandInteraction,
   APIPingInteraction,
-  InteractionType
+  InteractionType,
 } from 'discord-api-types/v10'
+import {verifyKey} from 'discord-interactions'
+import fetch from 'node-fetch'
 
 const DISCORD_APP_ID = process.env.DISCORD_APP_ID!
 const DISCORD_APP_PUBLIC_KEY = process.env.DISCORD_APP_PUBLIC_KEY!
@@ -16,7 +16,7 @@ export function verifyInteractionSignature(rawBody: string, signature: string, t
 }
 
 export function isPingInteraction(
-  data: APIPingInteraction | APIApplicationCommandInteraction
+  data: APIPingInteraction | APIApplicationCommandInteraction,
 ): data is APIPingInteraction {
   return data.type === InteractionType.Ping
 }
@@ -31,10 +31,10 @@ export const createGlobalCommand = (command: CreateGlobalCommand) => {
   return fetch(`https://discord.com/api/v10/applications/${DISCORD_APP_ID}/commands`, {
     method: 'POST',
     headers: {
-      'Authorization': `Bot ${DISCORD_BOT_TOKEN}`,
-      'Accept': 'application/json',
+      Authorization: `Bot ${DISCORD_BOT_TOKEN}`,
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(command)
+    body: JSON.stringify(command),
   })
 }
