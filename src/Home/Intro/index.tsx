@@ -1,6 +1,6 @@
 import cn from 'classnames'
 import {Button, Link} from 'common/Button'
-import {Captcha} from 'common/Catpcha'
+import {Captcha} from 'common/Captcha'
 import {memo} from 'react'
 
 export const Intro = memo(function Intro() {

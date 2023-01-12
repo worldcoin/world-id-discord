@@ -1,5 +1,5 @@
 import cn from 'classnames'
-import {Captcha} from 'common/Catpcha'
+import {Captcha} from 'common/Captcha'
 import {memo} from 'react'
 
 export const About = memo(function About() {
