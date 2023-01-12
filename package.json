@@ -1,14 +1,4 @@
 {
-  "name": "world-id-discord-bot",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "format": "ofmt ./src",
-    "lint": "ofmt --lint ./src && olint ./src"
-  },
   "dependencies": {
     "@next/font": "13.1.1",
     "@types/node": "18.11.18",
@@ -27,11 +17,25 @@
     "@ottofeller/ofmt": "1.5.2",
     "@ottofeller/prettier-config-ofmt": "1.5.2",
     "autoprefixer": "^10.4.13",
+    "cspell": "^6.18.1",
     "postcss": "^8.4.21",
     "tailwindcss": "^3.2.4"
   },
-  "prettier": "@ottofeller/prettier-config-ofmt",
   "eslintConfig": {
     "extends": "@ottofeller/eslint-config-ofmt/eslint.quality.cjs"
-  }
+  },
+  "name": "world-id-discord-bot",
+  "prettier": "@ottofeller/prettier-config-ofmt",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "format": "ofmt ./src",
+    "format:check": "ofmt --lint ./src",
+    "lint": "ofmt --lint ./src && olint ./src",
+    "spellcheck": "cspell ./**/*.{ts,js,tsx,json} -e package-lock.json -e node_modules -e .next",
+    "start": "next start",
+    "typecheck": "tsc"
+  },
+  "version": "0.1.0"
 }
