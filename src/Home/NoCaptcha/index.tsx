@@ -2,7 +2,11 @@ import cn from 'classnames'
 import {Link} from 'common/Button'
 import {memo} from 'react'
 
-export const NoCaptcha = memo(function NoCaptcha() {
+interface NoCaptchaProps {
+  onInstall: () => void
+}
+
+export const NoCaptcha = memo(function NoCaptcha(props: NoCaptchaProps) {
   return (
     <div className="grid grid-cols-container px-4 md:px-8 mt-24 md:mt-48 pb-32 md:pb-0">
       <div
@@ -19,11 +23,10 @@ export const NoCaptcha = memo(function NoCaptcha() {
             </p>
           </div>
 
-          {/* FIXME: add link */}
           <Link
             variant="flat"
             className="justify-self-stretch md:justify-self-start bg-ffffff"
-            href={process.env.REACT_APP_ADD_BOT_URL || '#'}
+            onClick={props.onInstall}
           >
             <span className="bg-gradient-81.5 from-4940e0 to-a39dff bg-clip-text text-transparent">Install now</span>
           </Link>

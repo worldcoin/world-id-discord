@@ -2,6 +2,7 @@ import {
   APIApplicationCommand,
   APIApplicationCommandInteraction,
   APIPingInteraction,
+  ApplicationCommandType,
   InteractionType,
 } from 'discord-api-types/v10'
 import {verifyKey} from 'discord-interactions'
@@ -21,14 +22,20 @@ export function isPingInteraction(
   return data.type === InteractionType.Ping
 }
 
-export type CreateGlobalCommand = {
+type Command = {
   type: APIApplicationCommand['type']
   name: APIApplicationCommand['name']
   description: APIApplicationCommand['description']
 }
 
-export const createGlobalCommand = (command: CreateGlobalCommand) => {
-  return fetch(`https://discord.com/api/v10/applications/${DISCORD_APP_ID}/commands`, {
+export const createGuildCommands = (guildId: string) => {
+  const command: Command = {
+    type: ApplicationCommandType.ChatInput,
+    name: 'verify',
+    description: 'verifying with WorldID',
+  }
+
+  return fetch(`https://discord.com/api/v10/applications/${DISCORD_APP_ID}/guilds/${guildId}/commands`, {
     method: 'POST',
     headers: {
       Authorization: `Bot ${DISCORD_BOT_TOKEN}`,
