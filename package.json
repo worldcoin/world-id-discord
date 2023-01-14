@@ -59,7 +59,7 @@
     "typescript": "^4.7"
   },
   "dependencies": {
-    "@aws-sdk/client-eventbridge": "^3.105.0",
+    "@aws-sdk/client-eventbridge": "^3.238.0",
     "@aws-sdk/client-secrets-manager": "^3.105.0",
     "@discordjs/builders": "*",
     "@discordjs/rest": "~0",
