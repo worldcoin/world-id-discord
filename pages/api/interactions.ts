@@ -41,10 +41,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     }
     return res.status(200).json(payload)
   }
+  // FIXME: implement verification
   const payload: APIInteractionResponseChannelMessageWithSource = {
     type: InteractionResponseType.ChannelMessageWithSource,
     data: {
-      content: 'Pong'
+      content: 'it works'
     }
   }
   return res.status(200).json(payload)
