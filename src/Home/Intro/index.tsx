@@ -1,9 +1,13 @@
 import cn from 'classnames'
-import {Button, Link} from 'common/Button'
+import {Button} from 'common/Button'
 import {Captcha} from 'common/Captcha'
 import {memo} from 'react'
 
-export const Intro = memo(function Intro() {
+interface IntroProps {
+  onInstall: () => void
+}
+
+export const Intro = memo(function Intro(props: IntroProps) {
   return (
     <div
       className={cn(
@@ -32,8 +36,9 @@ export const Intro = memo(function Intro() {
           </p>
 
           <div className="mt-6 grid md:grid-flow-col justify-start">
-            {/* FIXME: Redirect to bot installation page */}
-            <Link href={process.env.REACT_APP_ADD_BOT_URL || '#'}>Install now</Link>
+            <Button type="button" onClick={props.onInstall}>
+              Install now
+            </Button>
 
             <Button variant="flat" className="text-938cfa">
               Learn more

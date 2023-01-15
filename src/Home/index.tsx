@@ -2,7 +2,8 @@ import {Footer} from 'common/Footer'
 import {Header} from 'common/Header'
 import {Icon} from 'common/Icon'
 import {Layout} from 'common/Layout'
-import {memo} from 'react'
+import {signIn} from 'next-auth/react'
+import {memo, useCallback} from 'react'
 import {About} from './About'
 import {Benefits} from './Benefits'
 import {CTA} from './CTA'
@@ -12,11 +13,15 @@ import {NoCaptcha} from './NoCaptcha'
 import {Steps} from './Steps'
 
 export const Home = memo(function Home() {
+  const handleInstall = useCallback(async () => {
+    await signIn('discord', {callbackUrl: '/admin'})
+  }, [])
+
   return (
     <Layout>
       <div className="grid grid-rows-auto/fr/auto min-h-screen">
         <Header />
-        <Intro />
+        <Intro onInstall={handleInstall} />
 
         <CTA wrapperClassName="mt-16 md:mt-0">
           <span>
@@ -32,7 +37,7 @@ export const Home = memo(function Home() {
 
       <About />
       <Steps />
-      <NoCaptcha />
+      <NoCaptcha onInstall={handleInstall} />
       <Benefits />
       <Join />
 
