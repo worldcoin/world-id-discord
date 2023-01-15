@@ -21,8 +21,6 @@ To create your own bot:
     - Press `Add bot`
     - Press `Reset Token`
     - Token will be visible after this
-13. Go to the `OAuth2` section and select `URL Generator`.
-14. Set the `bot` checkbox in `SCOPES` and then `Use Slash Commands` in `BOT PERMISSIONS`. The installation link appears below.
-15. Go to `<Your NGROK tunneled url>/register` to register slash commands.
-16. Install your bot using URL from `URL Generator`.
-17. Try the `/ping` command.
+13. On the landing page press `Install now` button.
+14. Install bot.
+15. Try the `/verify` command.
