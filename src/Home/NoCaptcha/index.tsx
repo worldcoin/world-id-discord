@@ -1,5 +1,5 @@
 import cn from 'classnames'
-import {Link} from 'common/Button'
+import {Button} from 'common/Button'
 import {memo} from 'react'
 
 interface NoCaptchaProps {
@@ -23,13 +23,14 @@ export const NoCaptcha = memo(function NoCaptcha(props: NoCaptchaProps) {
             </p>
           </div>
 
-          <Link
+          <Button
+            type="button"
             variant="flat"
             className="justify-self-stretch md:justify-self-start bg-ffffff"
             onClick={props.onInstall}
           >
             <span className="bg-gradient-81.5 from-4940e0 to-a39dff bg-clip-text text-transparent">Install now</span>
-          </Link>
+          </Button>
         </div>
 
         <div className="mt-10 pb-20 md:mt-0 md:pb-0">

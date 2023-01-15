@@ -1,5 +1,5 @@
 import cn from 'classnames'
-import {Button, Link} from 'common/Button'
+import {Button} from 'common/Button'
 import {Captcha} from 'common/Captcha'
 import {memo} from 'react'
 
@@ -36,7 +36,9 @@ export const Intro = memo(function Intro(props: IntroProps) {
           </p>
 
           <div className="mt-6 grid md:grid-flow-col justify-start">
-            <Link onClick={props.onInstall}>Install now</Link>
+            <Button type="button" onClick={props.onInstall}>
+              Install now
+            </Button>
 
             <Button variant="flat" className="text-938cfa">
               Learn more
