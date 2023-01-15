@@ -31,6 +31,7 @@ export const InitialScene = memo(function Initial(props: {
   // FIXME: implement relevant submit function
   const complete = useCallback(() => {
     props.setLoading(true)
+
     setTimeout(() => {
       if (Math.random() > 0.5) {
         props.setLoading(false)
