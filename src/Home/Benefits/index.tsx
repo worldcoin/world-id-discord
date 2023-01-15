@@ -1,4 +1,5 @@
 import cn from 'classnames'
+import {GradientText} from 'common/GradientText'
 import {memo} from 'react'
 
 const items = [
@@ -28,14 +29,9 @@ export const Benefits = memo(function Benefits() {
         <div className="text-center md:w-min justify-self-center">
           <span className="font-bold uppercase text-14 text-96a0db">WORLD ID BENEFITS</span>
 
-          <h2
-            className={cn(
-              'text-transparent bg-clip-text bg-gradient-81.5 from-4940e0 to-a39dff text-36 md:text-64 font-semibold mt-4',
-              'md:whitespace-nowrap',
-            )}
-          >
+          <GradientText as="h2" className="text-36 md:text-64 font-semibold mt-4 md:whitespace-nowrap">
             Why choose World ID Bot?
-          </h2>
+          </GradientText>
 
           <p className="mt-8 md:px-16 md:text-18 text-bcc5f9">
             The World ID bot removes bot spam and protects against sybil attacks on your Discord server. Additionally,
@@ -50,21 +46,13 @@ export const Benefits = memo(function Benefits() {
               )}
               key={index}
             >
-              <span
-                className={cn(
-                  'text-transparent bg-clip-text bg-gradient-81.5 from-4940e0 to-a39dff font-medium text-42 md:text-72',
-                )}
-              >
+              <GradientText as="span" className="font-medium text-42 md:text-72">
                 {(index + 1).toString().padStart(2, '0')}
-              </span>
+              </GradientText>
 
-              <h3
-                className={cn(
-                  'text-transparent bg-clip-text bg-gradient-81.5 from-4940e0 to-a39dff text-20 md:text-24 font-semibold mt-4 md:mt-8',
-                )}
-              >
+              <GradientText as="h3" className="text-20 md:text-24 font-semibold mt-4 md:mt-8">
                 {item.title}
-              </h3>
+              </GradientText>
 
               <p className="font-rubik text-96a0db mt-4">{item.content}</p>
             </div>

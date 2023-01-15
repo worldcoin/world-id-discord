@@ -1,6 +1,7 @@
 import cn from 'classnames'
 import {Button} from 'common/Button'
 import {Captcha} from 'common/Captcha'
+import {GradientText} from 'common/GradientText'
 import {memo} from 'react'
 
 interface IntroProps {
@@ -21,13 +22,9 @@ export const Intro = memo(function Intro(props: IntroProps) {
       >
         <div className="grid gap-y-6">
           <div className="text-32 md:text-48">
-            <span className="bg-clip-text text-transparent bg-gradient-81.5 from-4940e0 to-a39dff inline-block">
-              Improve your Discord&nbsp;
-            </span>
+            <GradientText as="span">Improve your Discord&nbsp;</GradientText>
             server by verifying unique people&nbsp;
-            <span className="bg-clip-text text-transparent bg-gradient-81.5 from-4940e0 to-a39dff inline-block">
-              with World ID
-            </span>
+            <GradientText as="span">with World ID</GradientText>
           </div>
 
           <p className="font-rubik text-bcc5f9">

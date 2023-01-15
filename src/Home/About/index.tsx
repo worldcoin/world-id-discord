@@ -1,5 +1,6 @@
 import cn from 'classnames'
 import {Captcha} from 'common/Captcha'
+import {GradientText} from 'common/GradientText'
 import {memo} from 'react'
 
 export const About = memo(function About() {
@@ -9,13 +10,9 @@ export const About = memo(function About() {
         <div className="grid content-start items-start justify-items-start">
           <span className="uppercase text-14 font-bold text-96a0db">how to get verified</span>
 
-          <h2
-            className={cn(
-              'font-semibold text-32 md:text-48 bg-clip-text text-transparent bg-gradient-81.5 from-4940e0 to-a39dff mt-4',
-            )}
-          >
+          <GradientText as="h2" className="text-32 md:text-48 font-semibold mt-4">
             What is World ID
-          </h2>
+          </GradientText>
 
           <div className="grid gap-y-6 text-18 font-rubik text-bcc5f9 mt-12">
             <p>
