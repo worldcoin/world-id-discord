@@ -17,6 +17,7 @@ export const config = {
   },
 }
 
+// cspell:disable-next-line
 // REVIEW: @igorosip0v need pass real actionId
 const actionId = 'verify'
 
