@@ -1,7 +1,13 @@
+import {ISuccessResult, WidgetProps} from '@worldcoin/idkit'
 import {Button} from 'common/Button'
 import {GuildLabel} from 'common/GuildLabel'
+import dynamic from 'next/dynamic'
 import {memo, useEffect, useState} from 'react'
 import {VerificationError} from 'Verification/types'
+
+const IDKitWidget = dynamic<WidgetProps>(() => import('@worldcoin/idkit').then((mod) => mod.IDKitWidget), {
+  ssr: false,
+})
 
 const guildData = {
   image: '/images/orb.png',
@@ -20,7 +26,11 @@ const texts = {
   },
 }
 
-export const ErrorScene = memo(function ErrorScene() {
+export const ErrorScene = memo(function ErrorScene(props: {
+  actionId: string
+  signal: string
+  complete: (result: ISuccessResult) => Promise<void>
+}) {
   const [error, setError] = useState<VerificationError | null>(null)
 
   //NOTE: temporary useEffect to display different types of errors without real data
@@ -45,9 +55,13 @@ export const ErrorScene = memo(function ErrorScene() {
       )}
 
       {error !== VerificationError.AlreadyVerified && (
-        <Button type="button" className="mt-[22px] w-full">
-          Verify your identity
-        </Button>
+        <IDKitWidget actionId={props.actionId} signal={props.signal} onVerification={props.complete}>
+          {({open}) => (
+            <Button type="button" className="mt-[22px] w-full" onClick={open}>
+              Verify your identity
+            </Button>
+          )}
+        </IDKitWidget>
       )}
     </div>
   )
