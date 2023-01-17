@@ -1,16 +1,18 @@
 import cn from 'classnames'
 import {Button} from 'common/Button'
+import {GuildLabel} from 'common/GuildLabel'
 import {Header} from 'common/Header'
 import {Layout} from 'common/Layout'
 import {Modal} from 'common/Modal'
+import {BotConfig, Guild} from 'common/types'
 import {APIRole} from 'discord-api-types/v10'
 import Image from 'next/image'
-import {memo, useCallback, useState} from 'react'
+import {memo, useCallback, useEffect, useMemo, useState} from 'react'
 import {RolesSelector} from './RolesSelector'
 import {StyledCheckbox} from './StyledCheckbox'
 import type {Option} from './types/option'
 
-export const Admin = memo(function Admin(props: {roles: APIRole[]}) {
+export const Admin = memo(function Admin(props: {roles: APIRole[]; guild: Guild}) {
   const [roles, setRoles] = useState<Array<Option>>(() => {
     return props.roles.map((role) => ({
       label: role.name,
@@ -20,40 +22,106 @@ export const Admin = memo(function Admin(props: {roles: APIRole[]}) {
 
   const [selectedPhoneRoles, setSelectedPhoneRoles] = useState<Array<Option>>([])
   const [selectedOrbRoles, setSelectedOrbRoles] = useState<Array<Option>>([])
-  const [savingInProgress] = useState(false)
-  const [savedSuccessfully] = useState<boolean | null>(null)
+  const [savingInProgress, setSavingInProgress] = useState(false)
+  const [savedSuccessfully, setSavedSuccessfully] = useState<boolean | null>(null)
   const [formDataLoading] = useState(false)
 
+  const [isBotEnabled, setIsBotEnabled] = useState(false)
+  const [isPhoneVerificationEnabled, setIsPhoneVerificationEnabled] = useState(false)
+  const [isOrbVerificationEnabled, setIsOrbVerificationEnabled] = useState(false)
+
+  // NOTE: Removes saving status message from page after 3 seconds
+  useEffect(() => {
+    if (savedSuccessfully === null) {
+      return
+    }
+
+    const timer = setTimeout(() => {
+      setSavedSuccessfully(null)
+    }, 3000)
+
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [savedSuccessfully])
+
+  const botConfig: BotConfig = useMemo(
+    () => ({
+      enabled: isBotEnabled,
+      guild_id: props.guild.id,
+      action_id: 'wid_1234567890',
+
+      phone: {
+        enabled: isPhoneVerificationEnabled,
+        roles: selectedPhoneRoles.map((role) => role.value),
+      },
+
+      orb: {
+        enabled: isOrbVerificationEnabled,
+        roles: selectedOrbRoles.map((role) => role.value),
+      },
+    }),
+    [
+      isBotEnabled,
+      isOrbVerificationEnabled,
+      isPhoneVerificationEnabled,
+      props.guild.id,
+      selectedOrbRoles,
+      selectedPhoneRoles,
+    ],
+  )
+
   const saveChanges = useCallback(() => {
-    console.log('saveChanges')
-  }, [])
+    setSavingInProgress(true)
+    if (selectedPhoneRoles.length === 0 || selectedOrbRoles.length === 0) {
+      return
+    }
 
-  const formValid = true
+    fetch('/api/dynamodb/save', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(botConfig),
+    })
+      .then((response) => {
+        if (response.ok) {
+          setSavedSuccessfully(true)
+        } else {
+          setSavedSuccessfully(false)
+        }
 
-  const guildData = {
-    image: '/images/orb.png',
-    name: 'Official Fortnite',
-  }
+        setSavingInProgress(false)
+      })
+      .catch((error) => {
+        console.error('Error:', error)
+        setSavedSuccessfully(false)
+        setSavingInProgress(false)
+      })
+  }, [botConfig, selectedOrbRoles.length, selectedPhoneRoles.length])
+
+  const formValid = useMemo(
+    () => selectedPhoneRoles.length > 0 || selectedOrbRoles.length > 0,
+    [selectedOrbRoles.length, selectedPhoneRoles.length],
+  )
+
+  const guildImage = useMemo(() => {
+    return props.guild.icon ? `https://cdn.discordapp.com/icons/${props.guild.id}/${props.guild.icon}.png` : ''
+  }, [props.guild.icon, props.guild.id])
 
   return (
     <Layout className="bg-0d1020 flex justify-center items-center relative min-h-screen">
       <Image src="/images/admin/background.svg" alt="Background" fill className="object-cover" />
-
       <Header hideLinks onTop />
 
       <Modal loading={formDataLoading}>
         <div className="relative grid justify-center auto-cols-max items-center p-6 border-b border-[color:inherit]">
           <div className="grid gap-y-3 justify-items-center w-full">
             <span className="text-20 font-semibold">Discord Bouncer Admin</span>
-
-            <div className="grid items-center grid-cols-fr/auto py-2 px-3 bg-ffffff/10 rounded-lg gap-x-2">
-              {/* FIXME: pass real data  */}
-              <Image src={guildData.image} alt="Discord guild logo" width={24} height={24} className="rounded-full" />
-              <span>{guildData.name}</span>
-            </div>
+            <GuildLabel image={guildImage} name={props.guild?.name ?? 'Your guild'} />
           </div>
 
-          <StyledCheckbox className="absolute top-6 right-6" />
+          <StyledCheckbox isOn={isBotEnabled} setIsOn={setIsBotEnabled} className="absolute top-6 right-6" />
         </div>
 
         <div className="grid grid-cols-[100%] gap-y-8.5 px-8 pt-12 pb-4">
@@ -75,6 +143,8 @@ export const Admin = memo(function Admin(props: {roles: APIRole[]}) {
               setRoles={setRoles}
               selectedRoles={selectedPhoneRoles}
               setSelectedRoles={setSelectedPhoneRoles}
+              isEnabled={isPhoneVerificationEnabled}
+              setIsEnabled={setIsPhoneVerificationEnabled}
             />
 
             <RolesSelector
@@ -86,6 +156,8 @@ export const Admin = memo(function Admin(props: {roles: APIRole[]}) {
               setRoles={setRoles}
               selectedRoles={selectedOrbRoles}
               setSelectedRoles={setSelectedOrbRoles}
+              isEnabled={isOrbVerificationEnabled}
+              setIsEnabled={setIsOrbVerificationEnabled}
             />
           </div>
 

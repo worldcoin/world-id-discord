@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.245.0",
+    "@aws-sdk/util-dynamodb": "^3.245.0",
     "@discordjs/builders": "^1.4.0",
     "@discordjs/rest": "^1.5.0",
     "@next/font": "13.1.1",
