@@ -1,9 +1,15 @@
+import {ISuccessResult, WidgetProps} from '@worldcoin/idkit'
 import {Button} from 'common/Button'
 import {GradientText} from 'common/GradientText'
 import {GuildLabel} from 'common/GuildLabel'
-import {Dispatch, Fragment, memo, SetStateAction, useCallback} from 'react'
+import dynamic from 'next/dynamic'
+import {Dispatch, Fragment, memo, SetStateAction} from 'react'
 import {CredentialsItem} from 'Verification/InitialScene/CredentialsItem'
 import {Scene} from 'Verification/types'
+
+const IDKitWidget = dynamic<WidgetProps>(() => import('@worldcoin/idkit').then((mod) => mod.IDKitWidget), {
+  ssr: false,
+})
 
 const guildData = {
   image: '/images/orb.png',
@@ -24,24 +30,12 @@ const roles = {
 }
 
 export const InitialScene = memo(function Initial(props: {
+  actionId: string
+  signal: string
+  complete: (result: ISuccessResult) => Promise<void>
   setScene: Dispatch<SetStateAction<Scene>>
   setLoading: Dispatch<SetStateAction<boolean>>
 }) {
-  // FIXME: implement relevant submit function
-  const verifyIdentity = useCallback(() => {
-    props.setLoading(true)
-
-    setTimeout(() => {
-      if (Math.random() > 0.5) {
-        props.setLoading(false)
-        return props.setScene(Scene.Success)
-      }
-
-      props.setLoading(false)
-      return props.setScene(Scene.Error)
-    }, 1500)
-  }, [props])
-
   return (
     <Fragment>
       <div className="flex justify-center items-center w-full">
@@ -72,9 +66,13 @@ export const InitialScene = memo(function Initial(props: {
           />
         </div>
 
-        <Button type="button" onClick={verifyIdentity} className="mt-4">
-          Verify your identity
-        </Button>
+        <IDKitWidget actionId={props.actionId} signal={props.signal} onVerification={props.complete}>
+          {({open}) => (
+            <Button type="button" onClick={open} className="mt-4">
+              Verify your identity
+            </Button>
+          )}
+        </IDKitWidget>
       </div>
     </Fragment>
   )
