@@ -39,10 +39,13 @@ module.exports = {
           '#000000',
           '#060816',
           '#0c0e10',
+          '#0d0e11',
           '#0d1020',
           '#0f1328',
+          '#111318',
           '#183c4a',
           '#191c20',
+          '#242628',
           '#28282d',
           '#3e4152',
           '#4940e0',
@@ -51,6 +54,7 @@ module.exports = {
           '#96a0db',
           '#a39dff',
           '#bcc5f9',
+          '#e06258',
           '#f9f9f9',
           '#ff6848',
           '#ffffff',
@@ -59,7 +63,7 @@ module.exports = {
 
       gridTemplateColumns: {
         container: '1fr minmax(0, calc(328 * .25rem)) 1fr',
-        'container-wide': '1fr minmax(0, calc(353 * .25rem)) 1fr',
+        'container-wide': '1fr minmax(0, calc(353 * .4rem)) 1fr',
         ...commonGridTemplate,
       },
 
@@ -86,6 +90,7 @@ module.exports = {
         16: ['calc(16 * 1rem / 16)', {lineHeight: 'calc(19.2 * 1rem / 16)'}],
         14: ['calc(14 * 1rem / 16)', {lineHeight: 'calc(18 * 1rem / 16)'}],
         13: ['calc(13 * 1rem / 16)', {lineHeight: 'calc(15.6 * 1rem / 16)'}],
+        11: ['calc(11 * 1rem / 16)', {lineHeight: '1'}],
       },
 
       borderRadius: {

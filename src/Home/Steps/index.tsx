@@ -1,5 +1,6 @@
 import cn from 'classnames'
 import {Link} from 'common/Button'
+import {GradientText} from 'common/GradientText'
 import {Icon} from 'common/Icon'
 import {memo} from 'react'
 
@@ -54,13 +55,9 @@ export const Steps = memo(function Steps() {
               </span>
 
               <div className="grid gap-y-4">
-                <h3
-                  className={cn(
-                    'font-semibold text-20 text-transparent bg-clip-text bg-gradient-81.5 from-4940e0 to-a39dff',
-                  )}
-                >
+                <GradientText as="h3" className="font-semibold text-20">
                   {step.title}
-                </h3>
+                </GradientText>
 
                 <p className="text-14 font-rubik text-96a0db">{step.content}</p>
               </div>

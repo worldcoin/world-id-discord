@@ -1,4 +1,3 @@
-import {InputContainer} from 'Admin/common/InputContainer'
 import type {Option} from 'Admin/types/option'
 import cn from 'classnames'
 import {Icon} from 'common/Icon'
@@ -14,7 +13,7 @@ export const Selector = memo(function Selector(props: {
   inputPlaceholder?: string
   placeholder?: string
   info?: string
-  onChange: (value: Option) => void
+  setSelected: Dispatch<SetStateAction<Array<Option>>>
   disabled?: boolean
   selected: Array<Option>
 }) {
@@ -64,23 +63,30 @@ export const Selector = memo(function Selector(props: {
     [props],
   )
 
-  const onClick = useCallback(
-    (option: Option) => {
-      props.onChange(option)
+  const toggleRoles = useCallback(
+    (value: Option) => {
+      props.setSelected((prevValues) => {
+        if (prevValues.includes(value)) {
+          return prevValues.filter((prevValue) => prevValue !== value)
+        }
+
+        return [...prevValues, value]
+      })
     },
     [props],
   )
 
   return (
     <div className={cn('relative', props.className)} ref={ref}>
-      <InputContainer
+      <div
+        onClick={toggleExpand}
         className={cn(
           'grid grid-cols-fr/auto items-center justify-between gap-x-4 px-6 py-3.5 pr-7.5',
           'text-14 font-semibold cursor-pointer select-none',
           {'!border-6673b9': expanded},
           {'bg-0c0e10/50 pointer-events-none select-none': props.disabled},
+          'bg-0c0e10 border border-ffffff/20 hover:border-6673b9/50 transition-colors group rounded-xl',
         )}
-        onClick={toggleExpand}
       >
         <div className="grid grid-flow-col auto-cols-max gap-x-3 overflow-x-auto scrollbar-hide max-w-full">
           <span
@@ -102,7 +108,7 @@ export const Selector = memo(function Selector(props: {
                 key={`${option.value}-${index}`}
               >
                 {option.label}
-                <button className="grid hover:opacity-70 transition-opacity" onClick={() => onClick(option)}>
+                <button className="grid hover:opacity-70 transition-opacity" onClick={() => toggleRoles(option)}>
                   <Icon className="w-3 h-3" name="cross" />
                 </button>
               </span>
@@ -114,7 +120,7 @@ export const Selector = memo(function Selector(props: {
           })}
           name="chevron"
         />
-      </InputContainer>
+      </div>
 
       <div
         className={cn(
@@ -139,7 +145,7 @@ export const Selector = memo(function Selector(props: {
                   'grid grid-flow-col auto-cols-max justify-between items-center px-6 py-2.5 cursor-pointer hover:text-6673b9 transition-colors',
                 )}
                 key={`${option.value}-${index}`}
-                onClick={() => onClick(option)}
+                onClick={() => toggleRoles(option)}
               >
                 {option.label}
 

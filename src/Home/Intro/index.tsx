@@ -1,6 +1,8 @@
 import cn from 'classnames'
 import {Button} from 'common/Button'
 import {Captcha} from 'common/Captcha'
+import {GradientText} from 'common/GradientText'
+import Image from 'next/image'
 import {memo} from 'react'
 
 interface IntroProps {
@@ -16,18 +18,16 @@ export const Intro = memo(function Intro(props: IntroProps) {
         'before:bg-gradient-to-r before:from-4940e0 before:to-a39dff ',
       )}
     >
+      <Image src="/images/background.svg" fill alt="background" className="object-cover" />
+
       <div
         className={cn('grid gap-y-8 md:items-center md:grid-cols-auto/fr gap-x-40 justify-between col-start-2 z-10')}
       >
         <div className="grid gap-y-6">
           <div className="text-32 md:text-48">
-            <span className="bg-clip-text text-transparent bg-gradient-81.5 from-4940e0 to-a39dff inline-block">
-              Improve your Discord&nbsp;
-            </span>
+            <GradientText as="span">Improve your Discord&nbsp;</GradientText>
             server by verifying unique people&nbsp;
-            <span className="bg-clip-text text-transparent bg-gradient-81.5 from-4940e0 to-a39dff inline-block">
-              with World ID
-            </span>
+            <GradientText as="span">with World ID</GradientText>
           </div>
 
           <p className="font-rubik text-bcc5f9">

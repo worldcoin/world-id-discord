@@ -1,9 +1,16 @@
+import cn from 'classnames'
 import {Icon} from 'common/Icon'
 import {memo} from 'react'
 
-export const Header = memo(function Header(props: {hideLinks?: boolean}) {
+export const Header = memo(function Header(props: {hideLinks?: boolean; onTop?: boolean}) {
   return (
-    <div className="relative z-10 grid py-8 grid-cols-container-wide px-4 md:px-8">
+    <div
+      className={cn(
+        'z-10 grid py-8 grid-cols-container-wide px-4 md:px-8',
+        {relative: !props.onTop},
+        {'fixed top-0 inset-x-0': props.onTop},
+      )}
+    >
       <div className="grid items-center justify-between grid-flow-col col-start-2">
         <span className="grid items-center grid-flow-col uppercase gap-x-4 auto-cols-max text-ffffff font-semibold">
           <Icon className="w-6 h-8" name="logo" />
