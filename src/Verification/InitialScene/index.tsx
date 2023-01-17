@@ -1,9 +1,8 @@
+import {Button} from 'common/Button'
 import {GradientText} from 'common/GradientText'
 import {GuildLabel} from 'common/GuildLabel'
-import {Icon} from 'common/Icon'
 import {Dispatch, Fragment, memo, SetStateAction, useCallback} from 'react'
-import {Footer} from 'Verification/common/Footer'
-import {CredentialsItem} from 'Verification/CredentialsItem'
+import {CredentialsItem} from 'Verification/InitialScene/CredentialsItem'
 import {Scene} from 'Verification/types'
 
 const guildData = {
@@ -29,7 +28,7 @@ export const InitialScene = memo(function Initial(props: {
   setLoading: Dispatch<SetStateAction<boolean>>
 }) {
   // FIXME: implement relevant submit function
-  const complete = useCallback(() => {
+  const verifyIdentity = useCallback(() => {
     props.setLoading(true)
 
     setTimeout(() => {
@@ -45,31 +44,20 @@ export const InitialScene = memo(function Initial(props: {
 
   return (
     <Fragment>
-      <div className="flex justify-between items-center">
+      <div className="flex justify-center items-center w-full">
         {/* FIXME: pass real data  */}
         <GuildLabel image={guildData.image} name={guildData.name} />
-
-        <button type="button" className="text-0 leading-none">
-          <Icon name="cross" className="h-6 w-6 text-ffffff" />
-        </button>
       </div>
 
-      <div className="grid gap-y-6 justify-items-center">
-        <div className="grid gap-y-2 justify-items-center max-w-[460px]">
-          <GradientText as="h1" className="font-bold text-24 text-center">
-            Welcome! Please verify you are a unique person with World ID
-          </GradientText>
+      <div className="grid gap-y-12">
+        <GradientText as="h1" className="justify-self-center font-bold text-24 text-center max-w-[460px]">
+          Welcome! Please verify you are a unique person with World ID
+        </GradientText>
 
-          <p className="font-rubik text-14 text-bcc5f9 text-center">
-            You will only be able to do this verification once for this Discord server. Once you complete the
-            verification, you’ll get a special role assigned.
-          </p>
-        </div>
-
-        <div className="bg-242628 p-4 rounded-2xl grid grid-cols-2 gap-x-8 mt-1.5">
+        <div className="rounded-2xl grid grid-cols-2 gap-x-4">
           {/* FIXME: apply real roles */}
           <CredentialsItem
-            icon="mobile-device"
+            icon="mobile-device-huge"
             heading="Verify with phone number"
             description="A single-use code will be delivered
       to you via SMS"
@@ -77,31 +65,16 @@ export const InitialScene = memo(function Initial(props: {
           />
 
           <CredentialsItem
-            icon="orb"
+            icon="orb-huge"
             heading="Verify with Orb"
             description="Completely private iris imaging with a device called an orb"
             roles={roles.orb}
           />
         </div>
 
-        <div className="w-full grid grid-cols-2 gap-x-4 mt-[22px]">
-          <button
-            type="button"
-            className="bg-000000 shadow-[0_0_0_1px_rgba(255,255,255,1)_inset] rounded-2xl py-5 hover:opacity-70 transition-opacity"
-          >
-            Verify your identity
-          </button>
-
-          <button
-            type="button"
-            className="bg-gradient-to-r from-4940e0 to-a39dff shadow-[0_0_0_1px_rgba(255,255,255,0.4)_inset] py-5 rounded-2xl hover:opacity-70 transition-opacity"
-            onClick={complete}
-          >
-            Complete
-          </button>
-        </div>
-
-        <Footer className="px-4" />
+        <Button type="button" onClick={verifyIdentity} className="mt-4">
+          Verify your identity
+        </Button>
       </div>
     </Fragment>
   )

@@ -1,6 +1,6 @@
+import {Button} from 'common/Button'
 import {GuildLabel} from 'common/GuildLabel'
 import {memo, useEffect, useState} from 'react'
-import {Footer} from 'Verification/common/Footer'
 import {VerificationError} from 'Verification/types'
 
 const guildData = {
@@ -9,14 +9,14 @@ const guildData = {
 }
 
 const texts = {
-  heading: {
-    [VerificationError.AlreadyVerified]: 'Uh, oh!  Looks like you have already verified for this server.',
-    [VerificationError.Unknown]: 'Uh, oh! We couldn’t complete the verification process.',
+  [VerificationError.AlreadyVerified]: {
+    heading: 'Uh, oh!  Looks like you have already verified for this server.',
+    description: 'You can only verify once for each server.',
   },
 
-  description: {
-    [VerificationError.AlreadyVerified]: 'You can only verify once for each server.',
-    [VerificationError.Unknown]: 'Please try again.',
+  [VerificationError.Unknown]: {
+    heading: 'Uh, oh! We couldn’t complete the verification process.',
+    description: 'Please try again.',
   },
 }
 
@@ -33,35 +33,22 @@ export const ErrorScene = memo(function ErrorScene() {
   }, [])
 
   return (
-    <div className="grid gap-y-12 px-6 justify-items-center">
+    <div className="grid gap-y-12 justify-items-center">
       {/* FIXME: pass real data  */}
       <GuildLabel image={guildData.image} name={guildData.name} />
 
       {error !== null && (
         <div className="grid gap-y-2 max-w-[400px]">
-          <h1 className="text-24 font-bold text-e06258 text-center">{texts.heading[error]}</h1>
-          <p className="font-rubik text-ffffff/70 text-14 text-center">{texts.description[error]}</p>
+          <h1 className="text-24 font-bold text-e06258 text-center">{texts[error].heading}</h1>
+          <p className="font-rubik text-ffffff/70 text-14 text-center">{texts[error].description}</p>
         </div>
       )}
 
-      <div className="w-full grid gap-y-4 mt-[22px]">
-        <button
-          type="button"
-          className="bg-000000 shadow-[0_0_0_1px_rgba(255,255,255,1)_inset] rounded-2xl py-5 hover:opacity-70 transition-opacity"
-        >
+      {error !== VerificationError.AlreadyVerified && (
+        <Button type="button" className="mt-[22px] w-full">
           Verify your identity
-        </button>
-
-        <button
-          type="button"
-          className="bg-gradient-to-r from-4940e0 to-a39dff shadow-[0_0_0_1px_rgba(255,255,255,0.4)_inset] py-5 rounded-2xl hover:opacity-70 transition-opacity"
-          onClick={() => null}
-        >
-          Complete
-        </button>
-
-        <Footer className="mt-2 text-center" />
-      </div>
+        </Button>
+      )}
     </div>
   )
 })

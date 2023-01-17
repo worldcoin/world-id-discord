@@ -1,6 +1,5 @@
 import cn from 'classnames'
 import {CSSProperties, memo} from 'react'
-import styles from './icon.module.css'
 
 const iconNames = [
   'app-store',
@@ -14,7 +13,9 @@ const iconNames = [
   'info',
   'logo',
   'mobile-device',
+  'mobile-device-huge',
   'orb',
+  'orb-huge',
   'play-market',
   'world-id',
 ] as const
@@ -40,12 +41,15 @@ export const Icon = memo(function Icon(
   return (
     <span
       className={cn(
-        styles.icon,
+        '[contain:strict]',
         'inline-block pointer-events-none',
 
         {
-          'bg-current': !props.noMask,
-          'no-mask': props.noMask,
+          '[mask-image:var(--image)] [mask-size:contain] [mask-position:center] [mask-repeat:no-repeat] bg-current':
+            !props.noMask,
+
+          '[background-image:var(--image)] [background-size:contain] [background-position:center] [background-repeat:no-repeat]':
+            props.noMask,
         },
 
         props.className,
