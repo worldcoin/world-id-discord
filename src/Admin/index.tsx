@@ -35,6 +35,7 @@ export const Admin = memo(function Admin(props: {
   const [isPhoneVerificationEnabled, setIsPhoneVerificationEnabled] = useState(
     props.initialBotConfig?.phone.enabled || false,
   )
+
   const [isOrbVerificationEnabled, setIsOrbVerificationEnabled] = useState(props.initialBotConfig?.orb.enabled || false)
 
   // NOTE: Removes saving status message from page after 3 seconds
@@ -80,6 +81,7 @@ export const Admin = memo(function Admin(props: {
 
   const saveChanges = useCallback(() => {
     setSavingInProgress(true)
+
     if (selectedPhoneRoles.length === 0 || selectedOrbRoles.length === 0) {
       return
     }
