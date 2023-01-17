@@ -14,7 +14,7 @@ const getClassNames = (props: ButtonBaseProps) => {
   const variant = props.variant || 'primary'
 
   return cn(
-    'text-center leading-[1.2] font-sans rounded-2xl p-6 min-w-[250px] font-semibold drop-shadow-button',
+    'text-center leading-[1.2] rounded-2xl p-6 min-w-[250px] font-semibold drop-shadow-button',
     'cursor-pointer hover:opacity-75 transition-opacity',
     {'bg-gradient-81.5 from-4940e0 to-a39dff': variant === 'primary'},
     props.className,
