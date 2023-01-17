@@ -1,16 +1,20 @@
+import {REST} from '@discordjs/rest'
 import {
   APIApplicationCommand,
   APIApplicationCommandInteraction,
   APIPingInteraction,
+  APIRole,
   ApplicationCommandType,
   InteractionType,
+  Routes,
 } from 'discord-api-types/v10'
 import {verifyKey} from 'discord-interactions'
-import fetch from 'node-fetch'
 
 const DISCORD_APP_ID = process.env.DISCORD_APP_ID!
 const DISCORD_APP_PUBLIC_KEY = process.env.DISCORD_APP_PUBLIC_KEY!
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN!
+
+const rest = new REST({version: '10'}).setToken(DISCORD_BOT_TOKEN)
 
 export function verifyInteractionSignature(rawBody: string, signature: string, timestamp: string) {
   return verifyKey(rawBody, signature, timestamp, DISCORD_APP_PUBLIC_KEY)
@@ -28,20 +32,18 @@ type Command = {
   description: APIApplicationCommand['description']
 }
 
-export const createGuildCommands = (guildId: string) => {
+export const createGuildCommands = async (guildId: string) => {
   const command: Command = {
     type: ApplicationCommandType.ChatInput,
     name: 'verify',
     description: 'verifying with WorldID',
   }
 
-  return fetch(`https://discord.com/api/v10/applications/${DISCORD_APP_ID}/guilds/${guildId}/commands`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bot ${DISCORD_BOT_TOKEN}`,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(command),
+  return await rest.post(Routes.applicationGuildCommands(DISCORD_APP_ID, guildId), {
+    body: command,
   })
+}
+
+export const getGuildRoles = async (guildId: string) => {
+  return (await rest.get(Routes.guildRoles(guildId))) as APIRole[]
 }

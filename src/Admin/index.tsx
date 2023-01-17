@@ -3,18 +3,20 @@ import {Button} from 'common/Button'
 import {Header} from 'common/Header'
 import {Layout} from 'common/Layout'
 import {Modal} from 'common/Modal'
+import {APIRole} from 'discord-api-types/v10'
 import Image from 'next/image'
 import {memo, useCallback, useState} from 'react'
 import {RolesSelector} from './RolesSelector'
 import {StyledCheckbox} from './StyledCheckbox'
 import type {Option} from './types/option'
 
-export const Admin = memo(function Admin() {
-  //FIXME: update the initial value when real data will be available
-  const [roles, setRoles] = useState<Array<Option>>([
-    {label: 'Role #1', value: 'role1'},
-    {label: 'Role #2', value: 'role2'},
-  ])
+export const Admin = memo(function Admin(props: {roles: APIRole[]}) {
+  const [roles, setRoles] = useState<Array<Option>>(() => {
+    return props.roles.map((role) => ({
+      label: role.name,
+      value: role.id,
+    }))
+  })
 
   const [selectedPhoneRoles, setSelectedPhoneRoles] = useState<Array<Option>>([])
   const [selectedOrbRoles, setSelectedOrbRoles] = useState<Array<Option>>([])
