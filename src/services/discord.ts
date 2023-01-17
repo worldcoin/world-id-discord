@@ -1,8 +1,8 @@
 import {REST} from '@discordjs/rest'
-import {Guild} from 'common/types'
 import {
   APIApplicationCommand,
   APIApplicationCommandInteraction,
+  APIGuild,
   APIPingInteraction,
   APIRole,
   ApplicationCommandType,
@@ -50,5 +50,5 @@ export const getGuildRoles = async (guildId: string) => {
 }
 
 export const getGuildData = async (guildId: string) => {
-  return (await rest.get(Routes.guild(guildId))) as Guild
+  return (await rest.get(Routes.guild(guildId))) as APIGuild
 }

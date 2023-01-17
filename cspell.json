@@ -22,6 +22,7 @@
     "ofmt",
     "olint",
     "ottofeller",
-    "testid"
+    "testid",
+    "unmarshall"
   ]
 }

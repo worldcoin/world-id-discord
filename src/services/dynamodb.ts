@@ -1,11 +1,21 @@
-import {DynamoDBClient, PutItemCommand} from '@aws-sdk/client-dynamodb'
-import {marshall} from '@aws-sdk/util-dynamodb'
+import {DynamoDBClient, GetItemCommand, PutItemCommand} from '@aws-sdk/client-dynamodb'
+import {marshall, unmarshall} from '@aws-sdk/util-dynamodb'
 import {BotConfig} from 'common/types'
 
 type SaveBotConfigResult = {
   success: boolean
   error?: Error
 }
+
+type GetBotConfigResult =
+  | {
+      data: BotConfig
+      error?: never
+    }
+  | {
+      data: null
+      error: Error
+    }
 
 export const client = new DynamoDBClient({
   region: process.env.AWS_REGION,
@@ -73,6 +83,34 @@ export const saveBotConfig = async (botConfig: BotConfig): Promise<SaveBotConfig
   } catch (error) {
     console.error(error)
     result = {success: false, error}
+  }
+
+  return result
+}
+
+export const getBotConfig = async (guildId: string): Promise<GetBotConfigResult> => {
+  let result: GetBotConfigResult
+
+  try {
+    const response = await client.send(
+      new GetItemCommand({
+        TableName: TABLE_NAME,
+        Key: marshall({guild_id: guildId}),
+      }),
+    )
+
+    if (response['$metadata'].httpStatusCode !== 200) {
+      throw new Error('Error while getting bot config from database')
+    }
+
+    if (!response.Item) {
+      throw new Error('Bot config not found')
+    }
+
+    result = {data: unmarshall(response.Item) as BotConfig}
+  } catch (error) {
+    console.error(error)
+    result = {data: null, error}
   }
 
   return result

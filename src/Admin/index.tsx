@@ -4,15 +4,20 @@ import {GuildLabel} from 'common/GuildLabel'
 import {Header} from 'common/Header'
 import {Layout} from 'common/Layout'
 import {Modal} from 'common/Modal'
-import {BotConfig, Guild} from 'common/types'
-import {APIRole} from 'discord-api-types/v10'
+import {BotConfig} from 'common/types'
+import {APIGuild, APIRole} from 'discord-api-types/v10'
+import {generateGuildImage} from 'helpers'
 import Image from 'next/image'
 import {memo, useCallback, useEffect, useMemo, useState} from 'react'
 import {RolesSelector} from './RolesSelector'
 import {StyledCheckbox} from './StyledCheckbox'
 import type {Option} from './types/option'
 
-export const Admin = memo(function Admin(props: {roles: APIRole[]; guild: Guild}) {
+export const Admin = memo(function Admin(props: {
+  roles: APIRole[]
+  guild: APIGuild
+  initialBotConfig: BotConfig<'initial'> | null
+}) {
   const [roles, setRoles] = useState<Array<Option>>(() => {
     return props.roles.map((role) => ({
       label: role.name,
@@ -20,15 +25,17 @@ export const Admin = memo(function Admin(props: {roles: APIRole[]; guild: Guild}
     }))
   })
 
-  const [selectedPhoneRoles, setSelectedPhoneRoles] = useState<Array<Option>>([])
-  const [selectedOrbRoles, setSelectedOrbRoles] = useState<Array<Option>>([])
+  const [selectedPhoneRoles, setSelectedPhoneRoles] = useState<Array<Option>>(props.initialBotConfig?.phone.roles || [])
+  const [selectedOrbRoles, setSelectedOrbRoles] = useState<Array<Option>>(props.initialBotConfig?.orb.roles || [])
   const [savingInProgress, setSavingInProgress] = useState(false)
   const [savedSuccessfully, setSavedSuccessfully] = useState<boolean | null>(null)
-  const [formDataLoading] = useState(false)
 
-  const [isBotEnabled, setIsBotEnabled] = useState(false)
-  const [isPhoneVerificationEnabled, setIsPhoneVerificationEnabled] = useState(false)
-  const [isOrbVerificationEnabled, setIsOrbVerificationEnabled] = useState(false)
+  const [isBotEnabled, setIsBotEnabled] = useState(props.initialBotConfig?.enabled || false)
+
+  const [isPhoneVerificationEnabled, setIsPhoneVerificationEnabled] = useState(
+    props.initialBotConfig?.phone.enabled || false,
+  )
+  const [isOrbVerificationEnabled, setIsOrbVerificationEnabled] = useState(props.initialBotConfig?.orb.enabled || false)
 
   // NOTE: Removes saving status message from page after 3 seconds
   useEffect(() => {
@@ -106,7 +113,7 @@ export const Admin = memo(function Admin(props: {roles: APIRole[]; guild: Guild}
   )
 
   const guildImage = useMemo(() => {
-    return props.guild.icon ? `https://cdn.discordapp.com/icons/${props.guild.id}/${props.guild.icon}.png` : ''
+    return generateGuildImage(props.guild.id, props.guild.icon)
   }, [props.guild.icon, props.guild.id])
 
   return (
@@ -114,7 +121,7 @@ export const Admin = memo(function Admin(props: {roles: APIRole[]; guild: Guild}
       <Image src="/images/admin/background.svg" alt="Background" fill className="object-cover" />
       <Header hideLinks onTop />
 
-      <Modal loading={formDataLoading}>
+      <Modal loading={false}>
         <div className="relative grid justify-center auto-cols-max items-center p-6 border-b border-[color:inherit]">
           <div className="grid gap-y-3 justify-items-center w-full">
             <span className="text-20 font-semibold">Discord Bouncer Admin</span>

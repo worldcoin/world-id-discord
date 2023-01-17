@@ -4,6 +4,7 @@ import {Header} from 'common/Header'
 import {InfoLine} from 'common/InfoLine'
 import {Layout} from 'common/Layout'
 import {Modal} from 'common/Modal'
+import {APIGuild} from 'discord-api-types/v10'
 import Image from 'next/image'
 import {memo, useCallback, useState} from 'react'
 import {ErrorScene} from './ErrorScene'
@@ -20,7 +21,10 @@ const assignedRoles: Array<Option> = [
   {label: 'Community MVP', value: 'Community MVP'},
 ]
 
-export const Verification = memo(function Verification() {
+export const Verification = memo(function Verification(props: {
+  guild: APIGuild
+  rolesToAssign: {phone: Array<Option>; orb: Array<Option>} | null
+}) {
   const [scene, setScene] = useState<Scene>(Scene.Initial)
   const [loading, setLoading] = useState(false)
 
@@ -51,6 +55,8 @@ export const Verification = memo(function Verification() {
             complete={complete}
             setScene={setScene}
             setLoading={setLoading}
+            guild={props.guild}
+            roles={props.rolesToAssign}
           />
         )}
         {scene === Scene.Success && <SuccessScene assignedRoles={assignedRoles} />}
