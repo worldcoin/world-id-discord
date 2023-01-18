@@ -1,7 +1,7 @@
 import cn from 'classnames'
 import {Button} from 'common/Button'
-import {Captcha} from 'common/Captcha'
 import {GradientText} from 'common/GradientText'
+import {Icon} from 'common/Icon'
 import Image from 'next/image'
 import {memo} from 'react'
 
@@ -20,55 +20,33 @@ export const Intro = memo(function Intro(props: IntroProps) {
     >
       <Image src="/images/background.svg" fill alt="background" className="object-cover" />
 
-      <div
-        className={cn('grid gap-y-8 md:items-center md:grid-cols-auto/fr gap-x-40 justify-between col-start-2 z-10')}
-      >
-        <div className="grid gap-y-6">
-          <div className="text-32 md:text-48">
+      <div className={cn('grid col-start-2 content-center z-10 justify-items-center')}>
+        <div className="grid gap-y-4 justify-items-center max-w-[930px]">
+          <span className="uppercase tracking-[0.2em] text-14 font-bold text-96a0db">Introducing Discord Bouncer</span>
+          <div className="text-32 md:text-48 text-center">
             <GradientText as="span">Improve your Discord&nbsp;</GradientText>
             server by verifying unique people&nbsp;
             <GradientText as="span">with World ID</GradientText>
           </div>
 
-          <p className="font-rubik text-bcc5f9">
-            The World ID Discord bot helps prevent spam and increase the quality of the community by verifying humans.
-            Allow only humans to join, only humans to post or DM, or have humans-only channels.
+          <p className="font-rubik text-bcc5f9 text-center mt-8 px-20">
+            Discord Bouncer helps prevent spam and increase the quality of the community by verifying humans. Allow only
+            humans to join, only humans to post or DM, or have humans-only channels.
           </p>
 
-          <div className="mt-6 grid md:grid-flow-col justify-start">
-            <Button type="button" onClick={props.onInstall}>
-              Install now
+          <div className="mt-12 grid justify-start">
+            <Button
+              type="button"
+              className="grid grid-flow-col justify-center items-center gap-x-4"
+              onClick={props.onInstall}
+            >
+              <Icon name="discord" className="h-5 w-5 text-ffffff" />
+              <span>Add to Discord</span>
             </Button>
 
             <Button variant="flat" className="text-938cfa">
               Learn more
             </Button>
-          </div>
-        </div>
-
-        <div
-          className={cn(
-            'justify-self-center md:justify-self-start relative p-6 z-0 rounded-32 w-min',
-            'before:absolute before:-z-20 before:w-full before:h-full before:-left-1 before:-bottom-1',
-            'before:bg-gradient-81.5 before:from-4940e0 before:to-a39dff before:rounded-32',
-            'after:bg-ffffff after:-z-10 after:rounded-32 after:absolute after:inset-0',
-          )}
-        >
-          <div className="grid gap-y-6">
-            {/* FIXME: replace with real qr code */}
-            <img className="w-[275px]" src="/images/qr.png" alt="Qr Code" />
-
-            <span
-              className={cn(
-                'px-2 text-24 font-semibold bg-clip-text text-center text-transparent bg-gradient-81.5 from-4940e0 to-a39dff',
-              )}
-            >
-              Prove your unique-humanness with WorldID.
-            </span>
-
-            <div className="px-2">
-              <Captcha variant="flat" />
-            </div>
           </div>
         </div>
       </div>
