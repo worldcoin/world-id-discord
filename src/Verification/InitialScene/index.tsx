@@ -16,18 +16,19 @@ const IDKitWidget = dynamic<WidgetProps>(() => import('@worldcoin/idkit').then((
 
 export const InitialScene = memo(function Initial(props: {
   actionId: string
-  signal: string
+  signal: string | null
   complete: (result: ISuccessResult) => Promise<void>
   setScene: Dispatch<SetStateAction<Scene>>
   setLoading: Dispatch<SetStateAction<boolean>>
-  guild: APIGuild
+  guild: APIGuild | null
   roles: {phone: Array<Option>; orb: Array<Option>} | null
 }) {
   return (
     <Fragment>
       <div className="flex justify-center items-center w-full">
-        {/* FIXME: pass real data  */}
-        <GuildLabel image={generateGuildImage(props.guild.id, props.guild.icon)} name={props.guild.name} />
+        {props.guild && (
+          <GuildLabel image={generateGuildImage(props.guild.id, props.guild.icon)} name={props.guild.name} />
+        )}
       </div>
 
       <div className="grid gap-y-12">
@@ -53,13 +54,15 @@ export const InitialScene = memo(function Initial(props: {
           />
         </div>
 
-        <IDKitWidget actionId={props.actionId} signal={props.signal} onVerification={props.complete}>
-          {({open}) => (
-            <Button type="button" onClick={open} className="mt-4">
-              Verify your identity
-            </Button>
-          )}
-        </IDKitWidget>
+        {props.actionId && props.signal && (
+          <IDKitWidget actionId={props.actionId} signal={props.signal} onVerification={props.complete}>
+            {({open}) => (
+              <Button type="button" onClick={open} className="mt-4">
+                Verify your identity
+              </Button>
+            )}
+          </IDKitWidget>
+        )}
       </div>
     </Fragment>
   )

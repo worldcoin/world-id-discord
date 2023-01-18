@@ -13,7 +13,6 @@ import {SuccessScene} from './SuccessScene'
 import {Scene} from './types'
 
 const actionId = 'get_this_from_the_dev_portal' // FIXME
-const signal = 'my_signal' // FIXME
 
 const assignedRoles: Array<Option> = [
   {label: 'Moderator', value: 'Moderator'},
@@ -22,8 +21,9 @@ const assignedRoles: Array<Option> = [
 ]
 
 export const Verification = memo(function Verification(props: {
-  guild: APIGuild
+  guild: APIGuild | null
   rolesToAssign: {phone: Array<Option>; orb: Array<Option>} | null
+  userId: string | null
 }) {
   const [scene, setScene] = useState<Scene>(Scene.Initial)
   const [loading, setLoading] = useState(false)
@@ -51,7 +51,7 @@ export const Verification = memo(function Verification(props: {
         {scene === Scene.Initial && (
           <InitialScene
             actionId={actionId}
-            signal={signal}
+            signal={props.userId}
             complete={complete}
             setScene={setScene}
             setLoading={setLoading}
@@ -60,7 +60,7 @@ export const Verification = memo(function Verification(props: {
           />
         )}
         {scene === Scene.Success && <SuccessScene assignedRoles={assignedRoles} />}
-        {scene === Scene.Error && <ErrorScene actionId={actionId} signal={signal} complete={complete} />}
+        {scene === Scene.Error && <ErrorScene actionId={actionId} signal={props.userId} complete={complete} />}
       </Modal>
 
       <InfoLine

@@ -17,10 +17,6 @@ export const config = {
   },
 }
 
-// cspell:disable-next-line
-// REVIEW: @igorosip0v need pass real actionId
-const actionId = 'verify'
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse<APIInteractionResponse>) {
   const signature = req.headers['x-signature-ed25519']
   const timestamp = req.headers['x-signature-timestamp']
@@ -54,7 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     new ButtonBuilder()
       .setLabel('Verify')
       .setStyle(ButtonStyle.Link)
-      .setURL(`${process.env.NEXTAUTH_URL}/verification?action_id=${actionId}`),
+      .setURL(`${process.env.NEXTAUTH_URL}/verification?user_id=${data.member?.user.id}&guild_id=${data.guild_id}`),
   )
 
   // FIXME: implement verification

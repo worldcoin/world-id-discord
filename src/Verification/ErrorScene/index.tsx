@@ -28,7 +28,7 @@ const texts = {
 
 export const ErrorScene = memo(function ErrorScene(props: {
   actionId: string
-  signal: string
+  signal: string | null
   complete: (result: ISuccessResult) => Promise<void>
 }) {
   const [error, setError] = useState<VerificationError | null>(null)
@@ -54,7 +54,7 @@ export const ErrorScene = memo(function ErrorScene(props: {
         </div>
       )}
 
-      {error !== VerificationError.AlreadyVerified && (
+      {error !== VerificationError.AlreadyVerified && props.actionId && props.signal && (
         <IDKitWidget actionId={props.actionId} signal={props.signal} onVerification={props.complete}>
           {({open}) => (
             <Button type="button" className="mt-[22px] w-full" onClick={open}>

@@ -1,29 +1,31 @@
 import {findRoles} from 'helpers'
 import {GetServerSideProps} from 'next'
-import {getSession} from 'next-auth/react'
 import {getGuildData} from 'services/discord'
 import {getBotConfig} from 'services/dynamodb'
 import {Verification} from 'Verification'
 export default Verification
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getSession(ctx)
+  const {user_id, guild_id} = ctx.query
 
-  if (!session || !session.user) {
+  if (!user_id || !guild_id) {
     return {
       props: {
         guild: null,
+        rolesToAssign: null,
+        userId: null,
       },
     }
   }
 
-  const guild = await getGuildData(session.user.guildId)
-  const botConfig = (await getBotConfig(session.user.guildId)).data
+  const guild = await getGuildData(guild_id as string)
+  const botConfig = (await getBotConfig(guild_id as string)).data
 
   if (!botConfig) {
     return {
       props: {
         guild,
+        userId: user_id,
       },
     }
   }
@@ -37,6 +39,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     props: {
       guild,
       rolesToAssign,
+      userId: user_id,
     },
   }
 }
