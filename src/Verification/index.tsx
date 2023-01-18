@@ -11,6 +11,7 @@ import {ErrorScene} from './ErrorScene'
 import {InitialScene} from './InitialScene'
 import {SuccessScene} from './SuccessScene'
 import {Scene} from './types'
+import {VerificationCompletePayload} from 'common/types/verification-complete'
 
 const actionId = 'get_this_from_the_dev_portal' // FIXME
 
@@ -21,26 +22,43 @@ const assignedRoles: Array<Option> = [
 ]
 
 export const Verification = memo(function Verification(props: {
-  guild: APIGuild | null
-  rolesToAssign: {phone: Array<Option>; orb: Array<Option>} | null
-  userId: string | null
+  guild: APIGuild
+  rolesToAssign: {phone: Array<Option>; orb: Array<Option>}
+  guildId: string
+  userId: string
 }) {
   const [scene, setScene] = useState<Scene>(Scene.Initial)
   const [loading, setLoading] = useState(false)
 
+  const { guildId, userId } = props
   const complete = useCallback(async (result: ISuccessResult) => {
     try {
       setLoading(true)
       // FIXME: set discord roles here
       console.log(result)
-      await new Promise((r) => setTimeout(r, 1500))
+      const payload: VerificationCompletePayload = {
+        guildId,
+        userId,
+        result,
+      }
+      const res = await fetch('/api/verification/complete', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+      if (!res.ok) {
+        throw await res.json()
+      }
       setScene(Scene.Success)
     } catch (error) {
       setScene(Scene.Error)
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [guildId, userId])
 
   return (
     <Layout className="flex justify-center items-center relative">
