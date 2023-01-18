@@ -64,4 +64,4 @@ jobs:
 
       - name: Build
         run: |
-          npm run build
+          npm run build --ignore-scripts
