@@ -1,4 +1,11 @@
-import {DynamoDBClient, GetItemCommand, PutItemCommand} from '@aws-sdk/client-dynamodb'
+import {
+  CreateTableCommand,
+  DynamoDBClient,
+  GetItemCommand,
+  ListTablesCommand,
+  PutItemCommand,
+} from '@aws-sdk/client-dynamodb'
+
 import {marshall, unmarshall} from '@aws-sdk/util-dynamodb'
 import {BotConfig} from 'common/types'
 
@@ -18,15 +25,80 @@ type GetBotConfigResult =
     }
 
 export const client = new DynamoDBClient({
-  region: process.env.AWS_REGION,
+  region: process.env.AWS_DISCORD_BOUNCER_REGION,
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
-    sessionToken: process.env.AWS_SESSION_TOKEN,
+    accessKeyId: process.env.AWS_DISCORD_BOUNCER_ACCESS_KEY_ID as string,
+    secretAccessKey: process.env.AWS_DISCORD_BOUNCER_SECRET_ACCESS_KEY as string,
   },
 })
 
-const TABLE_NAME = process.env.AWS_TABLE_NAME
+const TABLE_NAME = process.env.AWS_GUILDS_TABLE_NAME
+
+export const params = {
+  AttributeDefinitions: [
+    {
+      AttributeName: 'guild_id',
+      AttributeType: 'S',
+    },
+  ],
+
+  KeySchema: [
+    {
+      AttributeName: 'guild_id',
+      KeyType: 'HASH',
+    },
+  ],
+
+  ProvisionedThroughput: {
+    ReadCapacityUnits: 10,
+    WriteCapacityUnits: 10,
+  },
+
+  TableName: TABLE_NAME,
+}
+
+export const createTable = async () => {
+  let result: {success: boolean; error?: Error} = {success: false}
+
+  console.log('Creating table...')
+
+  try {
+    await client.send(
+      new CreateTableCommand({
+        KeySchema: params.KeySchema,
+        AttributeDefinitions: params.AttributeDefinitions,
+        ProvisionedThroughput: params.ProvisionedThroughput,
+        TableName: params.TableName,
+      }),
+    )
+
+    result = {success: true}
+    console.log('Table created successfully')
+  } catch (error) {
+    console.log('Table not created, error occurred')
+    console.log(error.message)
+    result = {success: false, error}
+  }
+
+  return result
+}
+
+export const isTableExists = async (): Promise<boolean | null> => {
+  const response = await client.send(new ListTablesCommand({}))
+
+  if (!response.TableNames) {
+    return null
+  }
+
+  const result = response.TableNames.some((tableName) => tableName === TABLE_NAME)
+  if (!result) {
+    console.log('Table not found, trying to create a table')
+    return result
+  }
+
+  console.log(`Table '${TABLE_NAME}' already exists, skipping creation`)
+  return result
+}
 
 export const verifyBotConfig = (botConfig: BotConfig): {status: boolean; error?: Error} => {
   if (!botConfig.guild_id) {
