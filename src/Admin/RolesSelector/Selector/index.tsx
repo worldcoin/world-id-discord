@@ -1,7 +1,7 @@
 import type {Option} from 'Admin/types/option'
 import cn from 'classnames'
 import {Icon} from 'common/Icon'
-import {Dispatch, FormEvent, memo, SetStateAction, useCallback, useEffect, useRef, useState} from 'react'
+import {Dispatch, memo, SetStateAction, useCallback, useEffect, useRef, useState} from 'react'
 
 /** Multiple selector with dropdown menu */
 
@@ -9,7 +9,6 @@ export const Selector = memo(function Selector(props: {
   className?: string
   options: Array<Option>
   setOptions?: Dispatch<SetStateAction<Array<Option>>>
-  withInput?: boolean
   inputPlaceholder?: string
   placeholder?: string
   info?: string
@@ -42,32 +41,11 @@ export const Selector = memo(function Selector(props: {
     }
   }, [])
 
-  const addNewRole = useCallback(
-    (
-      event: FormEvent<HTMLFormElement> & {
-        target: FormEvent<HTMLFormElement> & {firstChild: HTMLInputElement}
-      },
-    ) => {
-      event.preventDefault()
-
-      if (!props.setOptions) {
-        return console.error('pass setOption into selector')
-      }
-
-      const roleName = event.target.firstChild.value
-
-      props.setOptions([{label: roleName, value: roleName}, ...props.options])
-
-      event.target.firstChild.value = ''
-    },
-    [props],
-  )
-
   const toggleRoles = useCallback(
     (value: Option) => {
       props.setSelected((prevValues) => {
-        if (prevValues.includes(value)) {
-          return prevValues.filter((prevValue) => prevValue !== value)
+        if (prevValues.some((prevValue) => prevValue.value === value.value)) {
+          return prevValues.filter((prevValue) => prevValue.value !== value.value)
         }
 
         return [...prevValues, value]
@@ -102,14 +80,14 @@ export const Selector = memo(function Selector(props: {
             props.selected.map((option, index) => (
               <span
                 className={cn(
-                  'grid grid-flow-col auto-cols-max items-center gap-x-3.5 rounded-lg p-2.5 bg-ffffff/20',
+                  'grid grid-flow-col auto-cols-max items-center gap-x-1 rounded-lg p-2.5 bg-ffffff/20',
                   'text-14 font-semibold',
                 )}
                 key={`${option.value}-${index}`}
               >
                 {option.label}
                 <button className="grid hover:opacity-70 transition-opacity" onClick={() => toggleRoles(option)}>
-                  <Icon className="w-3 h-3" name="cross" />
+                  <Icon className="w-6 h-6" name="cross" />
                 </button>
               </span>
             ))}
@@ -131,25 +109,19 @@ export const Selector = memo(function Selector(props: {
       >
         <div className="py-3.5">
           <div className="max-h-[120px] overflow-y-auto">
-            {props.withInput && (
-              <form onSubmit={addNewRole} className="px-6 py-0.5">
-                <input
-                  placeholder={props.inputPlaceholder || ''}
-                  className="w-full bg-transparent border-b-2 border-ffffff/50 outline-none py-2"
-                />
-              </form>
-            )}
             {props.options.map((option, index) => (
               <div
                 className={cn(
-                  'grid grid-flow-col auto-cols-max justify-between items-center px-6 py-2.5 cursor-pointer hover:text-6673b9 transition-colors',
+                  'grid grid-flow-col auto-cols-max justify-between leading-normal items-center px-6 py-2 cursor-pointer hover:text-6673b9 transition-colors',
                 )}
                 key={`${option.value}-${index}`}
                 onClick={() => toggleRoles(option)}
               >
                 {option.label}
 
-                {props.selected.includes(option) && <Icon className="w-3 h-3" name="cross" />}
+                {props.selected.some((item) => item.value === option.value) && (
+                  <Icon className="w-6 h-6" name="cross" />
+                )}
               </div>
             ))}
           </div>

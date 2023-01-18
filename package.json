@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.245.0",
+    "@aws-sdk/util-dynamodb": "^3.245.0",
     "@discordjs/builders": "^1.4.0",
     "@discordjs/rest": "^1.5.0",
     "@next/font": "13.1.1",
@@ -10,6 +12,7 @@
     "classnames": "^2.3.2",
     "discord-api-types": "^0.37.27",
     "discord-interactions": "^3.2.0",
+    "dotenv": "^16.0.3",
     "eslint": "8.31.0",
     "eslint-config-next": "13.1.1",
     "next": "13.1.1",
@@ -25,7 +28,8 @@
     "autoprefixer": "^10.4.13",
     "cspell": "^6.18.1",
     "postcss": "^8.4.21",
-    "tailwindcss": "^3.2.4"
+    "tailwindcss": "^3.2.4",
+    "ts-node": "^10.9.1"
   },
   "eslintConfig": {
     "extends": "@ottofeller/eslint-config-ofmt/eslint.quality.cjs"
@@ -35,10 +39,12 @@
   "private": true,
   "scripts": {
     "build": "next build",
+    "create-table-local": "ts-node -r dotenv/config ./create-table.ts dotenv_config_path=./.env.local dotenv_config_debug=true",
     "dev": "next dev",
     "format": "ofmt ./src",
     "format:check": "ofmt --lint ./src",
     "lint": "olint ./src",
+    "prebuild": "ts-node ./create-table.ts",
     "spellcheck": "cspell ./**/*.{ts,js,tsx,json} -e package-lock.json -e node_modules -e .next",
     "start": "next start",
     "typecheck": "tsc"

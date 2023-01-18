@@ -4,6 +4,7 @@ import {Header} from 'common/Header'
 import {InfoLine} from 'common/InfoLine'
 import {Layout} from 'common/Layout'
 import {Modal} from 'common/Modal'
+import {APIGuild} from 'discord-api-types/v10'
 import Image from 'next/image'
 import {memo, useCallback, useState} from 'react'
 import {ErrorScene} from './ErrorScene'
@@ -12,7 +13,6 @@ import {SuccessScene} from './SuccessScene'
 import {Scene} from './types'
 
 const actionId = 'get_this_from_the_dev_portal' // FIXME
-const signal = 'my_signal' // FIXME
 
 const assignedRoles: Array<Option> = [
   {label: 'Moderator', value: 'Moderator'},
@@ -20,7 +20,11 @@ const assignedRoles: Array<Option> = [
   {label: 'Community MVP', value: 'Community MVP'},
 ]
 
-export const Verification = memo(function Verification() {
+export const Verification = memo(function Verification(props: {
+  guild: APIGuild | null
+  rolesToAssign: {phone: Array<Option>; orb: Array<Option>} | null
+  userId: string | null
+}) {
   const [scene, setScene] = useState<Scene>(Scene.Initial)
   const [loading, setLoading] = useState(false)
 
@@ -47,14 +51,16 @@ export const Verification = memo(function Verification() {
         {scene === Scene.Initial && (
           <InitialScene
             actionId={actionId}
-            signal={signal}
+            signal={props.userId}
             complete={complete}
             setScene={setScene}
             setLoading={setLoading}
+            guild={props.guild}
+            roles={props.rolesToAssign}
           />
         )}
         {scene === Scene.Success && <SuccessScene assignedRoles={assignedRoles} />}
-        {scene === Scene.Error && <ErrorScene actionId={actionId} signal={signal} complete={complete} />}
+        {scene === Scene.Error && <ErrorScene actionId={actionId} signal={props.userId} complete={complete} />}
       </Modal>
 
       <InfoLine

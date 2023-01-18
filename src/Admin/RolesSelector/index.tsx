@@ -14,6 +14,8 @@ export const RolesSelector = memo(function RolesSelector(props: {
   setRoles: Dispatch<SetStateAction<Option[]>>
   selectedRoles: Array<Option>
   setSelectedRoles: Dispatch<SetStateAction<Array<Option>>>
+  isEnabled: boolean
+  setIsEnabled: Dispatch<SetStateAction<boolean>>
 }) {
   return (
     <div className={cn('grid gap-y-6', props.className)}>
@@ -24,7 +26,7 @@ export const RolesSelector = memo(function RolesSelector(props: {
             <span className="text-14 font-semibold">{props.name}</span>
           </div>
 
-          <StyledCheckbox />
+          <StyledCheckbox isOn={props.isEnabled} setIsOn={props.setIsEnabled} />
         </div>
 
         <span className="font-rubik text-14 text-ffffff/40">{props.description}</span>
