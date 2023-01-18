@@ -20,15 +20,13 @@ export const InitialScene = memo(function Initial(props: {
   complete: (result: ISuccessResult) => Promise<void>
   setScene: Dispatch<SetStateAction<Scene>>
   setLoading: Dispatch<SetStateAction<boolean>>
-  guild: APIGuild | null
+  guild: APIGuild
   roles: {phone: Array<Option>; orb: Array<Option>} | null
 }) {
   return (
     <Fragment>
       <div className="flex justify-center items-center w-full">
-        {props.guild && (
-          <GuildLabel image={generateGuildImage(props.guild.id, props.guild.icon)} name={props.guild.name} />
-        )}
+        <GuildLabel image={generateGuildImage(props.guild.id, props.guild.icon)} name={props.guild.name} />
       </div>
 
       <div className="grid gap-y-12">

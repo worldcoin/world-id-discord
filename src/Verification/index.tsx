@@ -4,22 +4,16 @@ import {Header} from 'common/Header'
 import {InfoLine} from 'common/InfoLine'
 import {Layout} from 'common/Layout'
 import {Modal} from 'common/Modal'
-import {APIGuild} from 'discord-api-types/v10'
+import {APIGuild, APIRole} from 'discord-api-types/v10'
 import Image from 'next/image'
 import {memo, useCallback, useState} from 'react'
 import {ErrorScene} from './ErrorScene'
 import {InitialScene} from './InitialScene'
 import {SuccessScene} from './SuccessScene'
 import {Scene} from './types'
-import {VerificationCompletePayload} from 'common/types/verification-complete'
+import {VerificationCompletePayload, VerificationCompleteResponsePayload} from 'common/types/verification-complete'
 
 const actionId = 'get_this_from_the_dev_portal' // FIXME
-
-const assignedRoles: Array<Option> = [
-  {label: 'Moderator', value: 'Moderator'},
-  {label: 'Server Admin', value: 'Server Admin'},
-  {label: 'Community MVP', value: 'Community MVP'},
-]
 
 export const Verification = memo(function Verification(props: {
   guild: APIGuild
@@ -29,13 +23,11 @@ export const Verification = memo(function Verification(props: {
 }) {
   const [scene, setScene] = useState<Scene>(Scene.Initial)
   const [loading, setLoading] = useState(false)
-
+  const [assignedRoles, setAssignedRoles] = useState<Array<APIRole>>([])
   const { guildId, userId } = props
   const complete = useCallback(async (result: ISuccessResult) => {
     try {
       setLoading(true)
-      // FIXME: set discord roles here
-      console.log(result)
       const payload: VerificationCompletePayload = {
         guildId,
         userId,
@@ -52,6 +44,8 @@ export const Verification = memo(function Verification(props: {
       if (!res.ok) {
         throw await res.json()
       }
+      const resPayload = await res.json() as VerificationCompleteResponsePayload
+      setAssignedRoles(resPayload.assignedRoles)
       setScene(Scene.Success)
     } catch (error) {
       setScene(Scene.Error)
@@ -77,7 +71,7 @@ export const Verification = memo(function Verification(props: {
             roles={props.rolesToAssign}
           />
         )}
-        {scene === Scene.Success && <SuccessScene assignedRoles={assignedRoles} />}
+        {scene === Scene.Success && <SuccessScene guild={props.guild} assignedRoles={assignedRoles} />}
         {scene === Scene.Error && <ErrorScene actionId={actionId} signal={props.userId} complete={complete} />}
       </Modal>
 

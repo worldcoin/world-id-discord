@@ -1,20 +1,18 @@
-import {Option} from 'Admin/types/option'
 import {Button} from 'common/Button'
 import {GradientText} from 'common/GradientText'
 import {GuildLabel} from 'common/GuildLabel'
 import {Icon} from 'common/Icon'
 import {memo} from 'react'
+import {generateGuildImage} from 'helpers'
+import {APIGuild, APIRole} from 'discord-api-types/v10'
 
-const guildData = {
-  image: '/images/orb.png',
-  name: 'Official Fortnite',
-}
-
-export const SuccessScene = memo(function SuccessScene(props: {assignedRoles: Array<Option>}) {
+export const SuccessScene = memo(function SuccessScene(props: {
+  guild: APIGuild
+  assignedRoles: Array<APIRole>
+}) {
   return (
     <div className="grid justify-items-center gap-y-12">
-      {/* FIXME: pass real data  */}
-      <GuildLabel image={guildData.image} name={guildData.name} />
+      <GuildLabel image={generateGuildImage(props.guild.id, props.guild.icon)} name={props.guild.name} />
 
       <div className="grid justify-items-center gap-y-2 max-w-[400px]">
         <span className="font-semibold text-14 tracking-[0.1em] uppercase mb-2">SUCCESS!</span>
@@ -29,13 +27,13 @@ export const SuccessScene = memo(function SuccessScene(props: {assignedRoles: Ar
       </div>
 
       <div className="flex flex-wrap gap-x-1">
-        {props.assignedRoles.map((role, index) => (
+        {props.assignedRoles.map((role) => (
           <div
             className="grid grid-cols-auto/fr items-center gap-x-2 py-1.5 px-2.5 bg-ffffff/10 rounded-lg"
-            key={`assignedRole-${role.value}-${index}`}
+            key={role.id}
           >
             <Icon path="/icons/gradient-human.png" className="h-4 w-4 z-50" noMask />
-            <span className="text-11">{role.label}</span>
+            <span className="text-11">{role.name}</span>
           </div>
         ))}
       </div>
