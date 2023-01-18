@@ -91,6 +91,7 @@ export const isTableExists = async (): Promise<boolean | null> => {
   }
 
   const result = response.TableNames.some((tableName) => tableName === TABLE_NAME)
+
   if (!result) {
     console.log('Table not found, trying to create a table')
     return result
