@@ -8,5 +8,5 @@ export type VerificationCompletePayload = {
 }
 
 export type VerificationCompleteResponsePayload = {
-    assignedRoles: APIRole[]
+  assignedRoles: APIRole[]
 }

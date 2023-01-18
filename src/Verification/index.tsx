@@ -4,6 +4,7 @@ import {Header} from 'common/Header'
 import {InfoLine} from 'common/InfoLine'
 import {Layout} from 'common/Layout'
 import {Modal} from 'common/Modal'
+import {VerificationCompletePayload, VerificationCompleteResponsePayload} from 'common/types/verification-complete'
 import {APIGuild, APIRole} from 'discord-api-types/v10'
 import Image from 'next/image'
 import {memo, useCallback, useState} from 'react'
@@ -11,7 +12,6 @@ import {ErrorScene} from './ErrorScene'
 import {InitialScene} from './InitialScene'
 import {SuccessScene} from './SuccessScene'
 import {Scene} from './types'
-import {VerificationCompletePayload, VerificationCompleteResponsePayload} from 'common/types/verification-complete'
 
 const actionId = 'get_this_from_the_dev_portal' // FIXME
 
@@ -24,35 +24,43 @@ export const Verification = memo(function Verification(props: {
   const [scene, setScene] = useState<Scene>(Scene.Initial)
   const [loading, setLoading] = useState(false)
   const [assignedRoles, setAssignedRoles] = useState<Array<APIRole>>([])
-  const { guildId, userId } = props
-  const complete = useCallback(async (result: ISuccessResult) => {
-    try {
-      setLoading(true)
-      const payload: VerificationCompletePayload = {
-        guildId,
-        userId,
-        result,
+  const {guildId, userId} = props
+
+  const complete = useCallback(
+    async (result: ISuccessResult) => {
+      try {
+        setLoading(true)
+
+        const payload: VerificationCompletePayload = {
+          guildId,
+          userId,
+          result,
+        }
+
+        const res = await fetch('/api/verification/complete', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        })
+
+        if (!res.ok) {
+          throw await res.json()
+        }
+
+        const resPayload = (await res.json()) as VerificationCompleteResponsePayload
+        setAssignedRoles(resPayload.assignedRoles)
+        setScene(Scene.Success)
+      } catch (error) {
+        setScene(Scene.Error)
+      } finally {
+        setLoading(false)
       }
-      const res = await fetch('/api/verification/complete', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      })
-      if (!res.ok) {
-        throw await res.json()
-      }
-      const resPayload = await res.json() as VerificationCompleteResponsePayload
-      setAssignedRoles(resPayload.assignedRoles)
-      setScene(Scene.Success)
-    } catch (error) {
-      setScene(Scene.Error)
-    } finally {
-      setLoading(false)
-    }
-  }, [guildId, userId])
+    },
+    [guildId, userId],
+  )
 
   return (
     <Layout className="flex justify-center items-center relative">

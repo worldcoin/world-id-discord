@@ -54,5 +54,5 @@ export const getGuildData = async (guildId: string) => {
 }
 
 export const assignGuildMemberRole = async (guildId: string, memberId: string, roleId: string) => {
-    return await rest.put(Routes.guildMemberRole(guildId, memberId, roleId))
+  return await rest.put(Routes.guildMemberRole(guildId, memberId, roleId))
 }
