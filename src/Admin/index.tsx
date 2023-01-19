@@ -119,7 +119,7 @@ export const Admin = memo(function Admin(props: {
   }, [props.guild.icon, props.guild.id])
 
   return (
-    <Layout className="bg-0d1020 flex justify-center items-center relative min-h-screen">
+    <Layout title="Configuration" className="bg-0d1020 flex justify-center items-center relative min-h-screen">
       <Image src="/images/admin/background.svg" alt="Background" fill className="object-cover" />
       <Header hideLinks onTop />
 

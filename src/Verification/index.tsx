@@ -62,7 +62,7 @@ export const Verification = memo(function Verification(props: {
   )
 
   return (
-    <Layout className="flex justify-center items-center relative">
+    <Layout title="Verification" className="flex justify-center items-center relative">
       <Image src="/images/background.svg" fill alt="background" className="object-cover" />
       <Header hideLinks onTop />
 
