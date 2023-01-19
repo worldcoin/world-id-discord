@@ -1,4 +1,10 @@
+<img src="./public/images/logo.png" alt="World ID Discord Bot logo" width="100" />
+
 # Discord Bouncer
+
+This project is a demonstration of serverless Discord Bot that uses [IDKit](https://github.com/worldcoin/idkit-js/) to verify humans. Verified humans get a special role assigned which can then be used to manage special permissions.
+
+## Local development
 
 For local development, you also will need [ngrok](https://ngrok.com/). After you log in, you can reach the [Setup & Installation](https://dashboard.ngrok.com/get-started/setup) section. There is an instruction on how to launch and configure `ngrok`
 
@@ -21,6 +27,7 @@ To create your own bot:
     - Press `Add bot`
     - Press `Reset Token`
     - Token will be visible after this
-13. On the landing page press `Install now` button.
-14. Install bot.
-15. Try the `/verify` command.
+13. Go to OAuth2 -> General -> Redirects -> add `<localhost or NGROK tunneled address>/api/auth/callback/discord`
+14. On the landing page press `Install now` button.
+15. Install bot.
+16. Try the `/verify` command.
