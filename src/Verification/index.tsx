@@ -13,13 +13,12 @@ import {InitialScene} from './InitialScene'
 import {SuccessScene} from './SuccessScene'
 import {Scene} from './types'
 
-const actionId = 'get_this_from_the_dev_portal' // FIXME
-
 export const Verification = memo(function Verification(props: {
   guild: APIGuild
   rolesToAssign: {phone: Array<Option>; orb: Array<Option>}
   guildId: string
   userId: string
+  actionId?: string
 }) {
   const [scene, setScene] = useState<Scene>(Scene.Initial)
   const [loading, setLoading] = useState(false)
@@ -68,9 +67,9 @@ export const Verification = memo(function Verification(props: {
       <Header hideLinks onTop />
 
       <Modal loading={loading} className="pt-6 px-12 pb-12 grid gap-y-6 max-w-[680px]">
-        {scene === Scene.Initial && (
+        {scene === Scene.Initial && props.actionId && (
           <InitialScene
-            actionId={actionId}
+            actionId={props.actionId}
             signal={props.userId}
             complete={complete}
             setScene={setScene}
@@ -80,7 +79,10 @@ export const Verification = memo(function Verification(props: {
           />
         )}
         {scene === Scene.Success && <SuccessScene guild={props.guild} assignedRoles={assignedRoles} />}
-        {scene === Scene.Error && <ErrorScene actionId={actionId} signal={props.userId} complete={complete} />}
+
+        {scene === Scene.Error && props.actionId && (
+          <ErrorScene actionId={props.actionId} signal={props.userId} complete={complete} />
+        )}
       </Modal>
 
       <InfoLine
