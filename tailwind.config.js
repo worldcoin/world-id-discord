@@ -62,7 +62,7 @@ module.exports = {
       },
 
       gridTemplateColumns: {
-        container: '1fr minmax(0, calc(328 * .25rem)) 1fr',
+        container: '1fr minmax(0, calc(360 * .25rem)) 1fr',
         'container-wide': '1fr minmax(0, calc(353 * .4rem)) 1fr',
         ...commonGridTemplate,
       },

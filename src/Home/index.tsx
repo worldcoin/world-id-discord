@@ -9,7 +9,6 @@ import {Benefits} from './Benefits'
 import {Intro} from './Intro'
 import {Join} from './Join'
 import {NoCaptcha} from './NoCaptcha'
-import {Steps} from './Steps'
 
 export const Home = memo(function Home() {
   const handleInstall = useCallback(async () => {
@@ -24,16 +23,15 @@ export const Home = memo(function Home() {
 
         <InfoLine
           className="mt-16 md:mt-0"
-          text="Welcome to the World ID Discord Bot, if you want to use this in your server to verify proof-of-personhood, follow these instructions to get started."
+          text="Welcome to the Discord Bouncer, if you want to use this in your server to verify humanness, follow these instructions to get started."
         />
       </div>
-
       <About />
-      <Steps />
+      {/* FIXME: Update text on orb card */}
+      {/* <Methods /> */}
       <NoCaptcha onInstall={handleInstall} />
       <Benefits />
-      <Join />
-
+      <Join onInstall={handleInstall} />
       <InfoLine className="mt-32 md:mt-64" text="This project is open sourced and anyone can contribute to it." />
       <Footer />
     </Layout>
