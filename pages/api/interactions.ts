@@ -7,6 +7,7 @@ import {
   APIPingInteraction,
   ButtonStyle,
   InteractionResponseType,
+  MessageFlags,
 } from 'discord-api-types/v10'
 import type {NextApiRequest, NextApiResponse} from 'next'
 import {isPingInteraction, verifyInteractionSignature} from 'services/discord'
@@ -59,6 +60,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     data: {
       embeds: [embed.toJSON()],
       components: [row.toJSON()],
+      flags: MessageFlags.Ephemeral,
     },
   }
   return res.status(200).json(payload)
