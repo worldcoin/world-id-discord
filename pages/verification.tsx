@@ -7,13 +7,14 @@ export default Verification
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const {user_id, guild_id} = ctx.query
+  const actionId = process.env.ACTION_ID
 
   if (!user_id || !guild_id) {
     return {
-      props: {
-        guild: null,
-        rolesToAssign: null,
-        userId: null,
+      redirect: {
+        permanent: false,
+        destination: '/',
+        actionId,
       },
     }
   }
@@ -23,9 +24,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   if (!botConfig) {
     return {
-      props: {
-        guild,
-        userId: user_id,
+      redirect: {
+        permanent: false,
+        destination: '/',
+        actionId,
       },
     }
   }
@@ -39,7 +41,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     props: {
       guild,
       rolesToAssign,
+      guildId: guild_id,
       userId: user_id,
+      actionId,
     },
   }
 }
