@@ -10,7 +10,7 @@ import {CredentialsItem} from 'Verification/InitialScene/CredentialsItem'
 import {Scene} from 'Verification/types'
 
 export const InitialScene = memo(function Initial(props: {
-  actionId: [string, string]
+  actionId: Array<[string, string]>
   signal: string | null
   complete: (result: ISuccessResult) => Promise<void>
   setScene: Dispatch<SetStateAction<Scene>>

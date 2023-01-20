@@ -69,7 +69,10 @@ export const Verification = memo(function Verification(props: {
       <Modal loading={loading} className="pt-6 px-12 pb-12 grid gap-y-6 max-w-[680px]">
         {scene === Scene.Initial && props.actionId && (
           <InitialScene
-            actionId={[props.actionId, guildId]}
+            actionId={[
+              ['string', props.actionId],
+              ['string', guildId],
+            ]}
             signal={props.userId}
             complete={complete}
             setScene={setScene}
