@@ -1,20 +1,20 @@
-import {findRoles} from 'helpers'
-import {GetServerSideProps} from 'next'
-import {getGuildData} from 'services/discord'
-import {getBotConfig} from 'services/dynamodb'
-import {Verification} from 'Verification'
+import { findRoles } from 'helpers'
+import { GetServerSideProps } from 'next'
+import { getGuildData } from 'services/discord'
+import { getBotConfig } from 'services/dynamodb'
+import { Verification } from 'Verification'
 export default Verification
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const {user_id, guild_id} = ctx.query
-  const actionId = process.env.ACTION_ID
+  const baseActionId = process.env.ACTION_ID
 
   if (!user_id || !guild_id) {
     return {
       redirect: {
         permanent: false,
         destination: '/',
-        actionId,
+        baseActionId,
       },
     }
   }
@@ -27,7 +27,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       redirect: {
         permanent: false,
         destination: '/',
-        actionId,
+        baseActionId,
       },
     }
   }
@@ -43,7 +43,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       rolesToAssign,
       guildId: guild_id,
       userId: user_id,
-      actionId,
+      baseActionId,
     },
   }
 }

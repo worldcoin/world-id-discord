@@ -1,13 +1,8 @@
-import {ISuccessResult, WidgetProps} from '@worldcoin/idkit'
-import {Button} from 'common/Button'
-import {GuildLabel} from 'common/GuildLabel'
-import dynamic from 'next/dynamic'
-import {memo, useEffect, useState} from 'react'
-import {VerificationError} from 'Verification/types'
-
-const IDKitWidget = dynamic<WidgetProps>(() => import('@worldcoin/idkit').then((mod) => mod.IDKitWidget), {
-  ssr: false,
-})
+import { IDKitWidget, ISuccessResult } from '@worldcoin/idkit'
+import { Button } from 'common/Button'
+import { GuildLabel } from 'common/GuildLabel'
+import { memo, useEffect, useState } from 'react'
+import { VerificationError } from 'Verification/types'
 
 const guildData = {
   image: '/images/orb.png',

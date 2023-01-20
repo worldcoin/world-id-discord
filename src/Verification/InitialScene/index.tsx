@@ -1,21 +1,16 @@
-import {ISuccessResult, WidgetProps} from '@worldcoin/idkit'
+import {IDKitWidget, ISuccessResult} from '@worldcoin/idkit'
 import {Option} from 'Admin/types/option'
 import {Button} from 'common/Button'
 import {GradientText} from 'common/GradientText'
 import {GuildLabel} from 'common/GuildLabel'
 import {APIGuild} from 'discord-api-types/v10'
 import {generateGuildImage} from 'helpers'
-import dynamic from 'next/dynamic'
 import {Dispatch, Fragment, memo, SetStateAction} from 'react'
 import {CredentialsItem} from 'Verification/InitialScene/CredentialsItem'
 import {Scene} from 'Verification/types'
 
-const IDKitWidget = dynamic<WidgetProps>(() => import('@worldcoin/idkit').then((mod) => mod.IDKitWidget), {
-  ssr: false,
-})
-
 export const InitialScene = memo(function Initial(props: {
-  actionId: string
+  actionId: [string, string]
   signal: string | null
   complete: (result: ISuccessResult) => Promise<void>
   setScene: Dispatch<SetStateAction<Scene>>
