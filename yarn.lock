@@ -1248,11 +1248,6 @@
   dependencies:
     client-only "^0.0.1"
 
-"@heroicons/react@^2.0.13":
-  version "2.0.13"
-  resolved "https://registry.yarnpkg.com/@heroicons/react/-/react-2.0.13.tgz#9b1cc54ff77d6625c9565efdce0054a4bcd9074c"
-  integrity sha512-iSN5XwmagrnirWlYEWNPdCDj9aRYVD/lnK3JlsC9/+fqGF80k8C7rl+1HCvBX0dBoagKqOFBs6fMhJJ1hOg1EQ==
-
 "@humanwhocodes/config-array@^0.11.8":
   version "0.11.8"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.8.tgz#03595ac2075a4dc0f191cc2131de14fbd7d410b9"
@@ -2198,16 +2193,15 @@
   dependencies:
     "@walletconnect/window-getters" "^1.0.0"
 
-"@worldcoin/idkit@^0.2.4":
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/@worldcoin/idkit/-/idkit-0.2.4.tgz#282fffb73a74e731eb2b30833262f791ca643c1d"
-  integrity sha512-lmwJPXoqv08QMfduePe/AkHYhSWAo3Ts573jJb6K7/zSslnLmaahDmn+nA1bYeZ73KgvT/00N+3moWi6Wrdb7A==
+"@worldcoin/idkit@^0.2.5":
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/@worldcoin/idkit/-/idkit-0.2.5.tgz#3839f0723621bd1e9df87903ea4f7aa9bfef76b5"
+  integrity sha512-VbCLzOfkLHMFCHAQ9Hp/C+SY9ai4bNlZOMyptdo4Jc1WYGk4rc0Vt050LdvFbYLYN/Qx0lczX2LQfATtQPfjzQ==
   dependencies:
     "@ethersproject/bytes" "^5.7.0"
     "@ethersproject/solidity" "^5.7.0"
     "@fontsource/rubik" "^4.5.11"
     "@headlessui/react" "^1.7.4"
-    "@heroicons/react" "^2.0.13"
     "@radix-ui/react-dialog" "^1.0.2"
     "@radix-ui/react-scroll-area" "^1.0.2"
     "@radix-ui/react-select" "^1.1.2"
