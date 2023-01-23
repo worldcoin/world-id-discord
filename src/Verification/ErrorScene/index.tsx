@@ -50,7 +50,7 @@ export const ErrorScene = memo(function ErrorScene(props: {
       )}
 
       {error !== VerificationError.AlreadyVerified && props.actionId && props.signal && (
-        <IDKitWidget actionId={props.actionId} signal={props.signal} onVerification={props.complete}>
+        <IDKitWidget actionId={props.actionId} signal={props.signal} handleVerify={props.complete}>
           {({open}) => (
             <Button type="button" className="mt-[22px] w-full" onClick={open}>
               Verify your identity

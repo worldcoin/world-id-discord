@@ -48,7 +48,7 @@ export const InitialScene = memo(function Initial(props: {
         </div>
 
         {props.actionId && props.signal && (
-          <IDKitWidget actionId={props.actionId} signal={props.signal} onVerification={props.complete}>
+          <IDKitWidget actionId={props.actionId} signal={props.signal} handleVerify={props.complete}>
             {({open}) => (
               <Button type="button" onClick={open} className="mt-4">
                 Verify your identity

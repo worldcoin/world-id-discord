@@ -5,16 +5,16 @@ import { getBotConfig } from 'services/dynamodb'
 import { Verification } from 'Verification'
 export default Verification
 
+const actionId = process.env.ACTION_ID
+
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const {user_id, guild_id} = ctx.query
-  const baseActionId = process.env.ACTION_ID
 
   if (!user_id || !guild_id) {
     return {
       redirect: {
         permanent: false,
         destination: '/',
-        baseActionId,
       },
     }
   }
@@ -27,7 +27,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       redirect: {
         permanent: false,
         destination: '/',
-        baseActionId,
       },
     }
   }
@@ -43,7 +42,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       rolesToAssign,
       guildId: guild_id,
       userId: user_id,
-      baseActionId,
+      actionId,
     },
   }
 }
