@@ -1,4 +1,4 @@
-import {ActionRowBuilder, ButtonBuilder, EmbedBuilder} from '@discordjs/builders'
+import { ActionRowBuilder, ButtonBuilder, EmbedBuilder } from '@discordjs/builders'
 import {
   APIApplicationCommandInteraction,
   APIInteractionResponse,
@@ -9,8 +9,8 @@ import {
   InteractionResponseType,
   MessageFlags,
 } from 'discord-api-types/v10'
-import type {NextApiRequest, NextApiResponse} from 'next'
-import {isPingInteraction, verifyInteractionSignature} from 'services/discord'
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { isPingInteraction, verifyInteractionSignature } from 'services/discord'
 
 export const config = {
   api: {
@@ -22,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   console.log('EXECUTED')
   const signature = req.headers['x-signature-ed25519']
   const timestamp = req.headers['x-signature-timestamp']
-  console.log({signature, timestamp})
+  console.log({ signature, timestamp })
 
   if (typeof signature !== 'string' || typeof timestamp !== 'string') {
     console.log('invalid request signature')
