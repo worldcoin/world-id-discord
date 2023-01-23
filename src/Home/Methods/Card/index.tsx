@@ -1,11 +1,11 @@
 import cn from 'classnames'
 import {Icon} from 'common/Icon'
 import Image from 'next/image'
-import {memo} from 'react'
+import {memo, ReactNode} from 'react'
 
 export const Card = memo(function Card(props: {
   heading: string
-  pros: Array<string>
+  pros: Array<ReactNode>
   decorationLayout: 'phone' | 'orb'
 }) {
   return (
