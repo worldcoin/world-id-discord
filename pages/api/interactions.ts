@@ -19,9 +19,13 @@ export const config = {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<APIInteractionResponse>) {
+  console.log('EXECUTED')
   const signature = req.headers['x-signature-ed25519']
   const timestamp = req.headers['x-signature-timestamp']
+  console.log({signature, timestamp})
+
   if (typeof signature !== 'string' || typeof timestamp !== 'string') {
+    console.log('invalid request signature')
     return res.status(401).end('invalid request signature')
   }
   const rawBody = await new Promise<string>((resolve) => {
@@ -30,18 +34,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       data += chunk
     })
     req.on('end', () => {
+      console.log('Ended making rawBody')
       resolve(Buffer.from(data).toString())
     })
   })
   const isVerified = verifyInteractionSignature(rawBody, signature, timestamp)
+  console.log('isVerified', isVerified)
+
   if (!isVerified) {
     return res.status(401).end('invalid request signature')
   }
+
   const data = JSON.parse(rawBody) as APIApplicationCommandInteraction | APIPingInteraction
+  console.log('data', data)
   if (isPingInteraction(data)) {
+    console.log('Pong condition')
     const payload: APIInteractionResponsePong = {
       type: InteractionResponseType.Pong,
     }
+    console.log('Ping payload', payload)
     return res.status(200).json(payload)
   }
 
@@ -63,5 +74,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       flags: MessageFlags.Ephemeral,
     },
   }
+  console.log('Embed payload', payload)
   return res.status(200).json(payload)
 }
