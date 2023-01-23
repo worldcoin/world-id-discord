@@ -83,9 +83,7 @@ export const Verification = memo(function Verification(props: {
         )}
         {scene === Scene.Success && <SuccessScene guild={props.guild} assignedRoles={assignedRoles} />}
 
-        {scene === Scene.Error && (
-          <ErrorScene actionId={actionId} signal={userId} complete={complete} />
-        )}
+        {scene === Scene.Error && <ErrorScene actionId={actionId} signal={userId} complete={complete} />}
       </Modal>
 
       <InfoLine

@@ -1,8 +1,8 @@
-import { IDKitWidget, ISuccessResult } from '@worldcoin/idkit'
-import { Button } from 'common/Button'
-import { GuildLabel } from 'common/GuildLabel'
-import { memo, useEffect, useState } from 'react'
-import { VerificationError } from 'Verification/types'
+import {IDKitWidget, ISuccessResult} from '@worldcoin/idkit'
+import {Button} from 'common/Button'
+import {GuildLabel} from 'common/GuildLabel'
+import {memo, useEffect, useState} from 'react'
+import {VerificationError} from 'Verification/types'
 
 const guildData = {
   image: '/images/orb.png',
