@@ -1,9 +1,9 @@
-import {StyledCheckbox} from 'Admin/StyledCheckbox'
-import {Option} from 'Admin/types/option'
+import { StyledCheckbox } from 'Admin/StyledCheckbox'
+import { Option } from 'Admin/types/option'
 import cn from 'classnames'
-import {Icon, IconType} from 'common/Icon'
-import {Dispatch, memo, SetStateAction} from 'react'
-import {Selector} from './Selector'
+import { Icon, IconType } from 'common/Icon'
+import { Dispatch, memo, SetStateAction } from 'react'
+import { Selector } from './Selector'
 
 export const RolesSelector = memo(function RolesSelector(props: {
   icon: IconType

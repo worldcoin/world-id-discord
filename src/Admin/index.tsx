@@ -1,17 +1,17 @@
 import cn from 'classnames'
-import {Button} from 'common/Button'
-import {GuildLabel} from 'common/GuildLabel'
-import {Header} from 'common/Header'
-import {Layout} from 'common/Layout'
-import {Modal} from 'common/Modal'
-import {BotConfig} from 'common/types'
-import {APIGuild, APIRole} from 'discord-api-types/v10'
-import {generateGuildImage} from 'helpers'
+import { Button } from 'common/Button'
+import { GuildLabel } from 'common/GuildLabel'
+import { Header } from 'common/Header'
+import { Layout } from 'common/Layout'
+import { Modal } from 'common/Modal'
+import { BotConfig } from 'common/types'
+import { APIGuild, APIRole } from 'discord-api-types/v10'
+import { generateGuildImage } from 'helpers'
 import Image from 'next/image'
-import {memo, useCallback, useEffect, useMemo, useState} from 'react'
-import {RolesSelector} from './RolesSelector'
-import {StyledCheckbox} from './StyledCheckbox'
-import type {Option} from './types/option'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { RolesSelector } from './RolesSelector'
+import { StyledCheckbox } from './StyledCheckbox'
+import type { Option } from './types/option'
 
 export const Admin = memo(function Admin(props: {
   roles: APIRole[]
@@ -182,8 +182,8 @@ export const Admin = memo(function Admin(props: {
             <span
               className={cn(
                 'transition-visibility/opacity col-start-1 row-start-2',
-                {'visible opacity-100': savedSuccessfully === true},
-                {'invisible opacity-0': savedSuccessfully !== true},
+                { 'visible opacity-100': savedSuccessfully === true },
+                { 'invisible opacity-0': savedSuccessfully !== true },
               )}
             >
               Your changes have been successfully saved!
@@ -192,8 +192,8 @@ export const Admin = memo(function Admin(props: {
             <span
               className={cn(
                 'transition-visibility/opacity col-start-1 row-start-2 text-red-500',
-                {'visible opacity-100': savedSuccessfully === false},
-                {'invisible opacity-0': savedSuccessfully !== false},
+                { 'visible opacity-100': savedSuccessfully === false },
+                { 'invisible opacity-0': savedSuccessfully !== false },
               )}
             >
               Something went wrong. Try again, please.

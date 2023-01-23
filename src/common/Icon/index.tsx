@@ -1,5 +1,5 @@
 import cn from 'classnames'
-import {CSSProperties, memo} from 'react'
+import { CSSProperties, memo } from 'react'
 
 const iconNames = [
   'app-store',
@@ -54,7 +54,7 @@ export const Icon = memo(function Icon(
 
         props.className,
       )}
-      {...(props.testId && {'data-testid': props.testId})}
+      {...(props.testId && { 'data-testid': props.testId })}
       style={
         {
           '--image': `url("${props.path ?? `/icons/${props.name}.svg`}")`,

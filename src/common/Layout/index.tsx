@@ -1,8 +1,8 @@
 import cn from 'classnames'
 import Head from 'next/head'
-import {Fragment, memo, ReactNode} from 'react'
+import { Fragment, memo, ReactNode } from 'react'
 
-export const Layout = memo(function Layout(props: {className?: string; children?: ReactNode; title?: string}) {
+export const Layout = memo(function Layout(props: { className?: string; children?: ReactNode; title?: string }) {
   return (
     <Fragment>
       <Head>

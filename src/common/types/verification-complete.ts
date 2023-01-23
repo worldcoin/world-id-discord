@@ -1,5 +1,5 @@
-import {ISuccessResult} from '@worldcoin/idkit'
-import {APIRole} from 'discord-api-types/v10'
+import { ISuccessResult } from '@worldcoin/idkit'
+import { APIRole } from 'discord-api-types/v10'
 
 export type VerificationCompletePayload = {
   guildId: string

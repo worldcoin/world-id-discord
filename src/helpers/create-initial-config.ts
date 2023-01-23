@@ -1,6 +1,6 @@
-import {BotConfig} from 'common/types'
-import {APIRole} from 'discord-api-types/v10'
-import {findRoles} from './find-roles'
+import { BotConfig } from 'common/types'
+import { APIRole } from 'discord-api-types/v10'
+import { findRoles } from './find-roles'
 
 export const createInitialConfig = (
   config: BotConfig | null,

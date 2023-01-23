@@ -1,4 +1,4 @@
-import type {BotConfig} from '.'
+import type { BotConfig } from '.'
 
 export type GetBotConfigResult =
   | {

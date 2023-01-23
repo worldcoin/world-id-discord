@@ -1,9 +1,9 @@
 import cn from 'classnames'
-import {Button} from 'common/Button'
-import {Icon} from 'common/Icon'
-import {memo} from 'react'
+import { Button } from 'common/Button'
+import { Icon } from 'common/Icon'
+import { memo } from 'react'
 
-export const Join = memo(function Join(props: {onInstall: () => Promise<void>}) {
+export const Join = memo(function Join(props: { onInstall: () => Promise<void> }) {
   return (
     <div
       className={cn(

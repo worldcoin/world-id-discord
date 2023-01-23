@@ -1,9 +1,9 @@
 import cn from 'classnames'
-import {Icon} from 'common/Icon'
-import {memo, useMemo, useState} from 'react'
+import { Icon } from 'common/Icon'
+import { memo, useMemo, useState } from 'react'
 
 // FIXME: Implement real captcha
-export const Captcha = memo(function Captcha(props: {className?: string; variant?: 'primary' | 'flat'}) {
+export const Captcha = memo(function Captcha(props: { className?: string; variant?: 'primary' | 'flat' }) {
   const [checked, setChecked] = useState<boolean>(false)
   const variant = useMemo(() => props.variant || 'primary', [props.variant])
 
