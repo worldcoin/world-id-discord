@@ -35,7 +35,6 @@
     "extends": "@ottofeller/eslint-config-ofmt/eslint.quality.cjs"
   },
   "name": "world-id-discord-bot",
-  "prettier": "@ottofeller/prettier-config-ofmt",
   "private": true,
   "scripts": {
     "build": "next build",
