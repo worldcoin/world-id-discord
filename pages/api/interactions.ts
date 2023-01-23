@@ -48,7 +48,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return res.status(200).json(payload)
   }
 
-  const embed = new EmbedBuilder().setColor([133, 126, 245]).setTitle('Open this page to verify')
+  const embed = new EmbedBuilder()
+    .setColor([133, 126, 245])
+    .setTitle('Open this page to verify')
+    .setDescription('Feel free to restart the validation with /verify command')
+
+    // NOTE: to see image locally, update process.env.NEXTAUTH_URL with ngrok tunneled url.
+    // Not working with localhost for some reason.
+    .setThumbnail(`${process.env.NEXTAUTH_URL}/images/api/interactions/verify-initial.png`)
 
   const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
     new ButtonBuilder()
