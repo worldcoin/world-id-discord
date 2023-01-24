@@ -1,6 +1,6 @@
-import {GradientText} from 'common/GradientText'
+import { GradientText } from 'common/GradientText'
 import Image from 'next/image'
-import {memo} from 'react'
+import { memo } from 'react'
 
 export const About = memo(function About() {
   return (

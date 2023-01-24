@@ -1,4 +1,4 @@
-import {ActionRowBuilder, ButtonBuilder, EmbedBuilder} from '@discordjs/builders'
+import { ActionRowBuilder, ButtonBuilder, EmbedBuilder } from '@discordjs/builders'
 import {
   APIApplicationCommandInteraction,
   APIInteractionResponse,
@@ -9,8 +9,8 @@ import {
   InteractionResponseType,
   MessageFlags,
 } from 'discord-api-types/v10'
-import type {NextApiRequest, NextApiResponse} from 'next'
-import {isPingInteraction, verifyInteractionSignature} from 'services/discord'
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { isPingInteraction, verifyInteractionSignature } from 'services/discord'
 
 export const config = {
   api: {

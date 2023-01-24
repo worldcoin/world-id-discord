@@ -1,7 +1,7 @@
 import cn from 'classnames'
-import {memo, ReactNode} from 'react'
+import { memo, ReactNode } from 'react'
 
-export const CTA = memo(function CTA(props: {className?: string; wrapperClassName?: string; children: ReactNode}) {
+export const CTA = memo(function CTA(props: { className?: string; wrapperClassName?: string; children: ReactNode }) {
   return (
     <div
       className={cn(

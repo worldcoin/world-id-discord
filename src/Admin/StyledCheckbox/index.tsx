@@ -1,5 +1,5 @@
 import cn from 'classnames'
-import {Dispatch, memo, SetStateAction, useCallback} from 'react'
+import { Dispatch, memo, SetStateAction, useCallback } from 'react'
 
 const state: Record<string, 'Disabled' | 'Enabled'> = {
   false: 'Disabled',
@@ -25,7 +25,7 @@ export const StyledCheckbox = memo(function StyledCheckbox(props: {
           {
             'bg-gradient-81.5 from-4940e0 to-a39dff before:left-[calc(100%-2px)] before:-translate-x-full': props.isOn,
           },
-          {'bg-3e4152 before:left-0.5': !props.isOn},
+          { 'bg-3e4152 before:left-0.5': !props.isOn },
         )}
         onClick={toggle}
       />

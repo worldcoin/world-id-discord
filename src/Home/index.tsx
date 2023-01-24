@@ -1,18 +1,18 @@
-import {Footer} from 'common/Footer'
-import {Header} from 'common/Header'
-import {InfoLine} from 'common/InfoLine'
-import {Layout} from 'common/Layout'
-import {signIn} from 'next-auth/react'
-import {memo, useCallback} from 'react'
-import {About} from './About'
-import {Benefits} from './Benefits'
-import {Intro} from './Intro'
-import {Join} from './Join'
-import {NoCaptcha} from './NoCaptcha'
+import { Footer } from 'common/Footer'
+import { Header } from 'common/Header'
+import { InfoLine } from 'common/InfoLine'
+import { Layout } from 'common/Layout'
+import { signIn } from 'next-auth/react'
+import { memo, useCallback } from 'react'
+import { About } from './About'
+import { Benefits } from './Benefits'
+import { Intro } from './Intro'
+import { Join } from './Join'
+import { NoCaptcha } from './NoCaptcha'
 
 export const Home = memo(function Home() {
   const handleInstall = useCallback(async () => {
-    await signIn('discord', {callbackUrl: '/admin'})
+    await signIn('discord', { callbackUrl: '/admin' })
   }, [])
 
   return (

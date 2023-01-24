@@ -6,8 +6,8 @@ import {
   PutItemCommand,
 } from '@aws-sdk/client-dynamodb'
 
-import {marshall, unmarshall} from '@aws-sdk/util-dynamodb'
-import {BotConfig} from 'common/types'
+import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
+import { BotConfig } from 'common/types'
 
 type SaveBotConfigResult = {
   success: boolean
@@ -58,7 +58,7 @@ export const params = {
 }
 
 export const createTable = async () => {
-  let result: {success: boolean; error?: Error} = {success: false}
+  let result: { success: boolean; error?: Error } = { success: false }
 
   console.log('Creating table...')
 
@@ -72,12 +72,12 @@ export const createTable = async () => {
       }),
     )
 
-    result = {success: true}
+    result = { success: true }
     console.log('Table created successfully')
   } catch (error) {
     console.log('Table not created, error occurred')
     console.log(error.message)
-    result = {success: false, error}
+    result = { success: false, error }
   }
 
   return result
@@ -101,40 +101,40 @@ export const isTableExists = async (): Promise<boolean | null> => {
   return result
 }
 
-export const verifyBotConfig = (botConfig: BotConfig): {status: boolean; error?: Error} => {
+export const verifyBotConfig = (botConfig: BotConfig): { status: boolean; error?: Error } => {
   if (!botConfig.guild_id) {
-    return {status: false, error: new Error('Guild id is required')}
+    return { status: false, error: new Error('Guild id is required') }
   }
 
   if (!botConfig.action_id) {
-    return {status: false, error: new Error('Action id is required')}
+    return { status: false, error: new Error('Action id is required') }
   }
 
   if (!botConfig.hasOwnProperty('enabled')) {
-    return {status: false, error: new Error('enabled is required')}
+    return { status: false, error: new Error('enabled is required') }
   }
 
   if (!botConfig.phone && !botConfig.orb) {
-    return {status: false, error: new Error('Phone or orb verification is required')}
+    return { status: false, error: new Error('Phone or orb verification is required') }
   }
 
   if (!botConfig.phone.hasOwnProperty('enabled')) {
-    return {status: false, error: new Error('Phone verification enabled is required')}
+    return { status: false, error: new Error('Phone verification enabled is required') }
   }
 
   if (!botConfig.orb.hasOwnProperty('enabled')) {
-    return {status: false, error: new Error('Orb verification enabled is required')}
+    return { status: false, error: new Error('Orb verification enabled is required') }
   }
 
   if (!botConfig.phone.roles || botConfig.phone.roles.length === 0) {
-    return {status: false, error: new Error('Roles for phone verification is required')}
+    return { status: false, error: new Error('Roles for phone verification is required') }
   }
 
   if (!botConfig.orb.roles || botConfig.orb.roles.length === 0) {
-    return {status: false, error: new Error('Roles for orb verification is required')}
+    return { status: false, error: new Error('Roles for orb verification is required') }
   }
 
-  return {status: true}
+  return { status: true }
 }
 
 export const saveBotConfig = async (botConfig: BotConfig): Promise<SaveBotConfigResult> => {
@@ -152,10 +152,10 @@ export const saveBotConfig = async (botConfig: BotConfig): Promise<SaveBotConfig
       throw new Error('Error while adding bot config into database')
     }
 
-    result = {success: true}
+    result = { success: true }
   } catch (error) {
     console.error(error)
-    result = {success: false, error}
+    result = { success: false, error }
   }
 
   return result
@@ -168,7 +168,7 @@ export const getBotConfig = async (guildId: string): Promise<GetBotConfigResult>
     const response = await client.send(
       new GetItemCommand({
         TableName: TABLE_NAME,
-        Key: marshall({guild_id: guildId}),
+        Key: marshall({ guild_id: guildId }),
       }),
     )
 
@@ -180,10 +180,10 @@ export const getBotConfig = async (guildId: string): Promise<GetBotConfigResult>
       throw new Error('Bot config not found')
     }
 
-    result = {data: unmarshall(response.Item) as BotConfig}
+    result = { data: unmarshall(response.Item) as BotConfig }
   } catch (error) {
     console.error(error)
-    result = {data: null, error}
+    result = { data: null, error }
   }
 
   return result
