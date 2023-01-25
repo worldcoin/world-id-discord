@@ -48,20 +48,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return res.status(200).json(payload)
   }
 
+  const verifyUrl = `${process.env.NEXTAUTH_URL}/verification?user_id=${data.member?.user.id}&guild_id=${data.guild_id}`
+
   const embed = new EmbedBuilder()
     .setColor([133, 126, 245])
-    .setTitle('Open this page to verify')
-    .setDescription('Feel free to restart the validation with /verify command')
+    .setTitle('Click below to verify')
+    .setURL(`${verifyUrl}&s=title`)
+    .setDescription('Follow the instructions on the page to verify. This message will magically update after.')
 
     // NOTE: to see image locally, update process.env.NEXTAUTH_URL with ngrok tunneled url.
     // Not working with localhost for some reason.
     .setThumbnail(`${process.env.NEXTAUTH_URL}/images/api/interactions/verify-initial.png`)
 
   const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-    new ButtonBuilder()
-      .setLabel('Verify')
-      .setStyle(ButtonStyle.Link)
-      .setURL(`${process.env.NEXTAUTH_URL}/verification?user_id=${data.member?.user.id}&guild_id=${data.guild_id}`),
+    new ButtonBuilder().setLabel('Verify now').setStyle(ButtonStyle.Link).setURL(verifyUrl),
   )
 
   // FIXME: implement verification
