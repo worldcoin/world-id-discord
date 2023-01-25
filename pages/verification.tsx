@@ -14,7 +14,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       redirect: {
         permanent: false,
         destination: '/',
-        actionId,
       },
     }
   }
@@ -27,7 +26,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       redirect: {
         permanent: false,
         destination: '/',
-        actionId,
       },
     }
   }

@@ -18,12 +18,12 @@ export const Verification = memo(function Verification(props: {
   rolesToAssign: { phone: Array<Option>; orb: Array<Option> }
   guildId: string
   userId: string
-  actionId?: string
+  actionId: string
 }) {
   const [scene, setScene] = useState<Scene>(Scene.Initial)
   const [loading, setLoading] = useState(false)
   const [assignedRoles, setAssignedRoles] = useState<Array<APIRole>>([])
-  const { guildId, userId } = props
+  const { guildId, userId, actionId } = props
 
   const complete = useCallback(
     async (result: ISuccessResult) => {
@@ -67,10 +67,13 @@ export const Verification = memo(function Verification(props: {
       <Header hideLinks onTop />
 
       <Modal loading={loading} className="pt-6 px-12 pb-12 grid gap-y-6 max-w-[680px]">
-        {scene === Scene.Initial && props.actionId && (
+        {scene === Scene.Initial && (
           <InitialScene
-            actionId={props.actionId}
-            signal={props.userId}
+            actionId={[
+              ['string', actionId],
+              ['string', guildId],
+            ]}
+            signal={userId}
             complete={complete}
             setScene={setScene}
             setLoading={setLoading}
@@ -80,9 +83,7 @@ export const Verification = memo(function Verification(props: {
         )}
         {scene === Scene.Success && <SuccessScene guild={props.guild} assignedRoles={assignedRoles} />}
 
-        {scene === Scene.Error && props.actionId && (
-          <ErrorScene actionId={props.actionId} signal={props.userId} complete={complete} />
-        )}
+        {scene === Scene.Error && <ErrorScene actionId={actionId} signal={userId} complete={complete} />}
       </Modal>
 
       <InfoLine

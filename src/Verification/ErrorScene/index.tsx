@@ -1,13 +1,8 @@
-import { ISuccessResult, WidgetProps } from '@worldcoin/idkit'
+import { IDKitWidget, ISuccessResult } from '@worldcoin/idkit'
 import { Button } from 'common/Button'
 import { GuildLabel } from 'common/GuildLabel'
-import dynamic from 'next/dynamic'
 import { memo, useEffect, useState } from 'react'
 import { VerificationError } from 'Verification/types'
-
-const IDKitWidget = dynamic<WidgetProps>(() => import('@worldcoin/idkit').then((mod) => mod.IDKitWidget), {
-  ssr: false,
-})
 
 const guildData = {
   image: '/images/orb.png',
@@ -55,7 +50,7 @@ export const ErrorScene = memo(function ErrorScene(props: {
       )}
 
       {error !== VerificationError.AlreadyVerified && props.actionId && props.signal && (
-        <IDKitWidget actionId={props.actionId} signal={props.signal} onVerification={props.complete}>
+        <IDKitWidget actionId={props.actionId} signal={props.signal} handleVerify={props.complete}>
           {({ open }) => (
             <Button type="button" className="mt-[22px] w-full" onClick={open}>
               Verify your identity
