@@ -28,7 +28,6 @@ export const Home = memo(function Home() {
         />
       </div>
       <About />
-      {/* FIXME: Update text on orb card */}
       <Methods />
       <NoCaptcha onInstall={handleInstall} />
       <Benefits />
