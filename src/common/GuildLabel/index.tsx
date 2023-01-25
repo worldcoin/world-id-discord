@@ -1,8 +1,8 @@
 import cn from 'classnames'
 import Image from 'next/image'
-import {memo} from 'react'
+import { memo } from 'react'
 
-export const GuildLabel = memo(function GuildLabel(props: {image: string; name: string; className?: string}) {
+export const GuildLabel = memo(function GuildLabel(props: { image: string; name: string; className?: string }) {
   return (
     <div
       className={cn('grid items-center grid-cols-fr/auto py-2 px-3 bg-ffffff/10 rounded-lg gap-x-2', props.className)}

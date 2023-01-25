@@ -1,6 +1,6 @@
-import {GradientText} from 'common/GradientText'
-import {memo} from 'react'
-import {Card} from './Card'
+import { GradientText } from 'common/GradientText'
+import { memo } from 'react'
+import { Card } from './Card'
 
 export const Methods = memo(function Methods() {
   return (

@@ -35,14 +35,13 @@
     "extends": "@ottofeller/eslint-config-ofmt/eslint.quality.cjs"
   },
   "name": "discord-bouncer",
-  "prettier": "@ottofeller/prettier-config-ofmt",
   "private": true,
   "scripts": {
     "build": "next build",
     "create-table-local": "ts-node -r dotenv/config ./create-table.ts dotenv_config_path=./.env.local dotenv_config_debug=true",
     "dev": "next dev",
-    "format": "ofmt ./src",
-    "format:check": "ofmt --lint ./src",
+    "format": "prettier --write \"{src,pages}/**/*.{ts,tsx,js}\"",
+    "format:check": "prettier --check \"{src,pages}/**/*.{ts,tsx,js}\"",
     "lint": "olint ./src",
     "prebuild": "ts-node ./create-table.ts",
     "spellcheck": "cspell ./**/*.{ts,js,tsx,json} -e package-lock.json -e node_modules -e .next",

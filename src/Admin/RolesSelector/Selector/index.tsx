@@ -1,7 +1,7 @@
-import type {Option} from 'Admin/types/option'
+import type { Option } from 'Admin/types/option'
 import cn from 'classnames'
-import {Icon} from 'common/Icon'
-import {Dispatch, memo, SetStateAction, useCallback, useEffect, useRef, useState} from 'react'
+import { Icon } from 'common/Icon'
+import { Dispatch, memo, SetStateAction, useCallback, useEffect, useRef, useState } from 'react'
 
 /** Multiple selector with dropdown menu */
 
@@ -61,8 +61,8 @@ export const Selector = memo(function Selector(props: {
         className={cn(
           'grid grid-cols-fr/auto items-center justify-between gap-x-4 px-6 py-3.5 pr-7.5',
           'text-14 font-semibold cursor-pointer select-none',
-          {'!border-6673b9': expanded},
-          {'bg-0c0e10/50 pointer-events-none select-none': props.disabled},
+          { '!border-6673b9': expanded },
+          { 'bg-0c0e10/50 pointer-events-none select-none': props.disabled },
           'bg-0c0e10 border border-ffffff/20 hover:border-6673b9/50 transition-colors group rounded-xl',
         )}
       >
@@ -103,8 +103,8 @@ export const Selector = memo(function Selector(props: {
       <div
         className={cn(
           'absolute z-10 top-[calc(100%+4px)] left-0 w-full rounded-xl overflow-hidden transition-[max-height] bg-0c0e10 border-f9f9f9/20',
-          {'max-h-0 border-0': !expanded},
-          {'max-h-50 border-2': expanded},
+          { 'max-h-0 border-0': !expanded },
+          { 'max-h-50 border-2': expanded },
         )}
       >
         <div className="py-3.5">

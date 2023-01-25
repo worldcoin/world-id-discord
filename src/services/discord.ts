@@ -1,4 +1,4 @@
-import {REST} from '@discordjs/rest'
+import { REST } from '@discordjs/rest'
 import {
   APIApplicationCommand,
   APIApplicationCommandInteraction,
@@ -9,13 +9,13 @@ import {
   InteractionType,
   Routes,
 } from 'discord-api-types/v10'
-import {verifyKey} from 'discord-interactions'
+import { verifyKey } from 'discord-interactions'
 
 const DISCORD_APP_ID = process.env.DISCORD_APP_ID!
 const DISCORD_APP_PUBLIC_KEY = process.env.DISCORD_APP_PUBLIC_KEY!
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN!
 
-const rest = new REST({version: '10'}).setToken(DISCORD_BOT_TOKEN)
+const rest = new REST({ version: '10' }).setToken(DISCORD_BOT_TOKEN)
 
 export function verifyInteractionSignature(rawBody: string, signature: string, timestamp: string) {
   return verifyKey(rawBody, signature, timestamp, DISCORD_APP_PUBLIC_KEY)

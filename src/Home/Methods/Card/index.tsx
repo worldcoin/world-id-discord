@@ -1,7 +1,7 @@
 import cn from 'classnames'
-import {Icon} from 'common/Icon'
+import { Icon } from 'common/Icon'
 import Image from 'next/image'
-import {memo} from 'react'
+import { memo } from 'react'
 
 export const Card = memo(function Card(props: {
   heading: string
@@ -13,8 +13,8 @@ export const Card = memo(function Card(props: {
       <Image
         className={cn(
           'absolute',
-          {'top-5 -left-[290px] opacity-50': props.decorationLayout === 'phone'},
-          {'top-[25%] -left-[330px] rotate-12 opacity-40': props.decorationLayout === 'orb'},
+          { 'top-5 -left-[290px] opacity-50': props.decorationLayout === 'phone' },
+          { 'top-[25%] -left-[330px] rotate-12 opacity-40': props.decorationLayout === 'orb' },
         )}
         width={432}
         height={396}
@@ -25,8 +25,8 @@ export const Card = memo(function Card(props: {
       <Image
         className={cn(
           'absolute',
-          {'right-5 -bottom-[340px]': props.decorationLayout === 'phone'},
-          {'-rotate-[105deg] top-4 -right-[300px] opacity-60': props.decorationLayout === 'orb'},
+          { 'right-5 -bottom-[340px]': props.decorationLayout === 'phone' },
+          { '-rotate-[105deg] top-4 -right-[300px] opacity-60': props.decorationLayout === 'orb' },
         )}
         width={432}
         height={396}

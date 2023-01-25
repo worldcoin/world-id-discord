@@ -1,5 +1,5 @@
 import cn from 'classnames'
-import {AnchorHTMLAttributes, ButtonHTMLAttributes, DetailedHTMLProps, memo, ReactNode} from 'react'
+import { AnchorHTMLAttributes, ButtonHTMLAttributes, DetailedHTMLProps, memo, ReactNode } from 'react'
 
 type ButtonBaseProps = {
   children?: ReactNode
@@ -16,7 +16,7 @@ const getClassNames = (props: ButtonBaseProps) => {
   return cn(
     'text-center leading-[1.2] rounded-2xl p-6 min-w-[250px] font-semibold drop-shadow-button',
     'cursor-pointer hover:opacity-75 transition-opacity',
-    {'bg-gradient-81.5 from-4940e0 to-a39dff': variant === 'primary'},
+    { 'bg-gradient-81.5 from-4940e0 to-a39dff': variant === 'primary' },
     props.className,
   )
 }
@@ -30,10 +30,10 @@ export const Link = memo(function Link(props: LinkProps) {
 })
 
 export const Button = memo(function Button(props: ButtonProps) {
-  const {variant, className, ...restProps} = props
+  const { variant, className, ...restProps } = props
 
   return (
-    <button {...restProps} className={getClassNames({variant, className})}>
+    <button {...restProps} className={getClassNames({ variant, className })}>
       {props.children}
     </button>
   )

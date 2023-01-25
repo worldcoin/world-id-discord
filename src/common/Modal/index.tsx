@@ -1,8 +1,8 @@
 import cn from 'classnames'
-import {Icon} from 'common/Icon'
-import {memo, ReactNode} from 'react'
+import { Icon } from 'common/Icon'
+import { memo, ReactNode } from 'react'
 
-export const Modal = memo(function Modal(props: {loading?: boolean; children: ReactNode; className?: string}) {
+export const Modal = memo(function Modal(props: { loading?: boolean; children: ReactNode; className?: string }) {
   return (
     <div
       className={cn(

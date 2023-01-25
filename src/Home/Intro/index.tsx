@@ -1,9 +1,9 @@
 import cn from 'classnames'
-import {Button} from 'common/Button'
-import {GradientText} from 'common/GradientText'
-import {Icon} from 'common/Icon'
+import { Button } from 'common/Button'
+import { GradientText } from 'common/GradientText'
+import { Icon } from 'common/Icon'
 import Image from 'next/image'
-import {memo} from 'react'
+import { memo } from 'react'
 
 interface IntroProps {
   onInstall: () => void

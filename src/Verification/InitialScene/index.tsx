@@ -1,13 +1,13 @@
-import {IDKitWidget, ISuccessResult} from '@worldcoin/idkit'
-import {Option} from 'Admin/types/option'
-import {Button} from 'common/Button'
-import {GradientText} from 'common/GradientText'
-import {GuildLabel} from 'common/GuildLabel'
-import {APIGuild} from 'discord-api-types/v10'
-import {generateGuildImage} from 'helpers'
-import {Dispatch, Fragment, memo, SetStateAction} from 'react'
-import {CredentialsItem} from 'Verification/InitialScene/CredentialsItem'
-import {Scene} from 'Verification/types'
+import { IDKitWidget, ISuccessResult } from '@worldcoin/idkit'
+import { Option } from 'Admin/types/option'
+import { Button } from 'common/Button'
+import { GradientText } from 'common/GradientText'
+import { GuildLabel } from 'common/GuildLabel'
+import { APIGuild } from 'discord-api-types/v10'
+import { generateGuildImage } from 'helpers'
+import { Dispatch, Fragment, memo, SetStateAction } from 'react'
+import { CredentialsItem } from 'Verification/InitialScene/CredentialsItem'
+import { Scene } from 'Verification/types'
 
 export const InitialScene = memo(function Initial(props: {
   actionId: Array<[string, string]>
@@ -16,7 +16,7 @@ export const InitialScene = memo(function Initial(props: {
   setScene: Dispatch<SetStateAction<Scene>>
   setLoading: Dispatch<SetStateAction<boolean>>
   guild: APIGuild
-  roles: {phone: Array<Option>; orb: Array<Option>} | null
+  roles: { phone: Array<Option>; orb: Array<Option> } | null
 }) {
   return (
     <Fragment>
@@ -49,7 +49,7 @@ export const InitialScene = memo(function Initial(props: {
 
         {props.actionId && props.signal && (
           <IDKitWidget actionId={props.actionId} signal={props.signal} handleVerify={props.complete}>
-            {({open}) => (
+            {({ open }) => (
               <Button type="button" onClick={open} className="mt-4">
                 Verify your identity
               </Button>
