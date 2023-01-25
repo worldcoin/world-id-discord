@@ -1,5 +1,5 @@
 import cn from 'classnames'
-import {memo, ReactNode} from 'react'
+import { memo, ReactNode } from 'react'
 
 export const GradientText = memo(function GradientText(props: {
   children: ReactNode

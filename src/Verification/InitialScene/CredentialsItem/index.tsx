@@ -1,7 +1,7 @@
-import {Option} from 'Admin/types/option'
-import {Icon, IconType} from 'common/Icon'
+import { Option } from 'Admin/types/option'
+import { Icon, IconType } from 'common/Icon'
 import Image from 'next/image'
-import {memo} from 'react'
+import { memo } from 'react'
 
 export const CredentialsItem = memo(function CredentialsItem(props: {
   icon: IconType

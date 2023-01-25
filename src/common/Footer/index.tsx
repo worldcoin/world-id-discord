@@ -1,5 +1,5 @@
-import {Icon} from 'common/Icon'
-import {memo} from 'react'
+import { Icon } from 'common/Icon'
+import { memo } from 'react'
 
 export const Footer = memo(function Footer() {
   return (

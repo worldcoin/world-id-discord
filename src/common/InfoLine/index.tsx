@@ -1,8 +1,8 @@
 import cn from 'classnames'
-import {Icon} from 'common/Icon'
-import {memo} from 'react'
+import { Icon } from 'common/Icon'
+import { memo } from 'react'
 
-export const InfoLine = memo(function InfoLine(props: {className?: string; text: string}) {
+export const InfoLine = memo(function InfoLine(props: { className?: string; text: string }) {
   return (
     <div
       className={cn(

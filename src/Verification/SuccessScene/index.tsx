@@ -1,12 +1,12 @@
-import {Button} from 'common/Button'
-import {GradientText} from 'common/GradientText'
-import {GuildLabel} from 'common/GuildLabel'
-import {Icon} from 'common/Icon'
-import {APIGuild, APIRole} from 'discord-api-types/v10'
-import {generateGuildImage} from 'helpers'
-import {memo} from 'react'
+import { Button } from 'common/Button'
+import { GradientText } from 'common/GradientText'
+import { GuildLabel } from 'common/GuildLabel'
+import { Icon } from 'common/Icon'
+import { APIGuild, APIRole } from 'discord-api-types/v10'
+import { generateGuildImage } from 'helpers'
+import { memo } from 'react'
 
-export const SuccessScene = memo(function SuccessScene(props: {guild: APIGuild; assignedRoles: Array<APIRole>}) {
+export const SuccessScene = memo(function SuccessScene(props: { guild: APIGuild; assignedRoles: Array<APIRole> }) {
   return (
     <div className="grid justify-items-center gap-y-12">
       <GuildLabel image={generateGuildImage(props.guild.id, props.guild.icon)} name={props.guild.name} />

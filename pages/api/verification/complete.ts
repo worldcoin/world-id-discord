@@ -1,7 +1,7 @@
-import {NextApiRequest, NextApiResponse} from 'next'
-import {assignGuildMemberRole, getGuildData} from 'services/discord'
-import {VerificationCompletePayload} from 'common/types/verification-complete'
-import {getBotConfig} from 'services/dynamodb'
+import { VerificationCompletePayload } from 'common/types/verification-complete'
+import { NextApiRequest, NextApiResponse } from 'next'
+import { assignGuildMemberRole, getGuildData } from 'services/discord'
+import { getBotConfig } from 'services/dynamodb'
 
 interface NextApiRequestWithBody extends NextApiRequest {
   body: VerificationCompletePayload
@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
     return res.status(500).json({})
   }
 
-  const { data:botConfig } = await getBotConfig(guildId)
+  const { data: botConfig } = await getBotConfig(guildId)
 
   if (!botConfig) {
     return res.status(500).json({})
@@ -49,9 +49,9 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
       await assignGuildMemberRole(guildId, userId, roleId)
     }
     const assignedRoles = guild.roles.filter((role) => roleIds.includes(role.id))
-    return res.status(200).json({assignedRoles})
+    return res.status(200).json({ assignedRoles })
   } catch (error) {
     console.error(error)
-    return res.status(500).json({message: error?.message})
+    return res.status(500).json({ message: error?.message })
   }
 }

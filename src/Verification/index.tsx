@@ -1,21 +1,21 @@
-import {ISuccessResult} from '@worldcoin/idkit'
-import {Option} from 'Admin/types/option'
-import {Header} from 'common/Header'
-import {InfoLine} from 'common/InfoLine'
-import {Layout} from 'common/Layout'
-import {Modal} from 'common/Modal'
-import {VerificationCompletePayload, VerificationCompleteResponsePayload} from 'common/types/verification-complete'
-import {APIGuild, APIRole} from 'discord-api-types/v10'
+import { ISuccessResult } from '@worldcoin/idkit'
+import { Option } from 'Admin/types/option'
+import { Header } from 'common/Header'
+import { InfoLine } from 'common/InfoLine'
+import { Layout } from 'common/Layout'
+import { Modal } from 'common/Modal'
+import { VerificationCompletePayload, VerificationCompleteResponsePayload } from 'common/types/verification-complete'
+import { APIGuild, APIRole } from 'discord-api-types/v10'
 import Image from 'next/image'
-import {memo, useCallback, useState} from 'react'
-import {ErrorScene} from './ErrorScene'
-import {InitialScene} from './InitialScene'
-import {SuccessScene} from './SuccessScene'
-import {Scene} from './types'
+import { memo, useCallback, useState } from 'react'
+import { ErrorScene } from './ErrorScene'
+import { InitialScene } from './InitialScene'
+import { SuccessScene } from './SuccessScene'
+import { Scene } from './types'
 
 export const Verification = memo(function Verification(props: {
   guild: APIGuild
-  rolesToAssign: {phone: Array<Option>; orb: Array<Option>}
+  rolesToAssign: { phone: Array<Option>; orb: Array<Option> }
   guildId: string
   userId: string
   actionId?: string
@@ -23,7 +23,7 @@ export const Verification = memo(function Verification(props: {
   const [scene, setScene] = useState<Scene>(Scene.Initial)
   const [loading, setLoading] = useState(false)
   const [assignedRoles, setAssignedRoles] = useState<Array<APIRole>>([])
-  const {guildId, userId} = props
+  const { guildId, userId } = props
 
   const complete = useCallback(
     async (result: ISuccessResult) => {

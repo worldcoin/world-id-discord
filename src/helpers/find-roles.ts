@@ -1,4 +1,4 @@
-import {APIRole} from 'discord-api-types/v10'
+import { APIRole } from 'discord-api-types/v10'
 
 export const findRoles = (configRoles: Array<string>, allRoles: Array<APIRole>) => {
   const roles = []

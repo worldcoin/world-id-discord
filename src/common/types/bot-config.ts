@@ -1,4 +1,4 @@
-import {Option} from 'Admin/types/option'
+import { Option } from 'Admin/types/option'
 
 type CredentialsData<T extends 'initial' | void = void> = {
   enabled: boolean

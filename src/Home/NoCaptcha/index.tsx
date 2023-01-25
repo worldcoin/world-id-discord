@@ -1,8 +1,8 @@
 import cn from 'classnames'
-import {Button} from 'common/Button'
-import {GradientText} from 'common/GradientText'
-import {Icon} from 'common/Icon'
-import {memo} from 'react'
+import { Button } from 'common/Button'
+import { GradientText } from 'common/GradientText'
+import { Icon } from 'common/Icon'
+import { memo } from 'react'
 
 interface NoCaptchaProps {
   onInstall: () => void

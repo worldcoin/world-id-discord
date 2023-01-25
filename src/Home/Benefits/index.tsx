@@ -1,6 +1,6 @@
 import cn from 'classnames'
-import {GradientText} from 'common/GradientText'
-import {memo} from 'react'
+import { GradientText } from 'common/GradientText'
+import { memo } from 'react'
 
 const items = [
   {
