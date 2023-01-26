@@ -37,7 +37,7 @@ export const createGuildCommands = async (guildId: string) => {
   const command: Command = {
     type: ApplicationCommandType.ChatInput,
     name: 'verify',
-    description: 'verifying with WorldID',
+    description: 'Verify your account with World ID',
   }
 
   return await rest.post(Routes.applicationGuildCommands(DISCORD_APP_ID, guildId), {
