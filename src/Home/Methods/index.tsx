@@ -34,7 +34,7 @@ export const Methods = memo(function Methods() {
               'Fully privacy preserving through cryptographic proofs',
               // eslint-disable-next-line react/jsx-key -- key passed in maping inside component
               <span>
-                Leverages users who have enrolled at
+                Leverages users who have enrolled at{' '}
                 <a href="https://worldcoin.org/" className="opacity-70 transition hover:opacity-100">
                   <GradientText as="span">Worldcoin Orb</GradientText>
                 </a>
