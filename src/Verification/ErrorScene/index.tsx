@@ -1,13 +1,10 @@
 import { IDKitWidget, ISuccessResult } from '@worldcoin/idkit'
 import { Button } from 'common/Button'
 import { GuildLabel } from 'common/GuildLabel'
+import { APIGuild } from 'discord-api-types/v10'
+import { generateGuildImage } from 'helpers'
 import { memo, useEffect, useState } from 'react'
 import { VerificationError } from 'Verification/types'
-
-const guildData = {
-  image: '/images/orb.png',
-  name: 'Official Fortnite',
-}
 
 const texts = {
   [VerificationError.AlreadyVerified]: {
@@ -24,6 +21,7 @@ const texts = {
 export const ErrorScene = memo(function ErrorScene(props: {
   actionId: string
   signal: string | null
+  guild: APIGuild
   complete: (result: ISuccessResult) => Promise<void>
 }) {
   const [error, setError] = useState<VerificationError | null>(null)
@@ -39,8 +37,7 @@ export const ErrorScene = memo(function ErrorScene(props: {
 
   return (
     <div className="grid gap-y-12 justify-items-center">
-      {/* FIXME: pass real data  */}
-      <GuildLabel image={guildData.image} name={guildData.name} />
+      <GuildLabel image={generateGuildImage(props.guild.id, props.guild.icon)} name={props.guild.name} />
 
       {error !== null && (
         <div className="grid gap-y-2 max-w-[400px]">
