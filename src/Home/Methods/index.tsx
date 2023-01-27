@@ -18,22 +18,27 @@ export const Methods = memo(function Methods() {
           <Card
             heading="Phone number"
             pros={[
-              'Supporting weaker protection',
-              'Phone numbers are not stored',
-              "No user's privacy is compromised",
-              ' A single phone number is used only once in server',
+              'Very simple user experience',
+              'Phone numbers are not stored anywhere',
+              'Fully privacy preserving',
+              'A single phone number is used only once in each server',
             ]}
             decorationLayout="phone"
           />
 
           <Card
             heading="Orb"
-            // FIXME: update pros
             pros={[
-              'Supporting weaker protection',
-              'Phone numbers are not stored',
-              "No user's privacy is compromised",
-              'A single phone number is used only once in server',
+              'Strongest level of protection',
+              'Only humans allowed - verified with biometrics',
+              'Fully privacy preserving through cryptographic proofs',
+              // eslint-disable-next-line react/jsx-key -- key passed in maping inside component
+              <span>
+                Leverages users who have enrolled at{' '}
+                <a href="https://worldcoin.org/" className="opacity-70 transition hover:opacity-100">
+                  <GradientText as="span">Worldcoin Orb</GradientText>
+                </a>
+              </span>,
             ]}
             decorationLayout="orb"
           />

@@ -35,19 +35,7 @@ export const About = memo(function About() {
           </div>
         </div>
 
-        <div className="box-content relative overflow-clip p-14 bg-111318 border border-ffffff/20 rounded-3xl">
-          <Image
-            className="absolute bottom-16 -left-5"
-            width={384}
-            height={171}
-            src="/images/home/dots.svg"
-            alt="Orb"
-          />
-
-          <Image className="absolute top-32 -right-14" width={384} height={171} src="/images/home/dots.svg" alt="Orb" />
-
-          <Image className="min-w-[370px]" width={370} height={484} src="/images/home/about.png" alt="Orb" />
-        </div>
+        <Image width={639} height={727} src="/images/home/how-to-get-verified.png" alt="IDkit screenshot" />
       </div>
     </div>
   )
