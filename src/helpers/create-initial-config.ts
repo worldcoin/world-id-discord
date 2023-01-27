@@ -2,23 +2,39 @@ import { BotConfig } from 'common/types'
 import { APIRole } from 'discord-api-types/v10'
 import { findRoles } from './find-roles'
 
-export const createInitialConfig = (
-  config: BotConfig | null,
-  allRoles: Array<APIRole>,
-): BotConfig<'initial'> | null => {
-  if (!config || !config.phone || !config.orb) {
-    return null
+export const createInitialConfig = ({
+  botConfig,
+  roles,
+  guild_id,
+}: {
+  botConfig: BotConfig | null
+  roles: Array<APIRole>
+  guild_id: string
+}): BotConfig<'initial'> | null => {
+  if (!botConfig || !botConfig.phone || !botConfig.orb) {
+    return {
+      enabled: false,
+      guild_id,
+      phone: {
+        enabled: false,
+        roles: [],
+      },
+      orb: {
+        enabled: false,
+        roles: [],
+      },
+    }
   }
 
   return {
-    ...config,
+    ...botConfig,
     phone: {
-      ...config.phone,
-      roles: findRoles(config.phone.roles, allRoles),
+      ...botConfig.phone,
+      roles: findRoles(botConfig.phone.roles, roles),
     },
     orb: {
-      ...config.orb,
-      roles: findRoles(config.orb.roles, allRoles),
+      ...botConfig.orb,
+      roles: findRoles(botConfig.orb.roles, roles),
     },
   }
 }

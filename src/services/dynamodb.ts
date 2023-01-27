@@ -106,10 +106,6 @@ export const verifyBotConfig = (botConfig: BotConfig): { status: boolean; error?
     return { status: false, error: new Error('Guild id is required') }
   }
 
-  if (!botConfig.action_id) {
-    return { status: false, error: new Error('Action id is required') }
-  }
-
   if (!botConfig.hasOwnProperty('enabled')) {
     return { status: false, error: new Error('enabled is required') }
   }
@@ -126,12 +122,12 @@ export const verifyBotConfig = (botConfig: BotConfig): { status: boolean; error?
     return { status: false, error: new Error('Orb verification enabled is required') }
   }
 
-  if (!botConfig.phone.roles || botConfig.phone.roles.length === 0) {
-    return { status: false, error: new Error('Roles for phone verification is required') }
+  if (botConfig.orb.roles.length === 0 && botConfig.orb.enabled) {
+    return { status: false, error: new Error('Set at least one role to Orb verification method') }
   }
 
-  if (!botConfig.orb.roles || botConfig.orb.roles.length === 0) {
-    return { status: false, error: new Error('Roles for orb verification is required') }
+  if (botConfig.phone.roles.length === 0 && botConfig.phone.enabled) {
+    return { status: false, error: new Error('Set at least one role to Orb verification method') }
   }
 
   return { status: true }

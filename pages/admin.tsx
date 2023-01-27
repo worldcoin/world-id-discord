@@ -32,10 +32,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   return {
     props: {
-      roles,
       session,
+      roles,
       guild,
-      initialBotConfig: createInitialConfig(botConfig, roles),
+      initialConfig: createInitialConfig({ botConfig, roles, guild_id: guild.id }),
     },
   }
 }
