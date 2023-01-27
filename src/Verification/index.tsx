@@ -89,7 +89,7 @@ export const Verification = memo(function Verification(props: {
       </Modal>
 
       <InfoLine
-        className="fixed bottom-0 inset-x-0"
+        className="fixed bottom-0 inset-x-0 z-10"
         text="The Discord Bouncer helps prevent spam and increase the quality of the community by making sure everyone who joins is a human. "
       />
     </Layout>
