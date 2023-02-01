@@ -18,12 +18,13 @@ export const Verification = memo(function Verification(props: {
   rolesToAssign: { phone: Array<Option>; orb: Array<Option> }
   guildId: string
   userId: string
+  token: string
   actionId: string
 }) {
   const [scene, setScene] = useState<Scene>(Scene.Initial)
   const [loading, setLoading] = useState(false)
   const [assignedRoles, setAssignedRoles] = useState<Array<APIRole>>([])
-  const { guildId, userId, actionId } = props
+  const { guildId, userId, actionId, token } = props
 
   const complete = useCallback(
     async (result: ISuccessResult) => {
@@ -33,6 +34,7 @@ export const Verification = memo(function Verification(props: {
         const payload: VerificationCompletePayload = {
           guildId,
           userId,
+          token,
           result,
         }
 
@@ -58,7 +60,7 @@ export const Verification = memo(function Verification(props: {
         setLoading(false)
       }
     },
-    [guildId, userId],
+    [guildId, userId, token],
   )
 
   return (
