@@ -48,7 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return res.status(200).json(payload)
   }
 
-  const verifyUrl = `${process.env.NEXTAUTH_URL}/verification?user_id=${data.member?.user.id}&guild_id=${data.guild_id}`
+  const verifyUrl = `${process.env.NEXTAUTH_URL}/verification?user_id=${data.member?.user.id}&guild_id=${data.guild_id}&token=${data.token}`
 
   const embed = new EmbedBuilder()
     .setColor([133, 126, 245])
@@ -64,7 +64,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     new ButtonBuilder().setLabel('Verify now').setStyle(ButtonStyle.Link).setURL(verifyUrl),
   )
 
-  // FIXME: implement verification
   const payload: APIInteractionResponseChannelMessageWithSource = {
     type: InteractionResponseType.ChannelMessageWithSource,
     data: {
@@ -73,5 +72,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       flags: MessageFlags.Ephemeral,
     },
   }
-  return res.status(200).json(payload)
+
+  return res.status(200).send(payload)
 }

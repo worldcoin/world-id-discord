@@ -1,6 +1,10 @@
+import { EmbedBuilder } from '@discordjs/builders'
 /* eslint-disable complexity -- FIXME */
 import { VerificationCompletePayload } from 'common/types/verification-complete'
+import { APIRole } from 'discord-api-types/v10'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { assignGuildMemberRole, editInteractionMessage, getGuildData } from 'services/discord'
+import { getBotConfig } from 'services/dynamodb'
 import { assignGuildMemberRole, getGuildData } from 'services/discord'
 import { getBotConfig, getNullifierHash, saveNullifier } from 'services/dynamodb'
 
@@ -9,29 +13,29 @@ interface NextApiRequestWithBody extends NextApiRequest {
 }
 
 export default async function handler(req: NextApiRequestWithBody, res: NextApiResponse) {
-  const { guildId, userId, result } = req.body
+  const { guildId, userId, token, result } = req.body
 
   // FIXME: check result signature
 
   const guild = await getGuildData(guildId)
   if (!guild) {
-    return res.status(500).json({})
+    return await sendErrorResponse(res, token, 500, 'Guild not found')
   }
 
   const { data: botConfig } = await getBotConfig(guildId)
 
   if (!botConfig) {
-    return res.status(500).json({})
+    return await sendErrorResponse(res, token, 500, 'Bot config not found')
   }
 
   if (!botConfig.enabled) {
-    return res.status(400).json({})
+    return await sendErrorResponse(res, token, 400, 'Bot is disabled')
   }
 
   let roleIds: string[]
   if (result.signal_type === 'orb') {
     if (!botConfig.orb.enabled) {
-      return res.status(400).json({})
+      return await sendErrorResponse(res, token, 400, 'Orb verification is disabled')
     }
     roleIds = botConfig.orb.roles
   } else if (result.signal_type === 'phone') {
@@ -50,11 +54,11 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
     }
 
     if (!botConfig.phone.enabled) {
-      return res.status(400).json({})
+      return await sendErrorResponse(res, token, 400, 'Phone verification is disabled')
     }
     roleIds = botConfig.phone.roles
   } else {
-    return res.status(400).json({})
+    return await sendErrorResponse(res, token, 400, 'Unknown signal type')
   }
 
   // FIXME: check that these roles really exist on the server
@@ -64,9 +68,36 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
       await assignGuildMemberRole(guildId, userId, roleId)
     }
     const assignedRoles = guild.roles.filter((role) => roleIds.includes(role.id))
-    return res.status(200).json({ assignedRoles })
+    return await sendSuccessResponse(res, token, assignedRoles)
   } catch (error) {
     console.error(error)
-    return res.status(500).json({ message: error?.message })
+    return await sendErrorResponse(res, token, 500, error?.message)
   }
+}
+
+async function sendErrorResponse(res: NextApiResponse, token: string, statusCode: number, message?: string) {
+  const description = [`Feel free to restart the validation with /verify command`].concat(message ?? []).join('\n')
+  const embed = new EmbedBuilder()
+    .setColor([237, 66, 69])
+    .setTitle('Sorry, an error occurred during validation')
+    .setDescription(description)
+    .setThumbnail(`${process.env.NEXTAUTH_URL}/images/api/interactions/verify-error.png`)
+    .setTimestamp(new Date())
+  await editInteractionMessage(token, [embed.toJSON()])
+  return res.status(statusCode).json({ message })
+}
+
+async function sendSuccessResponse(res: NextApiResponse, token: string, assignedRoles: APIRole[]) {
+  const description = [
+    'We ensure that you are real human using World ID technology.',
+    `You have been assigned the following roles: **${assignedRoles.map((role) => role.name).join('**, **')}**`,
+  ].join('\n')
+  const embed = new EmbedBuilder()
+    .setColor([87, 242, 135])
+    .setTitle('Verified!')
+    .setDescription(description)
+    .setThumbnail(`${process.env.NEXTAUTH_URL}/images/api/interactions/verify-success.png`)
+    .setTimestamp(new Date())
+  await editInteractionMessage(token, [embed.toJSON()])
+  return res.status(200).json({ assignedRoles })
 }
