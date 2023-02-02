@@ -37,7 +37,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
     roleIds = botConfig.orb.roles
   } else if (result.signal_type === 'phone') {
     if (!botConfig.phone.enabled) {
-      return await sendErrorResponse(res, token, 400, 'Phone verification is disabled')
+      return await sendErrorResponse(res, token, 400, 'Phone verification is disabled for this server.')
     }
     roleIds = botConfig.phone.roles
   } else {
