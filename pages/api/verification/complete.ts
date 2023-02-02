@@ -79,7 +79,7 @@ async function sendErrorResponse(res: NextApiResponse, token: string, statusCode
   const description = [`Feel free to restart the validation with /verify command`].concat(message ?? []).join('\n')
   const embed = new EmbedBuilder()
     .setColor([237, 66, 69])
-    .setTitle('Sorry, an error occurred during validation')
+    .setTitle('Sorry we could not complete your verification')
     .setDescription(description)
     .setThumbnail(`${process.env.NEXTAUTH_URL}/images/api/interactions/verify-error.png`)
     .setTimestamp(new Date())
