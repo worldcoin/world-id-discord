@@ -23,6 +23,7 @@ export const ErrorScene = memo(function ErrorScene(props: {
   signal: string | null
   guild: APIGuild
   complete: (result: ISuccessResult) => Promise<void>
+  credentials: Array<'phone' | 'orb'>
 }) {
   const [error, setError] = useState<VerificationError | null>(null)
 
@@ -47,7 +48,12 @@ export const ErrorScene = memo(function ErrorScene(props: {
       )}
 
       {error !== VerificationError.AlreadyVerified && props.actionId && props.signal && (
-        <IDKitWidget actionId={props.actionId} signal={props.signal} handleVerify={props.complete}>
+        <IDKitWidget
+          actionId={props.actionId}
+          signal={props.signal}
+          handleVerify={props.complete}
+          methods={props.credentials}
+        >
           {({ open }) => (
             <Button type="button" className="mt-[22px] w-full" onClick={open}>
               Verify your identity

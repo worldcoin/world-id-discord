@@ -17,6 +17,7 @@ export const InitialScene = memo(function Initial(props: {
   setLoading: Dispatch<SetStateAction<boolean>>
   guild: APIGuild
   roles: { phone: Array<Option>; orb: Array<Option> } | null
+  credentials: Array<'phone' | 'orb'>
 }) {
   return (
     <Fragment>
@@ -48,7 +49,12 @@ export const InitialScene = memo(function Initial(props: {
         </div>
 
         {props.actionId && props.signal && (
-          <IDKitWidget actionId={props.actionId} signal={props.signal} handleVerify={props.complete}>
+          <IDKitWidget
+            actionId={props.actionId}
+            signal={props.signal}
+            handleVerify={props.complete}
+            methods={props.credentials}
+          >
             {({ open }) => (
               <Button type="button" onClick={open} className="mt-4">
                 Verify your identity
