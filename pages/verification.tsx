@@ -37,12 +37,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const credentials = [] as Array<'phone' | 'orb'>
 
-  if (botConfig.phone.enabled) {
-    credentials.push('phone')
-  }
-
   if (botConfig.orb.enabled) {
     credentials.push('orb')
+  }
+
+  if (botConfig.phone.enabled) {
+    credentials.push('phone')
   }
 
   return {
