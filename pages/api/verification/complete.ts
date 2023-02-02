@@ -72,7 +72,7 @@ async function sendErrorResponse(res: NextApiResponse, token: string, statusCode
 
 async function sendSuccessResponse(res: NextApiResponse, token: string, assignedRoles: APIRole[]) {
   const description = [
-    'We ensure that you are real human using World ID technology.',
+    'Your verification with World ID is complete.',
     `You can now enjoy your new role(s): **${assignedRoles.map((role) => role.name).join('**, **')}**`,
   ].join('\n')
   const embed = new EmbedBuilder()
