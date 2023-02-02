@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
   const { data: botConfig } = await getBotConfig(guildId)
 
   if (!botConfig) {
-    return await sendErrorResponse(res, token, 500, 'Bot config not found')
+    return await sendErrorResponse(res, token, 500, 'Looks like this server is not properly configured for Discord Bouncer. Please contact your server admin.')
   }
 
   if (!botConfig.enabled) {
