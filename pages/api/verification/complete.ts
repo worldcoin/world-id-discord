@@ -94,7 +94,7 @@ async function sendSuccessResponse(res: NextApiResponse, token: string, assigned
   ].join('\n')
   const embed = new EmbedBuilder()
     .setColor([87, 242, 135])
-    .setTitle('Verified!')
+    .setTitle('Kudos! Your verification was successful')
     .setDescription(description)
     .setThumbnail(`${process.env.NEXTAUTH_URL}/images/api/interactions/verify-success.png`)
     .setTimestamp(new Date())
