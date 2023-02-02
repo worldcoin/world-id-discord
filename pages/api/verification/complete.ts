@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
   }
 
   if (!botConfig.enabled) {
-    return await sendErrorResponse(res, token, 400, 'Bot is disabled')
+    return await sendErrorResponse(res, token, 400, 'The bot is currently disabled for this server.')
   }
 
   let roleIds: string[]
