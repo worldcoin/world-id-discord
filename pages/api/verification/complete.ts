@@ -19,7 +19,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
 
   const guild = await getGuildData(guildId)
   if (!guild) {
-    return await sendErrorResponse(res, token, 500, 'Guild not found')
+    return await sendErrorResponse(res, token, 500, 'The Discord server was not found.')
   }
 
   const { data: botConfig } = await getBotConfig(guildId)
