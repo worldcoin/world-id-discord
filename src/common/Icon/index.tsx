@@ -17,6 +17,7 @@ const iconNames = [
   'orb',
   'orb-huge',
   'play-market',
+  'reload',
   'world-id',
 ] as const
 

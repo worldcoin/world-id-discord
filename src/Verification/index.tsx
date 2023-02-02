@@ -68,7 +68,7 @@ export const Verification = memo(function Verification(props: {
       <Image src="/images/background.svg" fill alt="background" className="object-cover" />
       <Header hideLinks onTop />
 
-      <Modal loading={loading} className="pt-6 px-12 pb-12 grid gap-y-6 max-w-[680px]">
+      <Modal loading={loading} className="p-12 grid gap-y-6 max-w-[500px]">
         {scene === Scene.Initial && (
           <InitialScene
             actionId={[
