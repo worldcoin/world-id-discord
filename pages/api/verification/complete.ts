@@ -58,7 +58,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
     }
     roleIds = botConfig.phone.roles
   } else {
-    return await sendErrorResponse(res, token, 400, 'Unknown signal type')
+    return await sendErrorResponse(res, token, 400, 'We had a problem verifying this credential. Please try again.')
   }
 
   // FIXME: check that these roles really exist on the server
