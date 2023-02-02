@@ -32,7 +32,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
   let roleIds: string[]
   if (result.signal_type === 'orb') {
     if (!botConfig.orb.enabled) {
-      return await sendErrorResponse(res, token, 400, 'Orb verification is disabled')
+      return await sendErrorResponse(res, token, 400, 'Orb verification is disabled for this server.')
     }
     roleIds = botConfig.orb.roles
   } else if (result.signal_type === 'phone') {
