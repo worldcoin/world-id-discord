@@ -1,7 +1,8 @@
+/* eslint-disable complexity -- FIXME */
 import { VerificationCompletePayload } from 'common/types/verification-complete'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { assignGuildMemberRole, getGuildData } from 'services/discord'
-import { getBotConfig } from 'services/dynamodb'
+import { getBotConfig, getNullifierHash, saveNullifier } from 'services/dynamodb'
 
 interface NextApiRequestWithBody extends NextApiRequest {
   body: VerificationCompletePayload
@@ -34,6 +35,24 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
     }
     roleIds = botConfig.orb.roles
   } else if (result.signal_type === 'phone') {
+    const nullifierHashResult = await getNullifierHash({ guild_id: guildId, nullifier_hash: result.nullifier_hash })
+
+    if (!nullifierHashResult.data) {
+      const NullifierSaveResult = await saveNullifier({ guild_id: guildId, nullifier_hash: result.nullifier_hash })
+
+      if (NullifierSaveResult.error) {
+        return res.status(500).json({ message: NullifierSaveResult.error.message })
+      }
+    }
+
+    if (
+      nullifierHashResult.data &&
+      nullifierHashResult.data.nullifier_hash === result.nullifier_hash &&
+      nullifierHashResult.data.guild_id === guildId
+    ) {
+      return res.status(400).json({ message: 'AlreadyVerified' })
+    }
+
     if (!botConfig.phone.enabled) {
       return res.status(400).json({})
     }
