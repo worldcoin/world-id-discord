@@ -19,6 +19,7 @@ export const Verification = memo(function Verification(props: {
   guildId: string
   userId: string
   actionId: string
+  credentials: Array<'phone' | 'orb'>
 }) {
   const [scene, setScene] = useState<Scene>(Scene.Initial)
   const [loading, setLoading] = useState(false)
@@ -79,12 +80,19 @@ export const Verification = memo(function Verification(props: {
             setLoading={setLoading}
             guild={props.guild}
             roles={props.rolesToAssign}
+            credentials={props.credentials}
           />
         )}
         {scene === Scene.Success && <SuccessScene guild={props.guild} assignedRoles={assignedRoles} />}
 
         {scene === Scene.Error && (
-          <ErrorScene guild={props.guild} actionId={actionId} signal={userId} complete={complete} />
+          <ErrorScene
+            guild={props.guild}
+            actionId={actionId}
+            signal={userId}
+            complete={complete}
+            credentials={props.credentials}
+          />
         )}
       </Modal>
 
