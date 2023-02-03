@@ -1,11 +1,9 @@
-import { EmbedBuilder } from '@discordjs/builders'
 /* eslint-disable complexity -- FIXME */
+import { EmbedBuilder } from '@discordjs/builders'
 import { VerificationCompletePayload } from 'common/types/verification-complete'
 import { APIRole } from 'discord-api-types/v10'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { assignGuildMemberRole, editInteractionMessage, getGuildData } from 'services/discord'
-import { getBotConfig } from 'services/dynamodb'
-import { assignGuildMemberRole, getGuildData } from 'services/discord'
 import { getBotConfig, getNullifierHash, saveNullifier } from 'services/dynamodb'
 
 interface NextApiRequestWithBody extends NextApiRequest {
@@ -50,7 +48,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
       const NullifierSaveResult = await saveNullifier({ guild_id: guildId, nullifier_hash: result.nullifier_hash })
 
       if (NullifierSaveResult.error) {
-        return res.status(500).json({ message: NullifierSaveResult.error.message })
+        return await sendErrorResponse(res, token, 500, NullifierSaveResult.error.message)
       }
     }
 
