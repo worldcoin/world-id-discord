@@ -187,11 +187,11 @@ export const getNullifierHash = async ({ guild_id, nullifier_hash }: NullifierHa
     )
 
     if (response['$metadata'].httpStatusCode !== 200) {
-      throw new Error('Error while getting bot config from database')
+      throw new Error('Error while getting nullifier hash from from database')
     }
 
     if (!response.Item) {
-      throw new Error('Bot config not found')
+      throw new Error('Nullifier not found')
     }
 
     result = { data: unmarshall(response.Item) as NullifierHashData }
