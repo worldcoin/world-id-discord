@@ -45,11 +45,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
       }
     }
 
-    if (
-      nullifierHashResult.data &&
-      nullifierHashResult.data.nullifier_hash === result.nullifier_hash &&
-      nullifierHashResult.data.guild_id === guildId
-    ) {
+    if (nullifierHashResult.data) {
       return res.status(400).json({ code: 'already_verified' })
     }
 
