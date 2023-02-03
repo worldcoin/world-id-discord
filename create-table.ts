@@ -82,7 +82,6 @@ async function createTables() {
   try {
     await Promise.all([guildsTable, nullifiersTable])
   } catch (error) {
-    console.log('here')
     console.log(error)
   }
 }
