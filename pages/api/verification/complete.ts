@@ -50,7 +50,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
       nullifierHashResult.data.nullifier_hash === result.nullifier_hash &&
       nullifierHashResult.data.guild_id === guildId
     ) {
-      return res.status(400).json({ message: 'AlreadyVerified' })
+      return res.status(400).json({ code: 'already_verified' })
     }
 
     if (!botConfig.phone.enabled) {

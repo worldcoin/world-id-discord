@@ -50,7 +50,7 @@ export const Verification = memo(function Verification(props: {
         if (!res.ok) {
           const completeResult = await res.json()
 
-          if (completeResult.message === 'AlreadyVerified') {
+          if (completeResult.code === 'already_verified') {
             setVerificationError(VerificationError.AlreadyVerified)
             return setScene(Scene.Error)
           }
