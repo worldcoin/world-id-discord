@@ -1,7 +1,9 @@
 /* eslint-disable complexity -- FIXME */
+import { EmbedBuilder } from '@discordjs/builders'
 import { VerificationCompletePayload } from 'common/types/verification-complete'
+import { APIRole } from 'discord-api-types/v10'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { assignGuildMemberRole, getGuildData } from 'services/discord'
+import { assignGuildMemberRole, editInteractionMessage, getGuildData } from 'services/discord'
 import { getBotConfig, getNullifierHash, saveNullifier } from 'services/dynamodb'
 
 interface NextApiRequestWithBody extends NextApiRequest {
@@ -9,29 +11,34 @@ interface NextApiRequestWithBody extends NextApiRequest {
 }
 
 export default async function handler(req: NextApiRequestWithBody, res: NextApiResponse) {
-  const { guildId, userId, result } = req.body
+  const { guildId, userId, token, result } = req.body
 
   // FIXME: check result signature
 
   const guild = await getGuildData(guildId)
   if (!guild) {
-    return res.status(500).json({})
+    return await sendErrorResponse(res, token, 500, 'The Discord server was not found.')
   }
 
   const { data: botConfig } = await getBotConfig(guildId)
 
   if (!botConfig) {
-    return res.status(500).json({})
+    return await sendErrorResponse(
+      res,
+      token,
+      500,
+      'Looks like this server is not properly configured for Discord Bouncer. Please contact your server admin.',
+    )
   }
 
   if (!botConfig.enabled) {
-    return res.status(400).json({})
+    return await sendErrorResponse(res, token, 400, 'The bot is currently disabled for this server.')
   }
 
   let roleIds: string[]
   if (result.signal_type === 'orb') {
     if (!botConfig.orb.enabled) {
-      return res.status(400).json({})
+      return await sendErrorResponse(res, token, 400, 'Orb verification is disabled for this server.')
     }
     roleIds = botConfig.orb.roles
   } else if (result.signal_type === 'phone') {
@@ -41,7 +48,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
       const NullifierSaveResult = await saveNullifier({ guild_id: guildId, nullifier_hash: result.nullifier_hash })
 
       if (NullifierSaveResult.error) {
-        return res.status(500).json({ message: NullifierSaveResult.error.message })
+        return await sendErrorResponse(res, token, 500, NullifierSaveResult.error.message)
       }
     }
 
@@ -50,11 +57,11 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
     }
 
     if (!botConfig.phone.enabled) {
-      return res.status(400).json({})
+      return await sendErrorResponse(res, token, 400, 'Phone verification is disabled for this server.')
     }
     roleIds = botConfig.phone.roles
   } else {
-    return res.status(400).json({})
+    return await sendErrorResponse(res, token, 400, 'We had a problem verifying this credential. Please try again.')
   }
 
   // FIXME: check that these roles really exist on the server
@@ -64,9 +71,36 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
       await assignGuildMemberRole(guildId, userId, roleId)
     }
     const assignedRoles = guild.roles.filter((role) => roleIds.includes(role.id))
-    return res.status(200).json({ assignedRoles })
+    return await sendSuccessResponse(res, token, assignedRoles)
   } catch (error) {
     console.error(error)
-    return res.status(500).json({ message: error?.message })
+    return await sendErrorResponse(res, token, 500, error?.message)
   }
+}
+
+async function sendErrorResponse(res: NextApiResponse, token: string, statusCode: number, message?: string) {
+  const description = [`Feel free to restart the validation with /verify command`].concat(message ?? []).join('\n')
+  const embed = new EmbedBuilder()
+    .setColor([237, 66, 69])
+    .setTitle('Sorry we could not complete your verification')
+    .setDescription(description)
+    .setThumbnail(`${process.env.NEXTAUTH_URL}/images/api/interactions/verify-error.png`)
+    .setTimestamp(new Date())
+  await editInteractionMessage(token, [embed.toJSON()])
+  return res.status(statusCode).json({ message })
+}
+
+async function sendSuccessResponse(res: NextApiResponse, token: string, assignedRoles: APIRole[]) {
+  const description = [
+    'Your verification with World ID is complete.',
+    `You can now enjoy your new role(s): **${assignedRoles.map((role) => role.name).join('**, **')}**`,
+  ].join('\n')
+  const embed = new EmbedBuilder()
+    .setColor([87, 242, 135])
+    .setTitle('Kudos! Your verification was successful')
+    .setDescription(description)
+    .setThumbnail(`${process.env.NEXTAUTH_URL}/images/api/interactions/verify-success.png`)
+    .setTimestamp(new Date())
+  await editInteractionMessage(token, [embed.toJSON()])
+  return res.status(200).json({ assignedRoles })
 }
