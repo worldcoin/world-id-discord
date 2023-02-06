@@ -5,8 +5,8 @@ import { GuildLabel } from 'common/GuildLabel'
 import { Icon } from 'common/Icon'
 import { APIGuild } from 'discord-api-types/v10'
 import { generateGuildImage } from 'helpers'
-import { memo } from 'react'
 import Image from 'next/image'
+import { memo } from 'react'
 import { VerificationError } from 'Verification/types'
 
 const texts = {
