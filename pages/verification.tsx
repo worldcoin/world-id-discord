@@ -35,6 +35,16 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     orb: findRoles(botConfig.orb.roles, guild.roles),
   }
 
+  const credentials = [] as Array<'phone' | 'orb'>
+
+  if (botConfig.orb.enabled) {
+    credentials.push('orb')
+  }
+
+  if (botConfig.phone.enabled) {
+    credentials.push('phone')
+  }
+
   return {
     props: {
       guild,
@@ -43,6 +53,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       userId: user_id,
       token,
       actionId,
+      credentials,
     },
   }
 }

@@ -11,7 +11,7 @@ import { memo, useCallback, useState } from 'react'
 import { ErrorScene } from './ErrorScene'
 import { InitialScene } from './InitialScene'
 import { SuccessScene } from './SuccessScene'
-import { Scene } from './types'
+import { Scene, VerificationError } from './types'
 
 export const Verification = memo(function Verification(props: {
   guild: APIGuild
@@ -20,11 +20,13 @@ export const Verification = memo(function Verification(props: {
   userId: string
   token: string
   actionId: string
+  credentials: Array<'phone' | 'orb'>
 }) {
+  const { guildId, userId, actionId, token } = props
   const [scene, setScene] = useState<Scene>(Scene.Initial)
   const [loading, setLoading] = useState(false)
   const [assignedRoles, setAssignedRoles] = useState<Array<APIRole>>([])
-  const { guildId, userId, actionId, token } = props
+  const [verificationError, setVerificationError] = useState<VerificationError>(VerificationError.Unknown)
 
   const complete = useCallback(
     async (result: ISuccessResult) => {
@@ -48,7 +50,12 @@ export const Verification = memo(function Verification(props: {
         })
 
         if (!res.ok) {
-          throw await res.json()
+          const completeResult = await res.json()
+
+          if (completeResult.code === 'already_verified') {
+            setVerificationError(VerificationError.AlreadyVerified)
+            return setScene(Scene.Error)
+          }
         }
 
         const resPayload = (await res.json()) as VerificationCompleteResponsePayload
@@ -81,12 +88,20 @@ export const Verification = memo(function Verification(props: {
             setLoading={setLoading}
             guild={props.guild}
             roles={props.rolesToAssign}
+            credentials={props.credentials}
           />
         )}
         {scene === Scene.Success && <SuccessScene guild={props.guild} assignedRoles={assignedRoles} />}
 
         {scene === Scene.Error && (
-          <ErrorScene guild={props.guild} actionId={actionId} signal={userId} complete={complete} />
+          <ErrorScene
+            guild={props.guild}
+            actionId={actionId}
+            signal={userId}
+            complete={complete}
+            credentials={props.credentials}
+            error={verificationError}
+          />
         )}
       </Modal>
 

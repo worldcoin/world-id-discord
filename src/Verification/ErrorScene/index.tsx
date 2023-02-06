@@ -5,8 +5,8 @@ import { GuildLabel } from 'common/GuildLabel'
 import { Icon } from 'common/Icon'
 import { APIGuild } from 'discord-api-types/v10'
 import { generateGuildImage } from 'helpers'
+import { memo } from 'react'
 import Image from 'next/image'
-import { memo, useEffect, useState } from 'react'
 import { VerificationError } from 'Verification/types'
 
 const texts = {
@@ -26,18 +26,9 @@ export const ErrorScene = memo(function ErrorScene(props: {
   signal: string | null
   guild: APIGuild
   complete: (result: ISuccessResult) => Promise<void>
+  credentials: Array<'phone' | 'orb'>
+  error: VerificationError
 }) {
-  const [error, setError] = useState<VerificationError | null>(null)
-
-  //NOTE: temporary useEffect to display different types of errors without real data
-  useEffect(() => {
-    if (Math.random() > 0.5) {
-      return setError(VerificationError.AlreadyVerified)
-    }
-
-    return setError(VerificationError.Unknown)
-  }, [])
-
   return (
     <div className="grid gap-y-6 justify-items-center">
       <div className="relative w-24 h-24">
@@ -46,21 +37,26 @@ export const ErrorScene = memo(function ErrorScene(props: {
 
       <GuildLabel image={generateGuildImage(props.guild.id, props.guild.icon)} name={props.guild.name} />
 
-      {error !== null && (
+      {props.error !== null && (
         <div className="grid gap-y-2">
           <p className="font-bold text-12 text-center uppercase tracking-[0.2em]">Uh, oh!</p>
           <GradientText
             as="h1"
             className="justify-self-center font-bold text-24 text-center max-w-[360px] from-e06258 to-ff8a81"
           >
-            {texts[error].heading}
+            {texts[props.error].heading}
           </GradientText>
-          <p className="text-bcc5f9 text-14 text-center">{texts[error].description}</p>
+          <p className="text-bcc5f9 text-14 text-center">{texts[props.error].description}</p>
         </div>
       )}
 
-      {error !== VerificationError.AlreadyVerified && props.actionId && props.signal && (
-        <IDKitWidget actionId={props.actionId} signal={props.signal} handleVerify={props.complete}>
+      {props.error !== VerificationError.AlreadyVerified && props.actionId && props.signal && (
+        <IDKitWidget
+          actionId={props.actionId}
+          signal={props.signal}
+          handleVerify={props.complete}
+          methods={props.credentials}
+        >
           {({ open }) => (
             <Button
               type="button"
