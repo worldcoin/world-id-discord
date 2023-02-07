@@ -26,23 +26,26 @@ export const InitialScene = memo(function Initial(props: {
       </div>
 
       <div className="grid gap-y-12">
-        <GradientText as="h1" className="justify-self-center font-bold text-24 text-center max-w-[460px]">
-          Welcome! Please verify you are a unique person with World ID
-        </GradientText>
+        <div className="grid gap-y-2">
+          <p className="font-bold text-12 text-center uppercase tracking-[0.2em]">Welcome!</p>
+          <GradientText as="h1" className="justify-self-center font-bold text-24 text-center max-w-[360px]">
+            Please verify you are a unique person with World ID
+          </GradientText>
+        </div>
 
-        <div className="rounded-2xl grid grid-cols-2 gap-x-4">
-          {/* FIXME: apply real roles */}
+        <div className="grid gap-y-6">
+          <div className="font-bold text-12 uppercase tracking-[0.2em]">How to verify?</div>
+
           <CredentialsItem
             icon="mobile-device-huge"
-            heading="Verify with phone number"
-            description="A single-use code will be delivered
-      to you via SMS"
+            heading="Phone number"
+            description="A single-use code will be delivered to you via SMS"
             roles={props.roles?.phone || []}
           />
 
           <CredentialsItem
             icon="orb-huge"
-            heading="Verify with Orb"
+            heading="The Orb"
             description="Completely private iris imaging with a device called an orb"
             roles={props.roles?.orb || []}
           />
@@ -56,7 +59,7 @@ export const InitialScene = memo(function Initial(props: {
             methods={props.credentials}
           >
             {({ open }) => (
-              <Button type="button" onClick={open} className="mt-4">
+              <Button type="button" onClick={open}>
                 Verify your identity
               </Button>
             )}

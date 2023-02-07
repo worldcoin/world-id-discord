@@ -53,7 +53,13 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
     }
 
     if (nullifierHashResult.data) {
-      return res.status(400).json({ code: 'already_verified' })
+      return await sendErrorResponse(
+        res,
+        token,
+        400,
+        'This phone number has already been verified.',
+        'already_verified',
+      )
     }
 
     if (!botConfig.phone.enabled) {
@@ -78,7 +84,13 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
   }
 }
 
-async function sendErrorResponse(res: NextApiResponse, token: string, statusCode: number, message?: string) {
+async function sendErrorResponse(
+  res: NextApiResponse,
+  token: string,
+  statusCode: number,
+  message?: string,
+  code?: string,
+) {
   const description = [`Feel free to restart the validation with /verify command`].concat(message ?? []).join('\n')
   const embed = new EmbedBuilder()
     .setColor([237, 66, 69])
@@ -87,7 +99,7 @@ async function sendErrorResponse(res: NextApiResponse, token: string, statusCode
     .setThumbnail(`${process.env.NEXTAUTH_URL}/images/api/interactions/verify-error.png`)
     .setTimestamp(new Date())
   await editInteractionMessage(token, [embed.toJSON()])
-  return res.status(statusCode).json({ message })
+  return res.status(statusCode).json({ code, message })
 }
 
 async function sendSuccessResponse(res: NextApiResponse, token: string, assignedRoles: APIRole[]) {
