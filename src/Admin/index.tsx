@@ -13,6 +13,11 @@ import { RolesSelector } from './RolesSelector'
 import { StyledCheckbox } from './StyledCheckbox'
 import type { Option } from './types/option'
 
+enum SaveConfigError {
+  Unknown = 'Something went wrong. Try again, please.',
+  EmptyRoles = 'Please, set at least one role at one of the credentials.',
+}
+
 export const Admin = memo(function Admin(props: {
   roles: APIRole[]
   guild: APIGuild
@@ -31,6 +36,7 @@ export const Admin = memo(function Admin(props: {
   const [savedSuccessfully, setSavedSuccessfully] = useState<boolean | null>(null)
   const [isBotEnabled, setIsBotEnabled] = useState(props.initialConfig?.enabled || false)
   const [isOrbVerificationEnabled, setIsOrbVerificationEnabled] = useState(props.initialConfig?.orb.enabled || false)
+  const [errorMessage, setErrorMessage] = useState<SaveConfigError>(SaveConfigError.Unknown)
 
   const [isPhoneVerificationEnabled, setIsPhoneVerificationEnabled] = useState(
     props.initialConfig?.phone.enabled || false,
@@ -98,6 +104,7 @@ export const Admin = memo(function Admin(props: {
 
     if (selectedPhoneRoles.length === 0 && selectedOrbRoles.length === 0) {
       setSavingInProgress(false)
+      setErrorMessage(SaveConfigError.EmptyRoles)
       return setSavedSuccessfully(false)
     }
 
@@ -112,6 +119,7 @@ export const Admin = memo(function Admin(props: {
         if (response.ok) {
           setSavedSuccessfully(true)
         } else {
+          setErrorMessage(SaveConfigError.Unknown)
           setSavedSuccessfully(false)
         }
 
@@ -123,10 +131,6 @@ export const Admin = memo(function Admin(props: {
         setSavingInProgress(false)
       })
   }, [botConfig, selectedOrbRoles.length, selectedPhoneRoles.length])
-
-  const formValid = useMemo(() => {
-    return selectedPhoneRoles.length > 0 || selectedOrbRoles.length > 0
-  }, [selectedOrbRoles, selectedPhoneRoles])
 
   const guildImage = useMemo(() => {
     return generateGuildImage(props.guild.id, props.guild.icon)
@@ -187,7 +191,7 @@ export const Admin = memo(function Admin(props: {
           <div className="grid justify-items-center gap-y-4 mt-12">
             <Button
               className="w-full font-sora disabled:opacity-20 disabled:cursor-not-allowed"
-              disabled={formIsClean || !formValid || savingInProgress}
+              disabled={formIsClean || savingInProgress}
               onClick={saveChanges}
             >
               {savingInProgress ? 'Saving...' : 'Save changes'}
@@ -210,7 +214,7 @@ export const Admin = memo(function Admin(props: {
                 { 'invisible opacity-0': savedSuccessfully !== false },
               )}
             >
-              Something went wrong. Try again, please.
+              {errorMessage}
             </span>
           </div>
         </div>
