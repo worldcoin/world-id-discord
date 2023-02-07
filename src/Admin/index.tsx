@@ -13,10 +13,15 @@ import { RolesSelector } from './RolesSelector'
 import { StyledCheckbox } from './StyledCheckbox'
 import type { Option } from './types/option'
 
+enum SaveConfigError {
+  Unknown = 'Something went wrong. Try again, please.',
+  EmptyRoles = 'Please, set at least one role at one of the credentials.',
+}
+
 export const Admin = memo(function Admin(props: {
   roles: APIRole[]
   guild: APIGuild
-  initialBotConfig: BotConfig<'initial'> | null
+  initialConfig: BotConfig<'initial'>
 }) {
   const [roles, setRoles] = useState<Array<Option>>(() => {
     return props.roles.map((role) => ({
@@ -25,18 +30,17 @@ export const Admin = memo(function Admin(props: {
     }))
   })
 
-  const [selectedPhoneRoles, setSelectedPhoneRoles] = useState<Array<Option>>(props.initialBotConfig?.phone.roles || [])
-  const [selectedOrbRoles, setSelectedOrbRoles] = useState<Array<Option>>(props.initialBotConfig?.orb.roles || [])
+  const [selectedPhoneRoles, setSelectedPhoneRoles] = useState<Array<Option>>(props.initialConfig?.phone.roles || [])
+  const [selectedOrbRoles, setSelectedOrbRoles] = useState<Array<Option>>(props.initialConfig?.orb.roles || [])
   const [savingInProgress, setSavingInProgress] = useState(false)
   const [savedSuccessfully, setSavedSuccessfully] = useState<boolean | null>(null)
-
-  const [isBotEnabled, setIsBotEnabled] = useState(props.initialBotConfig?.enabled || false)
+  const [isBotEnabled, setIsBotEnabled] = useState(props.initialConfig?.enabled || false)
+  const [isOrbVerificationEnabled, setIsOrbVerificationEnabled] = useState(props.initialConfig?.orb.enabled || false)
+  const [errorMessage, setErrorMessage] = useState<SaveConfigError>(SaveConfigError.Unknown)
 
   const [isPhoneVerificationEnabled, setIsPhoneVerificationEnabled] = useState(
-    props.initialBotConfig?.phone.enabled || false,
+    props.initialConfig?.phone.enabled || false,
   )
-
-  const [isOrbVerificationEnabled, setIsOrbVerificationEnabled] = useState(props.initialBotConfig?.orb.enabled || false)
 
   // NOTE: Removes saving status message from page after 3 seconds
   useEffect(() => {
@@ -56,8 +60,7 @@ export const Admin = memo(function Admin(props: {
   const botConfig: BotConfig = useMemo(
     () => ({
       enabled: isBotEnabled,
-      guild_id: props.guild.id,
-      action_id: 'wid_1234567890',
+      guild_id: props.initialConfig.guild_id,
 
       phone: {
         enabled: isPhoneVerificationEnabled,
@@ -73,17 +76,36 @@ export const Admin = memo(function Admin(props: {
       isBotEnabled,
       isOrbVerificationEnabled,
       isPhoneVerificationEnabled,
-      props.guild.id,
+      props.initialConfig.guild_id,
       selectedOrbRoles,
       selectedPhoneRoles,
     ],
   )
 
+  const formIsClean = useMemo(() => {
+    return (
+      isBotEnabled === props.initialConfig?.enabled &&
+      isPhoneVerificationEnabled === props.initialConfig?.phone.enabled &&
+      isOrbVerificationEnabled === props.initialConfig?.orb.enabled &&
+      selectedPhoneRoles.length === props.initialConfig?.phone.roles.length &&
+      selectedOrbRoles.length === props.initialConfig?.orb.roles.length
+    )
+  }, [
+    isBotEnabled,
+    isOrbVerificationEnabled,
+    isPhoneVerificationEnabled,
+    props.initialConfig,
+    selectedOrbRoles.length,
+    selectedPhoneRoles.length,
+  ])
+
   const saveChanges = useCallback(() => {
     setSavingInProgress(true)
 
-    if (selectedPhoneRoles.length === 0 || selectedOrbRoles.length === 0) {
-      return
+    if (selectedPhoneRoles.length === 0 && selectedOrbRoles.length === 0) {
+      setSavingInProgress(false)
+      setErrorMessage(SaveConfigError.EmptyRoles)
+      return setSavedSuccessfully(false)
     }
 
     fetch('/api/dynamodb/save', {
@@ -97,6 +119,7 @@ export const Admin = memo(function Admin(props: {
         if (response.ok) {
           setSavedSuccessfully(true)
         } else {
+          setErrorMessage(SaveConfigError.Unknown)
           setSavedSuccessfully(false)
         }
 
@@ -108,11 +131,6 @@ export const Admin = memo(function Admin(props: {
         setSavingInProgress(false)
       })
   }, [botConfig, selectedOrbRoles.length, selectedPhoneRoles.length])
-
-  const formValid = useMemo(
-    () => selectedPhoneRoles.length > 0 || selectedOrbRoles.length > 0,
-    [selectedOrbRoles.length, selectedPhoneRoles.length],
-  )
 
   const guildImage = useMemo(() => {
     return generateGuildImage(props.guild.id, props.guild.icon)
@@ -172,8 +190,8 @@ export const Admin = memo(function Admin(props: {
 
           <div className="grid justify-items-center gap-y-4 mt-12">
             <Button
-              className="w-full font-sora disabled:opacity-20"
-              disabled={!formValid || savingInProgress}
+              className="w-full font-sora disabled:opacity-20 disabled:cursor-not-allowed"
+              disabled={formIsClean || savingInProgress}
               onClick={saveChanges}
             >
               {savingInProgress ? 'Saving...' : 'Save changes'}
@@ -196,7 +214,7 @@ export const Admin = memo(function Admin(props: {
                 { 'invisible opacity-0': savedSuccessfully !== false },
               )}
             >
-              Something went wrong. Try again, please.
+              {errorMessage}
             </span>
           </div>
         </div>
