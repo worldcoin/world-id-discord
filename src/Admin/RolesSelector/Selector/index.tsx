@@ -15,6 +15,8 @@ export const Selector = memo(function Selector(props: {
   setSelected: Dispatch<SetStateAction<Array<Option>>>
   disabled?: boolean
   selected: Array<Option>
+  isEnabled: boolean
+  setIsEnabled: Dispatch<SetStateAction<boolean>>
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const [expanded, setExpanded] = useState(false)
@@ -43,8 +45,16 @@ export const Selector = memo(function Selector(props: {
 
   const toggleRoles = useCallback(
     (value: Option) => {
+      if (props.selected.length === 0 && !props.isEnabled) {
+        props.setIsEnabled(true)
+      }
+
       props.setSelected((prevValues) => {
         if (prevValues.some((prevValue) => prevValue.value === value.value)) {
+          if (prevValues.length === 1) {
+            props.setIsEnabled(false)
+          }
+
           return prevValues.filter((prevValue) => prevValue.value !== value.value)
         }
 

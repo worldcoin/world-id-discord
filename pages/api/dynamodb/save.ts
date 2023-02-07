@@ -4,8 +4,10 @@ import { saveBotConfig, verifyBotConfig } from 'services/dynamodb'
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const botConfig = req.body
 
-  if (!verifyBotConfig(botConfig).status) {
-    return res.status(400).json({ message: 'Bad request' })
+  const verifiedConfig = verifyBotConfig(botConfig)
+
+  if (!verifiedConfig.status) {
+    return res.status(400).json({ message: verifiedConfig.error?.message })
   }
 
   const result = await saveBotConfig(botConfig)
