@@ -10,7 +10,7 @@ interface NoCaptchaProps {
 
 export const NoCaptcha = memo(function NoCaptcha(props: NoCaptchaProps) {
   return (
-    <div className="grid grid-cols-container px-4 md:px-8 mt-24 md:mt-48 pb-32 md:pb-0">
+    <div className="grid grid-cols-container px-4 md:px-8 mt-24 md:mt-48 pb-32 md:pb-0 overflow-x-clip">
       <div
         className={cn(
           'relative rounded-64 bg-111318 border border-ffffff/20 col-start-2 py-14 md:py-24  px-10 md:px-16',
