@@ -6,10 +6,10 @@ import { Verification } from 'Verification'
 export default Verification
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { user_id, guild_id } = ctx.query
+  const { user_id, guild_id, token } = ctx.query
   const actionId = process.env.ACTION_ID
 
-  if (!user_id || !guild_id) {
+  if (!user_id || !guild_id || !token) {
     return {
       redirect: {
         permanent: false,
@@ -35,13 +35,25 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     orb: findRoles(botConfig.orb.roles, guild.roles),
   }
 
+  const credentials = [] as Array<'phone' | 'orb'>
+
+  if (botConfig.orb.enabled) {
+    credentials.push('orb')
+  }
+
+  if (botConfig.phone.enabled) {
+    credentials.push('phone')
+  }
+
   return {
     props: {
       guild,
       rolesToAssign,
       guildId: guild_id,
       userId: user_id,
+      token,
       actionId,
+      credentials,
     },
   }
 }

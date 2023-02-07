@@ -8,6 +8,7 @@ import { About } from './About'
 import { Benefits } from './Benefits'
 import { Intro } from './Intro'
 import { Join } from './Join'
+import { Methods } from './Methods'
 import { NoCaptcha } from './NoCaptcha'
 
 export const Home = memo(function Home() {
@@ -27,8 +28,7 @@ export const Home = memo(function Home() {
         />
       </div>
       <About />
-      {/* FIXME: Update text on orb card */}
-      {/* <Methods /> */}
+      <Methods />
       <NoCaptcha onInstall={handleInstall} />
       <Benefits />
       <Join onInstall={handleInstall} />

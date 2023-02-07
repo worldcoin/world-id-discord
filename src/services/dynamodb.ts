@@ -1,22 +1,34 @@
 import {
+  AttributeDefinition,
   CreateTableCommand,
   DynamoDBClient,
   GetItemCommand,
+  KeySchemaElement,
   ListTablesCommand,
+  ProvisionedThroughput,
   PutItemCommand,
 } from '@aws-sdk/client-dynamodb'
 
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
 import { BotConfig } from 'common/types'
 
-type SaveBotConfigResult = {
+export type TableConfig = {
+  AttributeDefinitions: Array<AttributeDefinition>
+  KeySchema: Array<KeySchemaElement>
+  ProvisionedThroughput: ProvisionedThroughput
+  TableName?: string
+}
+
+export type NullifierHashData = { guild_id: string; nullifier_hash: string }
+
+type PutDataResult = {
   success: boolean
   error?: Error
 }
 
-type GetBotConfigResult =
+type GetItemResult<T> =
   | {
-      data: BotConfig
+      data: T
       error?: never
     }
   | {
@@ -32,32 +44,10 @@ export const client = new DynamoDBClient({
   },
 })
 
-const TABLE_NAME = process.env.AWS_GUILDS_TABLE_NAME
+const GUILD_TABLE_NAME = process.env.AWS_GUILDS_TABLE_NAME
+const NULLIFIER_TABLE_NAME = process.env.AWS_NULLIFIERS_TABLE_NAME
 
-export const params = {
-  AttributeDefinitions: [
-    {
-      AttributeName: 'guild_id',
-      AttributeType: 'S',
-    },
-  ],
-
-  KeySchema: [
-    {
-      AttributeName: 'guild_id',
-      KeyType: 'HASH',
-    },
-  ],
-
-  ProvisionedThroughput: {
-    ReadCapacityUnits: 10,
-    WriteCapacityUnits: 10,
-  },
-
-  TableName: TABLE_NAME,
-}
-
-export const createTable = async () => {
+export const createTable = async (params: TableConfig) => {
   let result: { success: boolean; error?: Error } = { success: false }
 
   console.log('Creating table...')
@@ -73,7 +63,7 @@ export const createTable = async () => {
     )
 
     result = { success: true }
-    console.log('Table created successfully')
+    console.log(`Table ${params.TableName} created successfully`)
   } catch (error) {
     console.log('Table not created, error occurred')
     console.log(error.message)
@@ -83,21 +73,21 @@ export const createTable = async () => {
   return result
 }
 
-export const isTableExists = async (): Promise<boolean | null> => {
+export const isTableExists = async (name: string | undefined): Promise<boolean | null> => {
   const response = await client.send(new ListTablesCommand({}))
 
-  if (!response.TableNames) {
+  if (!response.TableNames || !name) {
     return null
   }
 
-  const result = response.TableNames.some((tableName) => tableName === TABLE_NAME)
+  const result = response.TableNames.some((tableName) => tableName === name)
 
   if (!result) {
     console.log('Table not found, trying to create a table')
     return result
   }
 
-  console.log(`Table '${TABLE_NAME}' already exists, skipping creation`)
+  console.log(`Table '${name}' already exists, skipping creation`)
   return result
 }
 
@@ -133,13 +123,37 @@ export const verifyBotConfig = (botConfig: BotConfig): { status: boolean; error?
   return { status: true }
 }
 
-export const saveBotConfig = async (botConfig: BotConfig): Promise<SaveBotConfigResult> => {
-  let result: SaveBotConfigResult
+export const saveNullifier = async ({ guild_id, nullifier_hash }: NullifierHashData) => {
+  let result: PutDataResult
 
   try {
     const response = await client.send(
       new PutItemCommand({
-        TableName: TABLE_NAME,
+        TableName: NULLIFIER_TABLE_NAME,
+        Item: marshall({ guild_id, nullifier_hash }),
+      }),
+    )
+
+    if (response['$metadata'].httpStatusCode !== 200) {
+      throw new Error('Error while adding nullifier into database')
+    }
+
+    result = { success: true }
+  } catch (error) {
+    console.error(error)
+    result = { success: false, error }
+  }
+
+  return result
+}
+
+export const saveBotConfig = async (botConfig: BotConfig): Promise<PutDataResult> => {
+  let result: PutDataResult
+
+  try {
+    const response = await client.send(
+      new PutItemCommand({
+        TableName: GUILD_TABLE_NAME,
         Item: marshall(botConfig),
       }),
     )
@@ -157,13 +171,41 @@ export const saveBotConfig = async (botConfig: BotConfig): Promise<SaveBotConfig
   return result
 }
 
-export const getBotConfig = async (guildId: string): Promise<GetBotConfigResult> => {
-  let result: GetBotConfigResult
+export const getNullifierHash = async ({ guild_id, nullifier_hash }: NullifierHashData) => {
+  let result: GetItemResult<NullifierHashData>
 
   try {
     const response = await client.send(
       new GetItemCommand({
-        TableName: TABLE_NAME,
+        TableName: NULLIFIER_TABLE_NAME,
+        Key: marshall({ guild_id, nullifier_hash }),
+      }),
+    )
+
+    if (response['$metadata'].httpStatusCode !== 200) {
+      throw new Error('Error while getting nullifier hash from from database')
+    }
+
+    if (!response.Item) {
+      throw new Error('Nullifier not found')
+    }
+
+    result = { data: unmarshall(response.Item) as NullifierHashData }
+  } catch (error) {
+    console.error(error)
+    result = { data: null, error }
+  }
+
+  return result
+}
+
+export const getBotConfig = async (guildId: string): Promise<GetItemResult<BotConfig>> => {
+  let result: GetItemResult<BotConfig>
+
+  try {
+    const response = await client.send(
+      new GetItemCommand({
+        TableName: GUILD_TABLE_NAME,
         Key: marshall({ guild_id: guildId }),
       }),
     )

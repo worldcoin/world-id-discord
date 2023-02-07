@@ -2,11 +2,13 @@ import { REST } from '@discordjs/rest'
 import {
   APIApplicationCommand,
   APIApplicationCommandInteraction,
+  APIEmbed,
   APIGuild,
   APIPingInteraction,
   APIRole,
   ApplicationCommandType,
   InteractionType,
+  RESTPostAPIChannelMessageJSONBody,
   Routes,
 } from 'discord-api-types/v10'
 import { verifyKey } from 'discord-interactions'
@@ -55,4 +57,14 @@ export const getGuildData = async (guildId: string) => {
 
 export const assignGuildMemberRole = async (guildId: string, memberId: string, roleId: string) => {
   return await rest.put(Routes.guildMemberRole(guildId, memberId, roleId))
+}
+
+export const editInteractionMessage = async (interactionToken: string, embeds: APIEmbed[]) => {
+  const body: RESTPostAPIChannelMessageJSONBody = {
+    embeds,
+    components: [],
+  }
+  return await rest.patch(Routes.webhookMessage(DISCORD_APP_ID, interactionToken), {
+    body,
+  })
 }
