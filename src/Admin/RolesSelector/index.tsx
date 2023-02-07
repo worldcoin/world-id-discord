@@ -40,6 +40,8 @@ export const RolesSelector = memo(function RolesSelector(props: {
           setOptions={props.setRoles}
           selected={props.selectedRoles}
           setSelected={props.setSelectedRoles}
+          isEnabled={props.isEnabled}
+          setIsEnabled={props.setIsEnabled}
           placeholder="Choose a role"
           info="You can create more roles in your Discord server settings"
         />
