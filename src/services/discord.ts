@@ -55,6 +55,14 @@ export const getGuildData = async (guildId: string) => {
   return (await rest.get(Routes.guild(guildId))) as APIGuild
 }
 
+export const getAvailableGuildRoles = async (guildId: string) => {
+  const guildRoles = await getGuildRoles(guildId)
+  const botRole = guildRoles.find((guildRole) => guildRole.tags?.bot_id === DISCORD_APP_ID)
+  return guildRoles
+    .filter((role) => role.name !== '@everyone')
+    .filter((guildRole) => guildRole.position < botRole!.position)
+}
+
 export const assignGuildMemberRole = async (guildId: string, memberId: string, roleId: string) => {
   return await rest.put(Routes.guildMemberRole(guildId, memberId, roleId))
 }

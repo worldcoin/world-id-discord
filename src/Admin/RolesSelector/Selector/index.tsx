@@ -1,3 +1,4 @@
+import * as ScrollArea from '@radix-ui/react-scroll-area'
 import type { Option } from 'Admin/types/option'
 import cn from 'classnames'
 import { Icon } from 'common/Icon'
@@ -117,8 +118,8 @@ export const Selector = memo(function Selector(props: {
           { 'max-h-50 border-2': expanded },
         )}
       >
-        <div className="py-3.5">
-          <div className="max-h-[120px] overflow-y-auto">
+        <ScrollArea.Root className="" type="always">
+          <ScrollArea.Viewport className="w-full max-h-[120px] py-3.5">
             {props.options.map((option, index) => (
               <div
                 className={cn(
@@ -134,15 +135,21 @@ export const Selector = memo(function Selector(props: {
                 )}
               </div>
             ))}
-          </div>
-
-          {props.info && (
-            <span className="grid grid-cols-auto/fr items-center gap-x-2 opacity-40 mt-2.5 px-6">
-              <Icon className="w-3 h-3" name="info" />
-              {props.info}
-            </span>
-          )}
-        </div>
+            {props.info && (
+              <span className="grid grid-cols-auto/fr items-center gap-x-2 opacity-40 mt-2.5 px-6 text-14">
+                <Icon className="w-3 h-3" name="info" />
+                {props.info}
+              </span>
+            )}
+          </ScrollArea.Viewport>
+          <ScrollArea.Scrollbar
+            className="flex px-2 py-2.5 w-5 before:block before:absolute before:w-[2px] before:inset-x-[9px] before:inset-y-[10px] before:bg-938cfa/10"
+            orientation="vertical"
+          >
+            <ScrollArea.Thumb className="flex-1 rounded-sm bg-938cfa" />
+          </ScrollArea.Scrollbar>
+          <ScrollArea.Corner className="ScrollAreaCorner" />
+        </ScrollArea.Root>
       </div>
     </div>
   )
