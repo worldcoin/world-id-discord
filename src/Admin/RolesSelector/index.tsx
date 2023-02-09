@@ -2,7 +2,8 @@ import { StyledCheckbox } from 'Admin/StyledCheckbox'
 import { Option } from 'Admin/types/option'
 import cn from 'classnames'
 import { Icon, IconType } from 'common/Icon'
-import { Dispatch, memo, SetStateAction } from 'react'
+import { APIRole } from 'discord-api-types/v10'
+import { Dispatch, memo, SetStateAction, useCallback, useState } from 'react'
 import { Selector } from './Selector'
 
 export const RolesSelector = memo(function RolesSelector(props: {
@@ -17,6 +18,23 @@ export const RolesSelector = memo(function RolesSelector(props: {
   isEnabled: boolean
   setIsEnabled: Dispatch<SetStateAction<boolean>>
 }) {
+  const [isFetching, setIsFetching] = useState(false)
+  const refetchRoles = useCallback(() => {
+    setIsFetching(true)
+    fetch('/api/admin/roles', {})
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data)
+        const roles = data.roles as APIRole[]
+        const options = roles.map((role) => ({
+          label: role.name,
+          value: role.id,
+        }))
+        props.setRoles(options)
+        setIsFetching(false)
+      })
+  }, [props])
+
   return (
     <div className={cn('grid gap-y-6', props.className)}>
       <div className="grid gap-y-2.5">
@@ -33,8 +51,16 @@ export const RolesSelector = memo(function RolesSelector(props: {
       </div>
 
       <div className="grid gap-y-3">
-        <span>Roles to assign</span>
-
+        <div className="grid grid-cols-fr/auto">
+          Roles to assign
+          <button
+            className="grid grid-flow-col items-center gap-x-1 font-rubik text-14 text-938cfa leading-[1px]"
+            onClick={refetchRoles}
+          >
+            <Icon name="reload" className="w-4 h-4" />
+            Refresh Roles
+          </button>
+        </div>
         <Selector
           options={props.roles}
           setOptions={props.setRoles}
@@ -44,6 +70,7 @@ export const RolesSelector = memo(function RolesSelector(props: {
           setIsEnabled={props.setIsEnabled}
           placeholder="Choose a role"
           info="You can create more roles in your Discord server settings"
+          disabled={isFetching}
         />
       </div>
     </div>
