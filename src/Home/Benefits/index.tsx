@@ -20,7 +20,7 @@ const items = [
   },
   {
     title: 'Better community controls',
-    content: ['Now when you ban a user you can be sure', 'they won’t return with another account.'],
+    content: ['Now when you ban a bad actor', 'they won’t return with another account.'],
   },
 ]
 
