@@ -4,7 +4,7 @@ import { VerificationCompletePayload } from 'common/types/verification-complete'
 import { APIRole } from 'discord-api-types/v10'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { assignGuildMemberRole, editInteractionMessage, getGuildData } from 'services/discord'
-import { getBotConfig, getNullifierHash, saveNullifier } from 'services/dynamodb'
+import { getBotConfig, getNullifierHash, getOrbNullifierHash, saveNullifier, saveOrbNullifier } from 'services/dynamodb'
 
 interface NextApiRequestWithBody extends NextApiRequest {
   body: VerificationCompletePayload
@@ -37,6 +37,26 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
 
   let roleIds: string[]
   if (result.signal_type === 'orb') {
+    const nullifierHashResult = await getOrbNullifierHash({ guild_id: guildId, nullifier_hash: result.nullifier_hash })
+
+    if (!nullifierHashResult.data) {
+      const NullifierSaveResult = await saveOrbNullifier({ guild_id: guildId, nullifier_hash: result.nullifier_hash })
+
+      if (NullifierSaveResult.error) {
+        return await sendErrorResponse(res, token, 500, NullifierSaveResult.error.message)
+      }
+    }
+
+    if (nullifierHashResult.data) {
+      return await sendErrorResponse(
+        res,
+        token,
+        400,
+        'This phone number has already been verified.',
+        'already_verified',
+      )
+    }
+
     if (!botConfig.orb.enabled) {
       return await sendErrorResponse(res, token, 400, 'Orb verification is disabled for this server.')
     }

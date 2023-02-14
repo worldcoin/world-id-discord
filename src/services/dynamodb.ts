@@ -46,6 +46,7 @@ export const client = new DynamoDBClient({
 
 const GUILD_TABLE_NAME = process.env.AWS_GUILDS_TABLE_NAME
 const NULLIFIER_TABLE_NAME = process.env.AWS_NULLIFIERS_TABLE_NAME
+const ORB_NULLIFIER_TABLE_NAME = process.env.AWS_ORB_NULLIFIERS_TABLE_NAME
 
 export const createTable = async (params: TableConfig) => {
   let result: { success: boolean; error?: Error } = { success: false }
@@ -147,6 +148,30 @@ export const saveNullifier = async ({ guild_id, nullifier_hash }: NullifierHashD
   return result
 }
 
+export const saveOrbNullifier = async ({ guild_id, nullifier_hash }: NullifierHashData) => {
+  let result: PutDataResult
+
+  try {
+    const response = await client.send(
+      new PutItemCommand({
+        TableName: ORB_NULLIFIER_TABLE_NAME,
+        Item: marshall({ guild_id, nullifier_hash }),
+      }),
+    )
+
+    if (response['$metadata'].httpStatusCode !== 200) {
+      throw new Error('Error while adding nullifier into database')
+    }
+
+    result = { success: true }
+  } catch (error) {
+    console.error(error)
+    result = { success: false, error }
+  }
+
+  return result
+}
+
 export const saveBotConfig = async (botConfig: BotConfig): Promise<PutDataResult> => {
   let result: PutDataResult
 
@@ -178,6 +203,34 @@ export const getNullifierHash = async ({ guild_id, nullifier_hash }: NullifierHa
     const response = await client.send(
       new GetItemCommand({
         TableName: NULLIFIER_TABLE_NAME,
+        Key: marshall({ guild_id, nullifier_hash }),
+      }),
+    )
+
+    if (response['$metadata'].httpStatusCode !== 200) {
+      throw new Error('Error while getting nullifier hash from from database')
+    }
+
+    if (!response.Item) {
+      throw new Error('Nullifier not found')
+    }
+
+    result = { data: unmarshall(response.Item) as NullifierHashData }
+  } catch (error) {
+    console.error(error)
+    result = { data: null, error }
+  }
+
+  return result
+}
+
+export const getOrbNullifierHash = async ({ guild_id, nullifier_hash }: NullifierHashData) => {
+  let result: GetItemResult<NullifierHashData>
+
+  try {
+    const response = await client.send(
+      new GetItemCommand({
+        TableName: ORB_NULLIFIER_TABLE_NAME,
         Key: marshall({ guild_id, nullifier_hash }),
       }),
     )
