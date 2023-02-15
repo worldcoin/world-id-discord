@@ -43,7 +43,8 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
       const NullifierSaveResult = await saveOrbNullifier({ guild_id: guildId, nullifier_hash: result.nullifier_hash })
 
       if (NullifierSaveResult.error) {
-        return await sendErrorResponse(res, token, 500, NullifierSaveResult.error.message)
+        console.error(NullifierSaveResult.error)
+        return await sendErrorResponse(res, token, 500)
       }
     }
 
@@ -68,7 +69,8 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
       const NullifierSaveResult = await saveNullifier({ guild_id: guildId, nullifier_hash: result.nullifier_hash })
 
       if (NullifierSaveResult.error) {
-        return await sendErrorResponse(res, token, 500, NullifierSaveResult.error.message)
+        console.error(NullifierSaveResult.error)
+        return await sendErrorResponse(res, token, 500)
       }
     }
 
