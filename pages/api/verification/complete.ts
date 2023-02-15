@@ -39,23 +39,15 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
   if (result.signal_type === 'orb') {
     const nullifierHashResult = await getOrbNullifierHash({ guild_id: guildId, nullifier_hash: result.nullifier_hash })
 
-    if (!nullifierHashResult.data) {
+    if (nullifierHashResult.data) {
+      return await sendErrorResponse(res, token, 400, 'This person has already been verified.', 'already_verified')
+    } else {
       const NullifierSaveResult = await saveOrbNullifier({ guild_id: guildId, nullifier_hash: result.nullifier_hash })
 
       if (NullifierSaveResult.error) {
         console.error(NullifierSaveResult.error)
         return await sendErrorResponse(res, token, 500)
       }
-    }
-
-    if (nullifierHashResult.data) {
-      return await sendErrorResponse(
-        res,
-        token,
-        400,
-        'This phone number has already been verified.',
-        'already_verified',
-      )
     }
 
     if (!botConfig.orb.enabled) {
@@ -65,15 +57,6 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
   } else if (result.signal_type === 'phone') {
     const nullifierHashResult = await getNullifierHash({ guild_id: guildId, nullifier_hash: result.nullifier_hash })
 
-    if (!nullifierHashResult.data) {
-      const NullifierSaveResult = await saveNullifier({ guild_id: guildId, nullifier_hash: result.nullifier_hash })
-
-      if (NullifierSaveResult.error) {
-        console.error(NullifierSaveResult.error)
-        return await sendErrorResponse(res, token, 500)
-      }
-    }
-
     if (nullifierHashResult.data) {
       return await sendErrorResponse(
         res,
@@ -82,6 +65,13 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
         'This phone number has already been verified.',
         'already_verified',
       )
+    } else {
+      const NullifierSaveResult = await saveNullifier({ guild_id: guildId, nullifier_hash: result.nullifier_hash })
+
+      if (NullifierSaveResult.error) {
+        console.error(NullifierSaveResult.error)
+        return await sendErrorResponse(res, token, 500)
+      }
     }
 
     if (!botConfig.phone.enabled) {
