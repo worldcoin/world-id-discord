@@ -7,9 +7,11 @@ import {
   ListTablesCommand,
   ProvisionedThroughput,
   PutItemCommand,
+  QueryCommand,
 } from '@aws-sdk/client-dynamodb'
 
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
+import { SignalType } from '@worldcoin/idkit'
 import { BotConfig } from 'common/types'
 
 export type TableConfig = {
@@ -19,7 +21,7 @@ export type TableConfig = {
   TableName?: string
 }
 
-export type NullifierHashData = { guild_id: string; nullifier_hash: string }
+export type NullifierHashData = { guild_id: string; nullifier_hash: string; signal_type: SignalType }
 
 type PutDataResult = {
   success: boolean
@@ -123,14 +125,14 @@ export const verifyBotConfig = (botConfig: BotConfig): { status: boolean; error?
   return { status: true }
 }
 
-export const saveNullifier = async ({ guild_id, nullifier_hash }: NullifierHashData) => {
+export const saveNullifier = async ({ guild_id, nullifier_hash, signal_type }: NullifierHashData) => {
   let result: PutDataResult
 
   try {
     const response = await client.send(
       new PutItemCommand({
         TableName: NULLIFIER_TABLE_NAME,
-        Item: marshall({ guild_id, nullifier_hash }),
+        Item: marshall({ guild_id, nullifier_hash, signal_type }),
       }),
     )
 
@@ -171,14 +173,28 @@ export const saveBotConfig = async (botConfig: BotConfig): Promise<PutDataResult
   return result
 }
 
-export const getNullifierHash = async ({ guild_id, nullifier_hash }: NullifierHashData) => {
+export const getNullifierHash = async ({ guild_id, nullifier_hash, signal_type }: NullifierHashData) => {
   let result: GetItemResult<NullifierHashData>
 
   try {
     const response = await client.send(
-      new GetItemCommand({
+      new QueryCommand({
         TableName: NULLIFIER_TABLE_NAME,
-        Key: marshall({ guild_id, nullifier_hash }),
+
+        ExpressionAttributeNames: {
+          '#guild_id': 'guild_id',
+          '#nullifier_hash': 'nullifier_hash',
+          '#signal_type': 'signal_type',
+        },
+
+        ExpressionAttributeValues: {
+          ':guild_id': { S: guild_id },
+          ':nullifier_hash': { S: nullifier_hash },
+          ':signal_type': { S: signal_type },
+        },
+
+        KeyConditionExpression: '#guild_id = :guild_id AND #nullifier_hash = :nullifier_hash',
+        FilterExpression: '#signal_type = :signal_type',
       }),
     )
 
@@ -186,11 +202,13 @@ export const getNullifierHash = async ({ guild_id, nullifier_hash }: NullifierHa
       throw new Error('Error while getting nullifier hash from from database')
     }
 
-    if (!response.Item) {
+    if (!response.Items || response.Items.length === 0) {
       throw new Error('Nullifier not found')
     }
 
-    result = { data: unmarshall(response.Item) as NullifierHashData }
+    const item = response.Items[0]
+
+    result = { data: unmarshall(item) as NullifierHashData }
   } catch (error) {
     console.error(error)
     result = { data: null, error }
