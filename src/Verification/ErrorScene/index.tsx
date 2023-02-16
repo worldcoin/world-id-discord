@@ -12,7 +12,7 @@ import { VerificationError } from 'Verification/types'
 const texts = {
   [VerificationError.AlreadyVerified]: {
     heading: 'Looks like you have already verified for this server.',
-    description: 'You can only verify once for each server.',
+    description: 'You have already verified with this server and the server only supports one verification per user.',
   },
 
   [VerificationError.Unknown]: {
