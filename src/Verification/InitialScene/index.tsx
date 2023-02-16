@@ -36,19 +36,23 @@ export const InitialScene = memo(function Initial(props: {
         <div className="grid gap-y-6">
           <div className="font-bold text-12 uppercase tracking-[0.2em]">How to verify?</div>
 
-          <CredentialsItem
-            icon="mobile-device-huge"
-            heading="Phone number"
-            description="A single-use code will be delivered to you via SMS"
-            roles={props.roles?.phone || []}
-          />
+          {props.credentials.includes('phone') && (
+            <CredentialsItem
+              icon="mobile-device-huge"
+              heading="Phone number"
+              description="A single-use code will be delivered to you via SMS"
+              roles={props.roles?.phone || []}
+            />
+          )}
 
-          <CredentialsItem
-            icon="orb-huge"
-            heading="The Orb"
-            description="Completely private iris imaging with a device called an orb"
-            roles={props.roles?.orb || []}
-          />
+          {props.credentials.includes('orb') && (
+            <CredentialsItem
+              icon="orb-huge"
+              heading="The Orb"
+              description="Completely private iris imaging with a device called an orb"
+              roles={props.roles?.orb || []}
+            />
+          )}
         </div>
 
         {props.actionId && props.signal && (
