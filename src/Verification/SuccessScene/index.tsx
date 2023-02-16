@@ -30,7 +30,7 @@ export const SuccessScene = memo(function SuccessScene(props: { guild: APIGuild;
 
       <div className="mt-6 grid gap-y-6">
         <p className="font-bold text-12 text-center uppercase tracking-[0.2em]">enjoy your new roles!</p>
-        <div className="flex flex-wrap gap-x-1">
+        <div className="flex flex-wrap gap-x-1 justify-center">
           {props.assignedRoles.map((role) => (
             <div
               className="grid grid-cols-auto/fr items-center gap-x-2 py-1.5 px-2.5 bg-ffffff/10 rounded-lg"
