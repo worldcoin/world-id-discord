@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
 
   const guild = await getGuildData(guildId)
   if (!guild) {
-    return await sendErrorResponse(res, token, 500, 'The Discord server was not found.')
+    return await sendErrorResponse(res, token, 500, false, 'The Discord server was not found.')
   }
 
   const { data: botConfig } = await getBotConfig(guildId)
@@ -26,18 +26,25 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
       res,
       token,
       500,
+      false,
       'Looks like this server is not properly configured for Discord Bouncer. Please contact your server admin.',
     )
   }
 
   if (!botConfig.enabled) {
-    return await sendErrorResponse(res, token, 400, 'The bot is currently disabled for this server.')
+    return await sendErrorResponse(res, token, 400, false, 'The bot is currently disabled for this server.')
   }
 
   let roleIds: string[]
 
   if (result.signal_type !== 'phone' && result.signal_type !== 'orb') {
-    return await sendErrorResponse(res, token, 400, 'We had a problem verifying this credential. Please try again.')
+    return await sendErrorResponse(
+      res,
+      token,
+      400,
+      true,
+      'We had a problem verifying this credential. Please try again.',
+    )
   }
 
   const nullifierHashResult = await getNullifierHash({
@@ -47,7 +54,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
   })
 
   if (nullifierHashResult.data) {
-    return await sendErrorResponse(res, token, 400, 'This user has already been verified.', 'already_verified')
+    return await sendErrorResponse(res, token, 400, false, 'This user has already been verified.', 'already_verified')
   }
 
   const NullifierSaveResult = await saveNullifier({
@@ -58,11 +65,11 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
 
   if (NullifierSaveResult.error) {
     console.error(NullifierSaveResult.error)
-    return await sendErrorResponse(res, token, 500)
+    return await sendErrorResponse(res, token, 500, true)
   }
 
   if (!botConfig.phone.enabled) {
-    return await sendErrorResponse(res, token, 400, 'Phone verification is disabled for this server.')
+    return await sendErrorResponse(res, token, 400, false, 'Phone verification is disabled for this server.')
   }
 
   roleIds = botConfig[result.signal_type].roles
@@ -78,7 +85,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
     return await sendSuccessResponse(res, token, assignedRoles)
   } catch (error) {
     console.error('Error while assigning roles: ', error)
-    return await sendErrorResponse(res, token, 500, error?.message)
+    return await sendErrorResponse(res, token, 500, true, error?.message)
   }
 }
 
@@ -86,14 +93,21 @@ async function sendErrorResponse(
   res: NextApiResponse,
   token: string,
   statusCode: number,
+  canRetry: boolean = false,
   message?: string,
   code?: string,
 ) {
-  const description = [`Feel free to restart the validation with /verify command`].concat(message ?? []).join('\n')
+  const description = []
+  if (canRetry) {
+    description.push('Feel free to restart the validation with /verify command')
+  }
+  if (message) {
+    description.push(message)
+  }
   const embed = new EmbedBuilder()
     .setColor([237, 66, 69])
     .setTitle('Sorry we could not complete your verification')
-    .setDescription(description)
+    .setDescription(description.join('\n'))
     .setThumbnail(`${process.env.NEXTAUTH_URL}/images/api/interactions/verify-error.png`)
     .setTimestamp(new Date())
   await editInteractionMessage(token, [embed.toJSON()])
