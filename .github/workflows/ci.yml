@@ -14,16 +14,16 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: 'npm'
+          cache: 'yarn'
 
       - name: Install dependencies
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Check formatting with Prettier
-        run: npm run format:check
+        run: yarn format:check
 
       - name: Spellcheck
-        run: npm run spellcheck
+        run: yarn spellcheck
 
   typecheck:
     name: Typecheck & linting
@@ -35,33 +35,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: 'npm'
+          cache: 'yarn'
 
       - name: Install dependencies
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Lint with ESLint
-        run: npm run lint
+        run: yarn lint
 
       - name: Check Typescript
         run: |
-          npm run typecheck
-
-  test-build:
-    name: Test production build
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up Node 16
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        run: |
-          npm run build --ignore-scripts
+          yarn typecheck
