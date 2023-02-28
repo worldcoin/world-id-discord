@@ -51,6 +51,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
     guild_id: guildId,
     nullifier_hash: result.nullifier_hash,
     credential_type: result.credential_type,
+    user_id: userId,
   })
 
   if (nullifierHashResult.data) {
@@ -61,6 +62,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
     guild_id: guildId,
     nullifier_hash: result.nullifier_hash,
     credential_type: result.credential_type,
+    user_id: userId,
   })
 
   if (NullifierSaveResult.error) {

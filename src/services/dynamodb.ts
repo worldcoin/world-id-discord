@@ -21,7 +21,12 @@ export type TableConfig = {
   TableName?: string
 }
 
-export type NullifierHashData = { guild_id: string; nullifier_hash: string; credential_type: CredentialType }
+export type NullifierHashData = {
+  guild_id: string
+  nullifier_hash: string
+  credential_type: CredentialType
+  user_id: string
+}
 
 type PutDataResult = {
   success: boolean
@@ -113,14 +118,14 @@ export const verifyBotConfig = (botConfig: BotConfig): { status: boolean; error?
   return { status: true }
 }
 
-export const saveNullifier = async ({ guild_id, nullifier_hash, credential_type }: NullifierHashData) => {
+export const saveNullifier = async ({ guild_id, nullifier_hash, credential_type, user_id }: NullifierHashData) => {
   let result: PutDataResult
 
   try {
     const response = await client.send(
       new PutItemCommand({
         TableName: NULLIFIER_TABLE_NAME,
-        Item: marshall({ guild_id, nullifier_hash, signal_type: credential_type }),
+        Item: marshall({ guild_id, nullifier_hash, signal_type: credential_type, user_id }),
       }),
     )
 
@@ -161,7 +166,7 @@ export const saveBotConfig = async (botConfig: BotConfig): Promise<PutDataResult
   return result
 }
 
-export const getNullifierHash = async ({ guild_id, nullifier_hash, credential_type }: NullifierHashData) => {
+export const getNullifierHash = async ({ guild_id, nullifier_hash, credential_type, user_id }: NullifierHashData) => {
   let result: GetItemResult<NullifierHashData>
 
   try {
@@ -173,16 +178,18 @@ export const getNullifierHash = async ({ guild_id, nullifier_hash, credential_ty
           '#guild_id': 'guild_id',
           '#nullifier_hash': 'nullifier_hash',
           '#signal_type': 'signal_type',
+          '#user_id': 'user_id',
         },
 
         ExpressionAttributeValues: {
           ':guild_id': { S: guild_id },
           ':nullifier_hash': { S: nullifier_hash },
           ':signal_type': { S: credential_type },
+          ':user_id': { S: user_id },
         },
 
         KeyConditionExpression: '#guild_id = :guild_id AND #nullifier_hash = :nullifier_hash',
-        FilterExpression: '#signal_type = :signal_type',
+        FilterExpression: '#signal_type = :signal_type AND #user_id = :user_id',
       }),
     )
 
