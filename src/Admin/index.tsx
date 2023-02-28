@@ -34,7 +34,7 @@ export const Admin = memo(function Admin(props: {
   const [savingInProgress, setSavingInProgress] = useState(false)
   const [savedSuccessfully, setSavedSuccessfully] = useState<boolean | null>(null)
   const [isBotEnabled, setIsBotEnabled] = useState(props.initialConfig?.enabled || false)
-  const [isOrbVerificationEnabled, setIsOrbVerificationEnabled] = useState(props.initialConfig?.orb.enabled || false)
+  const [isOrbVerificationEnabled, setIsOrbVerificationEnabled] = useState(props.initialConfig?.orb.enabled || true)
   const [errorMessage, setErrorMessage] = useState<SaveConfigError>(SaveConfigError.Unknown)
 
   // NOTE: Removes saving status message from page after 3 seconds

@@ -16,7 +16,7 @@ export const createInitialConfig = ({
       enabled: false,
       guild_id,
       orb: {
-        enabled: false,
+        enabled: true,
         roles: [],
       },
     }
