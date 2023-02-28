@@ -16,17 +16,18 @@ const texts = {
   },
 
   [VerificationError.Unknown]: {
-    heading: 'We couldn’t complete the verification process.',
+    heading: "We couldn't complete the verification process.",
     description: 'Please try again.',
   },
 }
 
 export const ErrorScene = memo(function ErrorScene(props: {
-  actionId: string
+  app_id: string
+  action: string
   signal: string | null
   guild: APIGuild
   complete: (result: ISuccessResult) => Promise<void>
-  credentials: Array<'phone' | 'orb'>
+  credentials: Array<'orb'>
   error: VerificationError
 }) {
   return (
@@ -50,13 +51,8 @@ export const ErrorScene = memo(function ErrorScene(props: {
         </div>
       )}
 
-      {props.error !== VerificationError.AlreadyVerified && props.actionId && props.signal && (
-        <IDKitWidget
-          actionId={props.actionId}
-          signal={props.signal}
-          handleVerify={props.complete}
-          methods={props.credentials}
-        >
+      {props.error !== VerificationError.AlreadyVerified && props.app_id && props.action && props.signal && (
+        <IDKitWidget app_id={props.app_id} action={props.action} signal={props.signal} handleVerify={props.complete}>
           {({ open }) => (
             <Button
               type="button"

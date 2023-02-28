@@ -11,14 +11,10 @@ export const createInitialConfig = ({
   roles: Array<APIRole>
   guild_id: string
 }): BotConfig<'initial'> | null => {
-  if (!botConfig || !botConfig.phone || !botConfig.orb) {
+  if (!botConfig || !botConfig.orb) {
     return {
       enabled: false,
       guild_id,
-      phone: {
-        enabled: false,
-        roles: [],
-      },
       orb: {
         enabled: false,
         roles: [],
@@ -28,10 +24,6 @@ export const createInitialConfig = ({
 
   return {
     ...botConfig,
-    phone: {
-      ...botConfig.phone,
-      roles: findRoles(botConfig.phone.roles, roles),
-    },
     orb: {
       ...botConfig.orb,
       roles: findRoles(botConfig.orb.roles, roles),

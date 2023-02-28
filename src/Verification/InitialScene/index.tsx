@@ -10,14 +10,15 @@ import { CredentialsItem } from 'Verification/InitialScene/CredentialsItem'
 import { Scene } from 'Verification/types'
 
 export const InitialScene = memo(function Initial(props: {
-  actionId: Array<[string, string]>
+  action: string
+  app_id: string
   signal: string | null
   complete: (result: ISuccessResult) => Promise<void>
   setScene: Dispatch<SetStateAction<Scene>>
   setLoading: Dispatch<SetStateAction<boolean>>
   guild: APIGuild
-  roles: { phone: Array<Option>; orb: Array<Option> } | null
-  credentials: Array<'phone' | 'orb'>
+  roles: { orb: Array<Option> } | null
+  credentials: Array<'orb'>
 }) {
   return (
     <Fragment>
@@ -36,15 +37,6 @@ export const InitialScene = memo(function Initial(props: {
         <div className="grid gap-y-6">
           <div className="font-bold text-12 uppercase tracking-[0.2em]">How to verify?</div>
 
-          {props.credentials.includes('phone') && (
-            <CredentialsItem
-              icon="mobile-device-huge"
-              heading="Phone number"
-              description="A single-use code will be delivered to you via SMS"
-              roles={props.roles?.phone || []}
-            />
-          )}
-
           {props.credentials.includes('orb') && (
             <CredentialsItem
               icon="orb-huge"
@@ -55,13 +47,8 @@ export const InitialScene = memo(function Initial(props: {
           )}
         </div>
 
-        {props.actionId && props.signal && (
-          <IDKitWidget
-            actionId={props.actionId}
-            signal={props.signal}
-            handleVerify={props.complete}
-            methods={props.credentials}
-          >
+        {props.app_id && props.action && props.signal && (
+          <IDKitWidget app_id={props.app_id} action={props.action} signal={props.signal} handleVerify={props.complete}>
             {({ open }) => (
               <Button type="button" onClick={open}>
                 Verify your identity

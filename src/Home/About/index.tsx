@@ -16,8 +16,7 @@ export const About = memo(function About() {
           <div className="grid gap-y-6 text-18 font-rubik text-bcc5f9 mt-12">
             <p>
               World ID is a decentralized protocol to verify unique humanness. This is done through completely private
-              iris imaging with a device called an orb or, for when a weaker protection is needed, using your phone
-              number.
+              iris imaging with a device called an orb.
             </p>
 
             <p>
