@@ -8,6 +8,5 @@ export type CredentialsData<T extends 'initial' | void = void> = {
 export type BotConfig<T extends 'initial' | void = void> = {
   enabled: boolean
   guild_id: string
-  phone: CredentialsData<T>
   orb: CredentialsData<T>
 }

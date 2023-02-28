@@ -37,7 +37,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
 
   let roleIds: string[]
 
-  if (result.signal_type !== 'phone' && result.signal_type !== 'orb') {
+  if (result.credential_type !== 'orb') {
     return await sendErrorResponse(
       res,
       token,
@@ -50,7 +50,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
   const nullifierHashResult = await getNullifierHash({
     guild_id: guildId,
     nullifier_hash: result.nullifier_hash,
-    signal_type: result.signal_type,
+    credential_type: result.credential_type,
   })
 
   if (nullifierHashResult.data) {
@@ -60,7 +60,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
   const NullifierSaveResult = await saveNullifier({
     guild_id: guildId,
     nullifier_hash: result.nullifier_hash,
-    signal_type: result.signal_type,
+    credential_type: result.credential_type,
   })
 
   if (NullifierSaveResult.error) {
@@ -68,11 +68,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
     return await sendErrorResponse(res, token, 500, true)
   }
 
-  if (!botConfig.phone.enabled) {
-    return await sendErrorResponse(res, token, 400, false, 'Phone verification is disabled for this server.')
-  }
-
-  roleIds = botConfig[result.signal_type].roles
+  roleIds = botConfig[result.credential_type].roles
 
   // FIXME: check that these roles really exist on the server
 

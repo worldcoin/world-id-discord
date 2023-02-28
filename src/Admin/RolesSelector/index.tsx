@@ -1,4 +1,3 @@
-import { StyledCheckbox } from 'Admin/StyledCheckbox'
 import { Option } from 'Admin/types/option'
 import cn from 'classnames'
 import { Icon, IconType } from 'common/Icon'
@@ -20,6 +19,7 @@ export const RolesSelector = memo(function RolesSelector(props: {
 }) {
   const [isFetching, setIsFetching] = useState(false)
   const refetchRoles = useCallback(() => {
+    props.setIsEnabled(true) // NOTE: We keep it enabled by default
     setIsFetching(true)
     fetch('/api/admin/roles', {})
       .then((res) => res.json())
@@ -43,8 +43,8 @@ export const RolesSelector = memo(function RolesSelector(props: {
             <Icon name={props.icon} className="w-5 h-5 text-fffff" />
             <span className="text-14 font-semibold">{props.name}</span>
           </div>
-
-          <StyledCheckbox isOn={props.isEnabled} setIsOn={props.setIsEnabled} />
+          {/* As we have only one credential, keep it always enabled */}
+          {/* <StyledCheckbox isOn={props.isEnabled} setIsOn={props.setIsEnabled} /> */}
         </div>
 
         <span className="font-rubik text-14 text-ffffff/40">{props.description}</span>

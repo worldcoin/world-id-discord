@@ -16,17 +16,6 @@ export const Methods = memo(function Methods() {
 
         <div className="grid grid-cols-2 gap-x-8">
           <Card
-            heading="Phone number"
-            pros={[
-              'Very simple user experience',
-              'Phone numbers are not stored anywhere',
-              'Fully privacy preserving',
-              'A single phone number is used only once in each server',
-            ]}
-            decorationLayout="phone"
-          />
-
-          <Card
             heading="Orb"
             pros={[
               'Strongest level of protection',

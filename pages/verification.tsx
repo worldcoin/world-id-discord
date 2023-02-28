@@ -7,7 +7,7 @@ export default Verification
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { user_id, guild_id, token } = ctx.query
-  const actionId = process.env.ACTION_ID
+  const appId = process.env.APP_ID
 
   if (!user_id || !guild_id || !token) {
     return {
@@ -31,18 +31,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   }
 
   const rolesToAssign = {
-    phone: findRoles(botConfig.phone.roles, guild.roles),
     orb: findRoles(botConfig.orb.roles, guild.roles),
   }
 
-  const credentials = [] as Array<'phone' | 'orb'>
+  const credentials = [] as Array<'orb'>
 
   if (botConfig.orb.enabled) {
     credentials.push('orb')
-  }
-
-  if (botConfig.phone.enabled) {
-    credentials.push('phone')
   }
 
   return {
@@ -52,7 +47,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       guildId: guild_id,
       userId: user_id,
       token,
-      actionId,
+      appId,
       credentials,
     },
   }

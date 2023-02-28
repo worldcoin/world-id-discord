@@ -15,14 +15,14 @@ import { Scene, VerificationError } from './types'
 
 export const Verification = memo(function Verification(props: {
   guild: APIGuild
-  rolesToAssign: { phone: Array<Option>; orb: Array<Option> }
+  rolesToAssign: { orb: Array<Option> }
   guildId: string
   userId: string
   token: string
-  actionId: string
-  credentials: Array<'phone' | 'orb'>
+  appId: string
+  credentials: Array<'orb'>
 }) {
-  const { guildId, userId, actionId, token } = props
+  const { guildId, userId, appId, token } = props
   const [scene, setScene] = useState<Scene>(Scene.Initial)
   const [loading, setLoading] = useState(false)
   const [assignedRoles, setAssignedRoles] = useState<Array<APIRole>>([])
@@ -78,10 +78,8 @@ export const Verification = memo(function Verification(props: {
       <Modal loading={loading} className="p-12 grid gap-y-6 max-w-[500px]">
         {scene === Scene.Initial && (
           <InitialScene
-            actionId={[
-              ['string', actionId],
-              ['string', guildId],
-            ]}
+            action={guildId}
+            app_id={appId}
             signal={userId}
             complete={complete}
             setScene={setScene}
@@ -96,7 +94,8 @@ export const Verification = memo(function Verification(props: {
         {scene === Scene.Error && (
           <ErrorScene
             guild={props.guild}
-            actionId={actionId}
+            action={guildId}
+            app_id={appId}
             signal={userId}
             complete={complete}
             credentials={props.credentials}

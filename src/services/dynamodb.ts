@@ -11,7 +11,7 @@ import {
 } from '@aws-sdk/client-dynamodb'
 
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
-import { SignalType } from '@worldcoin/idkit'
+import { CredentialType } from '@worldcoin/idkit'
 import { BotConfig } from 'common/types'
 
 export type TableConfig = {
@@ -21,7 +21,7 @@ export type TableConfig = {
   TableName?: string
 }
 
-export type NullifierHashData = { guild_id: string; nullifier_hash: string; signal_type: SignalType }
+export type NullifierHashData = { guild_id: string; nullifier_hash: string; credential_type: CredentialType }
 
 type PutDataResult = {
   success: boolean
@@ -102,14 +102,6 @@ export const verifyBotConfig = (botConfig: BotConfig): { status: boolean; error?
     return { status: false, error: new Error('enabled is required') }
   }
 
-  if (!botConfig.phone && !botConfig.orb) {
-    return { status: false, error: new Error('Phone or orb verification is required') }
-  }
-
-  if (!botConfig.phone.hasOwnProperty('enabled')) {
-    return { status: false, error: new Error('Phone verification enabled is required') }
-  }
-
   if (!botConfig.orb.hasOwnProperty('enabled')) {
     return { status: false, error: new Error('Orb verification enabled is required') }
   }
@@ -118,21 +110,17 @@ export const verifyBotConfig = (botConfig: BotConfig): { status: boolean; error?
     return { status: false, error: new Error('Set at least one role to Orb verification method') }
   }
 
-  if (botConfig.phone.roles.length === 0 && botConfig.phone.enabled) {
-    return { status: false, error: new Error('Set at least one role to Orb verification method') }
-  }
-
   return { status: true }
 }
 
-export const saveNullifier = async ({ guild_id, nullifier_hash, signal_type }: NullifierHashData) => {
+export const saveNullifier = async ({ guild_id, nullifier_hash, credential_type }: NullifierHashData) => {
   let result: PutDataResult
 
   try {
     const response = await client.send(
       new PutItemCommand({
         TableName: NULLIFIER_TABLE_NAME,
-        Item: marshall({ guild_id, nullifier_hash, signal_type }),
+        Item: marshall({ guild_id, nullifier_hash, signal_type: credential_type }),
       }),
     )
 
@@ -173,7 +161,7 @@ export const saveBotConfig = async (botConfig: BotConfig): Promise<PutDataResult
   return result
 }
 
-export const getNullifierHash = async ({ guild_id, nullifier_hash, signal_type }: NullifierHashData) => {
+export const getNullifierHash = async ({ guild_id, nullifier_hash, credential_type }: NullifierHashData) => {
   let result: GetItemResult<NullifierHashData>
 
   try {
@@ -190,7 +178,7 @@ export const getNullifierHash = async ({ guild_id, nullifier_hash, signal_type }
         ExpressionAttributeValues: {
           ':guild_id': { S: guild_id },
           ':nullifier_hash': { S: nullifier_hash },
-          ':signal_type': { S: signal_type },
+          ':signal_type': { S: credential_type },
         },
 
         KeyConditionExpression: '#guild_id = :guild_id AND #nullifier_hash = :nullifier_hash',

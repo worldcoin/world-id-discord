@@ -30,17 +30,12 @@ export const Admin = memo(function Admin(props: {
     }))
   })
 
-  const [selectedPhoneRoles, setSelectedPhoneRoles] = useState<Array<Option>>(props.initialConfig?.phone.roles || [])
   const [selectedOrbRoles, setSelectedOrbRoles] = useState<Array<Option>>(props.initialConfig?.orb.roles || [])
   const [savingInProgress, setSavingInProgress] = useState(false)
   const [savedSuccessfully, setSavedSuccessfully] = useState<boolean | null>(null)
   const [isBotEnabled, setIsBotEnabled] = useState(props.initialConfig?.enabled || false)
   const [isOrbVerificationEnabled, setIsOrbVerificationEnabled] = useState(props.initialConfig?.orb.enabled || false)
   const [errorMessage, setErrorMessage] = useState<SaveConfigError>(SaveConfigError.Unknown)
-
-  const [isPhoneVerificationEnabled, setIsPhoneVerificationEnabled] = useState(
-    props.initialConfig?.phone.enabled || false,
-  )
 
   // NOTE: Removes saving status message from page after 3 seconds
   useEffect(() => {
@@ -62,47 +57,26 @@ export const Admin = memo(function Admin(props: {
       enabled: isBotEnabled,
       guild_id: props.initialConfig.guild_id,
 
-      phone: {
-        enabled: isPhoneVerificationEnabled,
-        roles: selectedPhoneRoles.map((role) => role.value),
-      },
-
       orb: {
         enabled: isOrbVerificationEnabled,
         roles: selectedOrbRoles.map((role) => role.value),
       },
     }),
-    [
-      isBotEnabled,
-      isOrbVerificationEnabled,
-      isPhoneVerificationEnabled,
-      props.initialConfig.guild_id,
-      selectedOrbRoles,
-      selectedPhoneRoles,
-    ],
+    [isBotEnabled, isOrbVerificationEnabled, props.initialConfig.guild_id, selectedOrbRoles],
   )
 
   const formIsClean = useMemo(() => {
     return (
       isBotEnabled === props.initialConfig?.enabled &&
-      isPhoneVerificationEnabled === props.initialConfig?.phone.enabled &&
       isOrbVerificationEnabled === props.initialConfig?.orb.enabled &&
-      selectedPhoneRoles.length === props.initialConfig?.phone.roles.length &&
       selectedOrbRoles.length === props.initialConfig?.orb.roles.length
     )
-  }, [
-    isBotEnabled,
-    isOrbVerificationEnabled,
-    isPhoneVerificationEnabled,
-    props.initialConfig,
-    selectedOrbRoles.length,
-    selectedPhoneRoles.length,
-  ])
+  }, [isBotEnabled, isOrbVerificationEnabled, props.initialConfig, selectedOrbRoles.length])
 
   const saveChanges = useCallback(() => {
     setSavingInProgress(true)
 
-    if (selectedPhoneRoles.length === 0 && selectedOrbRoles.length === 0) {
+    if (selectedOrbRoles.length === 0) {
       setSavingInProgress(false)
       setErrorMessage(SaveConfigError.EmptyRoles)
       return setSavedSuccessfully(false)
@@ -130,7 +104,7 @@ export const Admin = memo(function Admin(props: {
         setSavedSuccessfully(false)
         setSavingInProgress(false)
       })
-  }, [botConfig, selectedOrbRoles.length, selectedPhoneRoles.length])
+  }, [botConfig, selectedOrbRoles.length])
 
   const guildImage = useMemo(() => {
     return generateGuildImage(props.guild.id, props.guild.icon)
@@ -161,19 +135,6 @@ export const Admin = memo(function Admin(props: {
           </div>
 
           <div className="grid gap-y-8">
-            <RolesSelector
-              icon="mobile-device"
-              name="Phone Number"
-              description="A single-use code will be delivered via SMS."
-              className="mt-4"
-              roles={roles}
-              setRoles={setRoles}
-              selectedRoles={selectedPhoneRoles}
-              setSelectedRoles={setSelectedPhoneRoles}
-              isEnabled={isPhoneVerificationEnabled}
-              setIsEnabled={setIsPhoneVerificationEnabled}
-            />
-
             <RolesSelector
               icon="orb"
               name="Orb"
