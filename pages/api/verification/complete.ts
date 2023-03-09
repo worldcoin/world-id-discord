@@ -2,7 +2,7 @@ import { EmbedBuilder } from '@discordjs/builders'
 import { VerificationCompletePayload } from 'common/types/verification-complete'
 import { APIRole } from 'discord-api-types/v10'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { assignGuildMemberRole, editInteractionMessage, getGuildData } from 'services/discord'
+import { assignGuildMemberRole, editInteractionMessage, getGuildData, removeGuildMemberRole } from 'services/discord'
 import { getBotConfig, getNullifierHash, saveNullifier } from 'services/dynamodb'
 
 interface NextApiRequestWithBody extends NextApiRequest {
@@ -47,14 +47,24 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
     )
   }
 
+  roleIds = botConfig[result.credential_type].roles
+
   const nullifierHashResult = await getNullifierHash({
     guild_id: guildId,
     nullifier_hash: result.nullifier_hash,
     credential_type: result.credential_type,
-    user_id: userId,
   })
 
-  if (nullifierHashResult.data) {
+  const knownNullifierHash = nullifierHashResult.data?.nullifier_hash === result.nullifier_hash
+  const knownUser = nullifierHashResult.data?.user_id === userId
+
+  if (nullifierHashResult.data && knownNullifierHash && !knownUser) {
+    for (const roleId of roleIds) {
+      await removeGuildMemberRole(guildId, nullifierHashResult.data?.user_id, roleId)
+    }
+  }
+
+  if (nullifierHashResult.data && knownNullifierHash && knownUser) {
     return await sendErrorResponse(res, token, 400, false, 'This user has already been verified.', 'already_verified')
   }
 
@@ -69,8 +79,6 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
     console.error(NullifierSaveResult.error)
     return await sendErrorResponse(res, token, 500, true)
   }
-
-  roleIds = botConfig[result.credential_type].roles
 
   // FIXME: check that these roles really exist on the server
 

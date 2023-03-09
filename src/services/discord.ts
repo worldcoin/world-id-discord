@@ -67,6 +67,10 @@ export const assignGuildMemberRole = async (guildId: string, memberId: string, r
   return await rest.put(Routes.guildMemberRole(guildId, memberId, roleId))
 }
 
+export const removeGuildMemberRole = async (guildId: string, memberId: string, roleId: string) => {
+  return await rest.delete(Routes.guildMemberRole(guildId, memberId, roleId))
+}
+
 export const editInteractionMessage = async (interactionToken: string, embeds: APIEmbed[]) => {
   const body: RESTPostAPIChannelMessageJSONBody = {
     embeds,
