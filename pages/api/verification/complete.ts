@@ -9,6 +9,7 @@ interface NextApiRequestWithBody extends NextApiRequest {
   body: VerificationCompletePayload
 }
 
+//eslint-disable-next-line complexity -- FIXME: refactor this function
 export default async function handler(req: NextApiRequestWithBody, res: NextApiResponse) {
   const { guildId, userId, token, result } = req.body
 
