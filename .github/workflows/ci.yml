@@ -10,20 +10,25 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up Node 16
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Set up Node 18
         uses: actions/setup-node@v3
         with:
-          node-version: 16
-          cache: 'yarn'
+          node-version: 18
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Check formatting with Prettier
-        run: yarn format:check
+        run: pnpm format:check
 
       - name: Spellcheck
-        run: yarn spellcheck
+        run: pnpm spellcheck
 
   typecheck:
     name: Typecheck & linting
@@ -31,18 +36,23 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up Node 16
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Set up Node 18
         uses: actions/setup-node@v3
         with:
-          node-version: 16
-          cache: 'yarn'
+          node-version: 18
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Lint with ESLint
-        run: yarn lint
+        run: pnpm lint
 
       - name: Check Typescript
         run: |
-          yarn typecheck
+          pnpm typecheck
