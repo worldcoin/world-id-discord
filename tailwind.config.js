@@ -51,6 +51,7 @@ module.exports = {
           '#3e4152',
           '#4940e0',
           '#6673b9',
+          '#726aee',
           '#928bf9',
           '#938cfa',
           '#93f9b9',
@@ -81,6 +82,9 @@ module.exports = {
       },
 
       fontSize: {
+        'caption': ['calc(14 * 1rem / 16)', {lineHeight: '140%', fontWeight: 700, letterSpacing: '0.2em'}],
+        'heading': ['calc(32 * 1rem / 16)', {lineHeight: '120%', fontWeight: 700}],
+        'heading-md': ['calc(48 * 1rem / 16)', {lineHeight: '120%', fontWeight: 700}],
         72: ['calc(72 * 1rem / 16)', {lineHeight: 'calc(86 * 1rem / 16)'}],
         64: ['calc(64 * 1rem / 16)', {lineHeight: 'calc(76.8 * 1rem / 16)'}],
         48: ['calc(48 * 1rem / 16)', {lineHeight: 'calc(57.6 * 1rem / 16)'}],

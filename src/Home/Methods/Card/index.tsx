@@ -3,11 +3,18 @@ import { Icon } from 'common/Icon'
 import Image from 'next/image'
 import { memo, ReactNode } from 'react'
 
-export const Card = memo(function Card(props: { heading: string; pros: Array<ReactNode>; decorationLayout: 'orb' }) {
+export const Card = memo(function Card(props: {
+  heading: string
+  pros: Array<ReactNode>
+  decorationLayout: 'orb' | 'phone'
+}) {
   return (
     <div className="grid gap-y-12 p-16 bg-111318 rounded-3xl border border-ffffff/20 relative overflow-clip">
       <Image
-        className={cn('absolute', { 'top-[25%] -left-[330px] rotate-12 opacity-40': props.decorationLayout === 'orb' })}
+        className={cn('absolute', {
+          'top-[25%] left-[-330px] rotate-12 opacity-40': props.decorationLayout === 'orb',
+          'top-[15px] left-[-295px] opacity-40': props.decorationLayout === 'phone',
+        })}
         width={432}
         height={396}
         src="/images/home/honeycombs-triangle.svg"
@@ -15,18 +22,17 @@ export const Card = memo(function Card(props: { heading: string; pros: Array<Rea
       />
 
       <Image
-        className={cn(
-          'absolute',
-
-          { '-rotate-[105deg] top-4 -right-[300px] opacity-60': props.decorationLayout === 'orb' },
-        )}
+        className={cn('absolute', {
+          'top-4 right-[-285px] -rotate-[105deg] opacity-60': props.decorationLayout === 'orb',
+          'bottom-[-375px] right-[65px] opacity-60': props.decorationLayout === 'phone',
+        })}
         width={432}
         height={396}
         src="/images/home/honeycombs-triangle.svg"
         alt="decoration"
       />
 
-      <h4 className="text-40 text-center">{props.heading}</h4>
+      <h4 className="font-medium text-32 text-center">{props.heading}</h4>
 
       <ul className="grid gap-y-4">
         {props.pros.map((p, i) => (
@@ -37,7 +43,7 @@ export const Card = memo(function Card(props: { heading: string; pros: Array<Rea
             <div className="w-5 h-5 bg-gradient-to-r from-4940e0 to-a39dff rounded-full flex justify-center items-center">
               <Icon name="check" className="w-3 h-3 text-111318" />
             </div>
-            <span className="text-20 font-rubik text-ffffff/70 leading-loose">{p}</span>
+            <span className="font-rubik leading-6 text-20 text-bcc5f9">{p}</span>
           </li>
         ))}
       </ul>

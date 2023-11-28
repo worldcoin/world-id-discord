@@ -21,20 +21,22 @@ export const Intro = memo(function Intro(props: IntroProps) {
       <Image src="/images/background.svg" fill alt="background" className="object-cover" />
 
       <div className={cn('grid col-start-2 content-center z-10 justify-items-center')}>
-        <div className="grid gap-y-4 justify-items-center max-w-[930px]">
-          <span className="uppercase tracking-[0.2em] text-14 font-bold text-96a0db">Introducing Discord Bouncer</span>
-          <div className="text-32 md:text-48 text-center">
-            <GradientText as="span">Improve your Discord&nbsp;</GradientText>
-            server by verifying unique people&nbsp;
-            <GradientText as="span">with World ID</GradientText>
-          </div>
+        <div className="grid justify-items-center">
+          <span className="uppercase font-bold text-caption text-96a0db">Introducing Discord Bouncer</span>
 
-          <p className="font-rubik text-bcc5f9 text-center mt-8 px-20">
+          <GradientText
+            as="h1"
+            className="md:max-w-[1200px] mt-8 uppercase text-heading md:text-heading-md text-center"
+          >
+            Improve your Discord <span className="text-white">server by verifying unique people</span> with World ID
+          </GradientText>
+
+          <p className="mt-6 md:max-w-[860px] leading-7 font-rubik text-lg text-bcc5f9 text-center">
             Discord Bouncer helps prevent spam and increase the quality of the community by verifying humans. Allow only
             humans to join, only humans to post or DM, or have humans-only channels.
           </p>
 
-          <div className="mt-12 grid justify-start">
+          <div className="mt-16 grid justify-start">
             <Button
               type="button"
               className="grid grid-flow-col justify-center items-center gap-x-4"

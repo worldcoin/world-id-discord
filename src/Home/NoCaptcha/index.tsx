@@ -18,7 +18,7 @@ export const NoCaptcha = memo(function NoCaptcha(props: NoCaptchaProps) {
       >
         <div className="justify-items-start grid gap-y-12 max-w-[620px]">
           <div className="grid gap-y-4">
-            <GradientText className="text-48 uppercase" as="h3">
+            <GradientText as="h2" className="uppercase text-heading md:text-heading-md">
               Say goodbye to CAPTCHA and bots
             </GradientText>
 

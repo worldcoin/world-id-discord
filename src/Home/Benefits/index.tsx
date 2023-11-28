@@ -29,13 +29,13 @@ export const Benefits = memo(function Benefits() {
     <div className="grid grid-cols-container mt-12 md:mt-72 px-4 md:px-8">
       <div className="grid gap-y-14 md:gap-y-20 col-start-2">
         <div className="text-center justify-self-center">
-          <span className="font-bold uppercase text-14 text-ffffff tracking-[0.2em]">WORLD ID BENEFITS</span>
+          <span className="uppercase font-bold text-caption text-white">World ID benefits</span>
 
-          <GradientText as="h2" className="max-w-[560px] mx-auto text-48 font-bold mt-4 uppercase">
+          <GradientText as="h2" className="max-w-[560px] mx-auto uppercase text-heading md:text-heading-md mt-3">
             Why choose Discord Bouncer?
           </GradientText>
 
-          <p className="max-w-[688px] mt-8 font-rubik text-18 text-bcc5f9 leading-6">
+          <p className="max-w-[688px] mt-8 leading-7 font-rubik text-18 text-bcc5f9">
             Discord Bouncer removes bot spam and protects against sybil attacks on your Discord server. Additionally,
             it’s trustless and completely privacy-preserving.
           </p>
