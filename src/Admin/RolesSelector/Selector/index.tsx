@@ -18,13 +18,22 @@ export const Selector = memo(function Selector(props: {
   selected: Array<Option>
   isEnabled: boolean
   setIsEnabled: Dispatch<SetStateAction<boolean>>
+  onExpanded: () => void
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const [expanded, setExpanded] = useState(false)
 
+  const { onExpanded } = props
   const toggleExpand = useCallback(() => {
     setExpanded((p) => !p)
   }, [])
+
+  // Callback for expanded
+  useEffect(() => {
+    if (expanded) {
+      onExpanded()
+    }
+  }, [expanded, onExpanded])
 
   // Click outside
   useEffect(() => {

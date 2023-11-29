@@ -30,11 +30,15 @@ export const Admin = memo(function Admin(props: {
     }))
   })
 
+  const [selectedDeviceRoles, setSelectedDeviceRoles] = useState<Array<Option>>(props.initialConfig?.device.roles || [])
   const [selectedOrbRoles, setSelectedOrbRoles] = useState<Array<Option>>(props.initialConfig?.orb.roles || [])
   const [savingInProgress, setSavingInProgress] = useState(false)
   const [savedSuccessfully, setSavedSuccessfully] = useState<boolean | null>(null)
   const [isBotEnabled, setIsBotEnabled] = useState(props.initialConfig?.enabled || false)
-  const [isOrbVerificationEnabled, setIsOrbVerificationEnabled] = useState(props.initialConfig?.orb.enabled || true)
+  const [isDeviceVerificationEnabled, setIsDeviceVerificationEnabled] = useState(
+    props.initialConfig?.device.enabled || false,
+  )
+  const [isOrbVerificationEnabled, setIsOrbVerificationEnabled] = useState(props.initialConfig?.orb.enabled || false)
   const [errorMessage, setErrorMessage] = useState<SaveConfigError>(SaveConfigError.Unknown)
 
   // NOTE: Removes saving status message from page after 3 seconds
@@ -57,21 +61,42 @@ export const Admin = memo(function Admin(props: {
       enabled: isBotEnabled,
       guild_id: props.initialConfig.guild_id,
 
+      device: {
+        enabled: isDeviceVerificationEnabled,
+        roles: selectedDeviceRoles.map((role) => role.value),
+      },
+
       orb: {
         enabled: isOrbVerificationEnabled,
         roles: selectedOrbRoles.map((role) => role.value),
       },
     }),
-    [isBotEnabled, isOrbVerificationEnabled, props.initialConfig.guild_id, selectedOrbRoles],
+    [
+      isBotEnabled,
+      isDeviceVerificationEnabled,
+      isOrbVerificationEnabled,
+      props.initialConfig.guild_id,
+      selectedOrbRoles,
+      selectedDeviceRoles,
+    ],
   )
 
   const formIsClean = useMemo(() => {
     return (
       isBotEnabled === props.initialConfig?.enabled &&
+      isDeviceVerificationEnabled === props.initialConfig?.device.enabled &&
+      selectedDeviceRoles.length === props.initialConfig?.device.roles.length &&
       isOrbVerificationEnabled === props.initialConfig?.orb.enabled &&
       selectedOrbRoles.length === props.initialConfig?.orb.roles.length
     )
-  }, [isBotEnabled, isOrbVerificationEnabled, props.initialConfig, selectedOrbRoles.length])
+  }, [
+    isBotEnabled,
+    isDeviceVerificationEnabled,
+    isOrbVerificationEnabled,
+    props.initialConfig,
+    selectedDeviceRoles.length,
+    selectedOrbRoles.length,
+  ])
 
   const saveChanges = useCallback(() => {
     setSavingInProgress(true)
@@ -106,9 +131,25 @@ export const Admin = memo(function Admin(props: {
       })
   }, [botConfig, selectedOrbRoles.length])
 
+  const resetChanges = useCallback(() => {
+    setSelectedDeviceRoles(props.initialConfig?.device.roles || [])
+    setSelectedOrbRoles(props.initialConfig?.orb.roles || [])
+    setIsBotEnabled(props.initialConfig?.enabled || false)
+    setIsDeviceVerificationEnabled(props.initialConfig?.device.enabled || false)
+    setIsOrbVerificationEnabled(props.initialConfig?.orb.enabled || false)
+  }, [props.initialConfig])
+
   const guildImage = useMemo(() => {
     return generateGuildImage(props.guild.id, props.guild.icon)
   }, [props.guild.icon, props.guild.id])
+
+  const copyRolesFromDevice = useCallback(() => {
+    setSelectedOrbRoles(selectedDeviceRoles)
+  }, [selectedDeviceRoles])
+
+  const copyRolesFromOrb = useCallback(() => {
+    setSelectedDeviceRoles(selectedOrbRoles)
+  }, [selectedOrbRoles])
 
   return (
     <Layout title="Configuration" className="bg-0d1020 flex justify-center items-center relative min-h-screen">
@@ -116,8 +157,8 @@ export const Admin = memo(function Admin(props: {
       <Header hideLinks onTop />
 
       <Modal loading={false}>
-        <div className="relative grid justify-center auto-cols-max items-center p-6 border-b border-[color:inherit]">
-          <div className="grid gap-y-3 justify-items-center w-full">
+        <div className="relative grid auto-cols-max items-center p-6 border-b border-white/20">
+          <div className="grid gap-y-3 justify-items-start w-full">
             <span className="text-20 font-semibold">Discord Bouncer Admin</span>
             <GuildLabel image={guildImage} name={props.guild?.name ?? 'Your guild'} />
           </div>
@@ -129,34 +170,64 @@ export const Admin = memo(function Admin(props: {
           <div className="grid gap-y-2">
             <span>Credentials</span>
 
-            <p className="font-rubik text-14 text-ffffff/40">
+            <p className="font-rubik text-14 text-bcc5f9/60">
               The server configuration allows you to manage the various components of your Discord Bouncer.
             </p>
           </div>
 
-          <div className="grid gap-y-8">
-            <RolesSelector
-              icon="orb"
-              name="Orb"
-              description="Completely private iris imaging with a device called an orb."
-              className="mt-4"
-              roles={roles}
-              setRoles={setRoles}
-              selectedRoles={selectedOrbRoles}
-              setSelectedRoles={setSelectedOrbRoles}
-              isEnabled={isOrbVerificationEnabled}
-              setIsEnabled={setIsOrbVerificationEnabled}
-            />
+          <div className="grid gap-y-6 mt-10">
+            <div className="grid gap-y-8">
+              <RolesSelector
+                icon="mobile-device"
+                name="Phone Number"
+                description="A single-use code will be delivered via SMS or phone call. Basic level of attack prevention. Ensures a single number can only be used by one account in your server."
+                roles={roles}
+                setRoles={setRoles}
+                selectedRoles={selectedDeviceRoles}
+                setSelectedRoles={setSelectedDeviceRoles}
+                isEnabled={isDeviceVerificationEnabled}
+                setIsEnabled={setIsDeviceVerificationEnabled}
+                copyLabel="Copy from Orb"
+                copy={copyRolesFromOrb}
+              />
+            </div>
+
+            <div className="grid gap-y-8">
+              <RolesSelector
+                icon="orb"
+                name="Orb"
+                description="Humanity verification. Completely privacy-preserving biometric verification with the Orb."
+                highestSecurity
+                roles={roles}
+                setRoles={setRoles}
+                selectedRoles={selectedOrbRoles}
+                setSelectedRoles={setSelectedOrbRoles}
+                isEnabled={isOrbVerificationEnabled}
+                setIsEnabled={setIsOrbVerificationEnabled}
+                copyLabel="Copy from Phone Number"
+                copy={copyRolesFromDevice}
+              />
+            </div>
           </div>
 
           <div className="grid justify-items-center gap-y-4 mt-12">
-            <Button
-              className="w-full font-sora disabled:opacity-20 disabled:cursor-not-allowed"
-              disabled={formIsClean || savingInProgress}
-              onClick={saveChanges}
-            >
-              {savingInProgress ? 'Saving...' : 'Save changes'}
-            </Button>
+            <div className="grid grid-cols-2 gap-x-4 w-full">
+              <Button
+                className="w-full font-sora !bg-none !bg-white/10 disabled:opacity-20 disabled:cursor-not-allowed"
+                disabled={formIsClean || savingInProgress}
+                onClick={resetChanges}
+              >
+                Cancel
+              </Button>
+
+              <Button
+                className="w-full font-sora disabled:opacity-20 disabled:cursor-not-allowed"
+                disabled={formIsClean || savingInProgress}
+                onClick={saveChanges}
+              >
+                {savingInProgress ? 'Saving...' : 'Save changes'}
+              </Button>
+            </div>
 
             <span
               className={cn(

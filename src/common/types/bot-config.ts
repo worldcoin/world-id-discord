@@ -9,4 +9,5 @@ export type BotConfig<T extends 'initial' | void = void> = {
   enabled: boolean
   guild_id: string
   orb: CredentialsData<T>
+  device: CredentialsData<T>
 }

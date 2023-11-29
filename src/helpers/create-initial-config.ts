@@ -15,6 +15,10 @@ export const createInitialConfig = ({
     return {
       enabled: false,
       guild_id,
+      device: {
+        enabled: true,
+        roles: [],
+      },
       orb: {
         enabled: true,
         roles: [],
@@ -24,6 +28,10 @@ export const createInitialConfig = ({
 
   return {
     ...botConfig,
+    device: {
+      ...botConfig.device,
+      roles: findRoles(botConfig.device.roles, roles),
+    },
     orb: {
       ...botConfig.orb,
       roles: findRoles(botConfig.orb.roles, roles),

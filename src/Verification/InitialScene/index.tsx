@@ -1,4 +1,4 @@
-import { IDKitWidget, ISuccessResult } from '@worldcoin/idkit'
+import { CredentialType, IDKitWidget, ISuccessResult } from '@worldcoin/idkit'
 import { Option } from 'Admin/types/option'
 import { Button } from 'common/Button'
 import { GradientText } from 'common/GradientText'
@@ -17,8 +17,8 @@ export const InitialScene = memo(function Initial(props: {
   setScene: Dispatch<SetStateAction<Scene>>
   setLoading: Dispatch<SetStateAction<boolean>>
   guild: APIGuild
-  roles: { orb: Array<Option> } | null
-  credentials: Array<'orb'>
+  roles: { orb: Array<Option>; device: Array<Option> } | null
+  credentials: Array<'device' | 'orb'>
 }) {
   return (
     <Fragment>
@@ -37,6 +37,15 @@ export const InitialScene = memo(function Initial(props: {
         <div className="grid gap-y-6">
           <div className="font-bold text-12 uppercase tracking-[0.2em]">How to verify?</div>
 
+          {props.credentials.includes('device') && (
+            <CredentialsItem
+              icon="mobile-device-huge"
+              heading="Phone number"
+              description="A single-use code will be delivered to you via SMS"
+              roles={props.roles?.device || []}
+            />
+          )}
+
           {props.credentials.includes('orb') && (
             <CredentialsItem
               icon="orb-huge"
@@ -48,7 +57,13 @@ export const InitialScene = memo(function Initial(props: {
         </div>
 
         {props.app_id && props.action && props.signal && (
-          <IDKitWidget app_id={props.app_id} action={props.action} signal={props.signal} onSuccess={props.complete}>
+          <IDKitWidget
+            credential_types={props.credentials as CredentialType[]}
+            app_id={props.app_id}
+            action={props.action}
+            signal={props.signal}
+            onSuccess={props.complete}
+          >
             {({ open }) => (
               <Button type="button" onClick={open}>
                 Verify your identity
