@@ -1,4 +1,4 @@
-import { IDKitWidget, ISuccessResult } from '@worldcoin/idkit'
+import { CredentialType, IDKitWidget, ISuccessResult } from '@worldcoin/idkit'
 import { Button } from 'common/Button'
 import { GradientText } from 'common/GradientText'
 import { GuildLabel } from 'common/GuildLabel'
@@ -27,7 +27,7 @@ export const ErrorScene = memo(function ErrorScene(props: {
   signal: string | null
   guild: APIGuild
   complete: (result: ISuccessResult) => Promise<void>
-  credentials: Array<'orb'>
+  credentials: Array<CredentialType>
   error: VerificationError
 }) {
   return (
@@ -52,8 +52,15 @@ export const ErrorScene = memo(function ErrorScene(props: {
       )}
 
       {props.error !== VerificationError.AlreadyVerified && props.app_id && props.action && props.signal && (
-        <IDKitWidget app_id={props.app_id} action={props.action} signal={props.signal} onSuccess={props.complete}>
-          {({ open }) => (
+        <IDKitWidget
+          bridge_url="https://staging-bridge.worldcoin.org" // FIXME: use production bridge
+          credential_types={props.credentials}
+          app_id={props.app_id}
+          action={props.action}
+          signal={props.signal}
+          onSuccess={props.complete}
+        >
+          {({ open }: { open: () => void }) => (
             <Button
               type="button"
               className="mt-6 py-0 w-full grid grid-flow-col gap-x-2 items-center justify-center"

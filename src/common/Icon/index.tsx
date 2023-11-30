@@ -12,6 +12,7 @@ const iconNames = [
   'github',
   'info',
   'logo',
+  'logo-full',
   'mobile-device',
   'mobile-device-huge',
   'orb',

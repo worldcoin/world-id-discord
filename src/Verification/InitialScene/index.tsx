@@ -18,7 +18,7 @@ export const InitialScene = memo(function Initial(props: {
   setLoading: Dispatch<SetStateAction<boolean>>
   guild: APIGuild
   roles: { orb: Array<Option>; device: Array<Option> } | null
-  credentials: Array<'device' | 'orb'>
+  credentials: Array<CredentialType.Device | CredentialType.Orb>
 }) {
   return (
     <Fragment>
@@ -37,7 +37,7 @@ export const InitialScene = memo(function Initial(props: {
         <div className="grid gap-y-6">
           <div className="font-bold text-12 uppercase tracking-[0.2em]">How to verify?</div>
 
-          {props.credentials.includes('device') && (
+          {props.credentials.includes(CredentialType.Device) && (
             <CredentialsItem
               icon="mobile-device-huge"
               heading="Phone number"
@@ -46,7 +46,7 @@ export const InitialScene = memo(function Initial(props: {
             />
           )}
 
-          {props.credentials.includes('orb') && (
+          {props.credentials.includes(CredentialType.Orb) && (
             <CredentialsItem
               icon="orb-huge"
               heading="The Orb"
@@ -58,13 +58,14 @@ export const InitialScene = memo(function Initial(props: {
 
         {props.app_id && props.action && props.signal && (
           <IDKitWidget
-            credential_types={props.credentials as CredentialType[]}
+            bridge_url="https://staging-bridge.worldcoin.org" // FIXME: use production bridge
+            credential_types={props.credentials}
             app_id={props.app_id}
             action={props.action}
             signal={props.signal}
             onSuccess={props.complete}
           >
-            {({ open }) => (
+            {({ open }: { open: () => void }) => (
               <Button type="button" onClick={open}>
                 Verify your identity
               </Button>

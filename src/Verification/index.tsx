@@ -1,4 +1,4 @@
-import { ISuccessResult } from '@worldcoin/idkit'
+import { CredentialType, ISuccessResult } from '@worldcoin/idkit'
 import { Option } from 'Admin/types/option'
 import { Header } from 'common/Header'
 import { InfoLine } from 'common/InfoLine'
@@ -15,12 +15,12 @@ import { Scene, VerificationError } from './types'
 
 export const Verification = memo(function Verification(props: {
   guild: APIGuild
-  rolesToAssign: { orb: Array<Option> }
+  rolesToAssign: { device: Array<Option>; orb: Array<Option> }
   guildId: string
   userId: string
   token: string
   appId: string
-  credentials: Array<'orb'>
+  credentials: Array<CredentialType>
 }) {
   const { guildId, userId, appId, token } = props
   const [scene, setScene] = useState<Scene>(Scene.Initial)

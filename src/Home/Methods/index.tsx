@@ -1,3 +1,4 @@
+import { CredentialType } from '@worldcoin/idkit'
 import { GradientText } from 'common/GradientText'
 import { memo } from 'react'
 import { Card } from './Card'
@@ -23,7 +24,7 @@ export const Methods = memo(function Methods() {
               'Fully privacy preserving',
               'A single phone number is used only once in each server',
             ]}
-            decorationLayout="phone"
+            decorationLayout={CredentialType.Device}
           />
 
           <Card
@@ -40,7 +41,7 @@ export const Methods = memo(function Methods() {
                 </a>
               </span>,
             ]}
-            decorationLayout="orb"
+            decorationLayout={CredentialType.Orb}
           />
         </div>
       </div>

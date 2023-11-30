@@ -1,3 +1,4 @@
+import { CredentialType } from '@worldcoin/idkit'
 import cn from 'classnames'
 import { Icon } from 'common/Icon'
 import Image from 'next/image'
@@ -6,14 +7,14 @@ import { memo, ReactNode } from 'react'
 export const Card = memo(function Card(props: {
   heading: string
   pros: Array<ReactNode>
-  decorationLayout: 'orb' | 'phone'
+  decorationLayout: CredentialType
 }) {
   return (
     <div className="grid gap-y-12 p-16 bg-111318 rounded-3xl border border-ffffff/20 relative overflow-clip">
       <Image
         className={cn('absolute', {
-          'top-[25%] left-[-330px] rotate-12 opacity-40': props.decorationLayout === 'orb',
-          'top-[15px] left-[-295px] opacity-40': props.decorationLayout === 'phone',
+          'top-[15px] left-[-295px] opacity-40': props.decorationLayout === CredentialType.Device,
+          'top-[25%] left-[-330px] rotate-12 opacity-40': props.decorationLayout === CredentialType.Orb,
         })}
         width={432}
         height={396}
@@ -23,8 +24,8 @@ export const Card = memo(function Card(props: {
 
       <Image
         className={cn('absolute', {
-          'top-4 right-[-285px] -rotate-[105deg] opacity-60': props.decorationLayout === 'orb',
-          'bottom-[-375px] right-[65px] opacity-60': props.decorationLayout === 'phone',
+          'bottom-[-375px] right-[65px] opacity-60': props.decorationLayout === CredentialType.Device,
+          'top-4 right-[-285px] -rotate-[105deg] opacity-60': props.decorationLayout === CredentialType.Orb,
         })}
         width={432}
         height={396}
