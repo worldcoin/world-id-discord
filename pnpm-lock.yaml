@@ -29,8 +29,8 @@ dependencies:
     specifier: 18.0.10
     version: 18.0.10
   '@worldcoin/idkit':
-    specifier: ^1.0.0-alpha.2
-    version: 1.0.0-alpha.2(@types/react-dom@18.0.10)(@types/react@18.0.26)(prop-types@15.8.1)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.2.4)(typescript@4.9.4)
+    specifier: ^1.0.0-alpha.4
+    version: 1.0.0-alpha.4(@types/react-dom@18.0.10)(@types/react@18.0.26)(prop-types@15.8.1)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.2.4)(typescript@4.9.4)
   classnames:
     specifier: ^2.3.2
     version: 2.3.2
@@ -2313,8 +2313,8 @@ packages:
       '@typescript-eslint/types': 5.60.0
       eslint-visitor-keys: 3.4.1
 
-  /@worldcoin/idkit-core@1.0.0-alpha.2(react@18.2.0)(typescript@4.9.4):
-    resolution: {integrity: sha512-znaMJY6bgzXD+gWcjXttpzBiWJ4akuQ3qojOw3drAASYdX/+sOinZnzB0vRJW2snTdxaeafLNcAkm6lKaXTMqw==}
+  /@worldcoin/idkit-core@1.0.0-alpha.4(react@18.2.0)(typescript@4.9.4):
+    resolution: {integrity: sha512-G5SI4+wMcxF0DPW4WAwmA8GaOgFsRKseBAXcsItz5H9nE0mjBjxYptWJyZzOsGGWB8SbOgTbRdYLDBqnp/99QA==}
     engines: {node: '>=12.4'}
     dependencies:
       buffer: 6.0.3
@@ -2329,8 +2329,8 @@ packages:
       - zod
     dev: false
 
-  /@worldcoin/idkit@1.0.0-alpha.2(@types/react-dom@18.0.10)(@types/react@18.0.26)(prop-types@15.8.1)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.2.4)(typescript@4.9.4):
-    resolution: {integrity: sha512-Sygd053jt4TBLJxNpDBHI1TvkDT7Pv/d0VtA9niPdsGj1DoqP1VjFIrF9QOzpieNUx/4xiNmXmN2d3KsNYQ1Ag==}
+  /@worldcoin/idkit@1.0.0-alpha.4(@types/react-dom@18.0.10)(@types/react@18.0.26)(prop-types@15.8.1)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.2.4)(typescript@4.9.4):
+    resolution: {integrity: sha512-u+1+euYR+SgekcZyXEXfS3onNMLgRRRxYzavIgmxoOpC7KdebKCujnXhe8RR5Q5+Q9WG2TErPnx7TNmTDWS4VQ==}
     engines: {node: '>=12.4'}
     peerDependencies:
       react: '>18.0.0'
@@ -2341,7 +2341,7 @@ packages:
       '@radix-ui/react-dialog': 1.0.4(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-toast': 1.1.4(@types/react-dom@18.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
       '@tailwindcss/forms': 0.5.3(tailwindcss@3.2.4)
-      '@worldcoin/idkit-core': 1.0.0-alpha.2(react@18.2.0)(typescript@4.9.4)
+      '@worldcoin/idkit-core': 1.0.0-alpha.4(react@18.2.0)(typescript@4.9.4)
       copy-to-clipboard: 3.3.3
       framer-motion: 7.10.3(react-dom@18.2.0)(react@18.2.0)
       posthog-js-lite: 2.4.0
