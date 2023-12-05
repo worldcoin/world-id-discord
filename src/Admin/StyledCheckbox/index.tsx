@@ -17,7 +17,7 @@ export const StyledCheckbox = memo(function StyledCheckbox(props: {
     <div className={cn('grid grid-cols-fr/auto items-center gap-x-2', props.className)}>
       <span
         className={cn('font-rubik text-14', {
-          'text-bcc5f9': !props.isOn,
+          'text-grey-400': !props.isOn,
           'text-938cfa': props.isOn,
         })}
       >

@@ -35,6 +35,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        grey: {
+          400: '#9ba3ae',
+          500: '#657080',
+          700: '#3c424b',
+          900: '#191c20',
+        },
         ...mirrorHexColors([
           '#000000',
           '#060816',

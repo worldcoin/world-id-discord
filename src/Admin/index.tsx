@@ -157,25 +157,25 @@ export const Admin = memo(function Admin(props: {
       <Header hideLinks onTop />
 
       <Modal loading={false}>
-        <div className="relative grid auto-cols-max items-center p-6 border-b border-white/20">
+        <div className="relative grid auto-cols-max items-center p-6 border-b border-gray-700">
           <div className="grid gap-y-3 justify-items-start w-full">
-            <span className="text-20 font-semibold">Discord Bouncer Admin</span>
+            <span className="text-20 font-semibold">Discord Admin</span>
             <GuildLabel image={guildImage} name={props.guild?.name ?? 'Your guild'} />
           </div>
 
           <StyledCheckbox isOn={isBotEnabled} setIsOn={setIsBotEnabled} className="absolute top-6 right-6" />
         </div>
 
-        <div className="grid grid-cols-[100%] gap-y-8.5 px-8 pt-12 pb-4">
+        <div className="grid grid-cols-[100%] gap-y-6 p-6 pb-4">
           <div className="grid gap-y-2">
-            <span>Credentials</span>
+            <span>Verification levels - Credentials</span>
 
-            <p className="font-rubik text-14 text-bcc5f9/60">
-              The server configuration allows you to manage the various components of your Discord Bouncer.
+            <p className="font-rubik text-14 text-grey-400">
+              Select the relevant verification level and accepted credentials for your server.
             </p>
           </div>
 
-          <div className="grid gap-y-6 mt-10">
+          <div className="grid gap-y-6">
             <div className="grid gap-y-8">
               <RolesSelector
                 icon="mobile-device"

@@ -5,10 +5,10 @@ import { memo } from 'react'
 export const GuildLabel = memo(function GuildLabel(props: { image: string; name: string; className?: string }) {
   return (
     <div
-      className={cn('grid items-center grid-cols-fr/auto py-2 px-3 bg-ffffff/10 rounded-lg gap-x-2', props.className)}
+      className={cn('inline-flex items-center pl-1.5 py-1.5 pr-3 bg-ffffff/10 rounded-full gap-x-1.5', props.className)}
     >
-      <Image src={props.image} alt="Discord guild logo" width={16} height={16} className="rounded-full" />
-      <span className="text-14 leading-none">{props.name}</span>
+      <Image src={props.image} alt="Discord guild logo" width={20} height={20} className="rounded-full" />
+      <span className="text-14 leading-5">{props.name}</span>
     </div>
   )
 })

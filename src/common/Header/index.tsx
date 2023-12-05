@@ -35,7 +35,7 @@ export const Header = memo(function Header(props: { hideLinks?: boolean; onTop?:
     >
       <div className="grid items-center justify-between grid-flow-col col-start-2">
         <Link href="/" className="relative grid items-center grid-flow-col gap-x-4 auto-cols-max text-ffffff">
-          <Icon className="w-[251px] h-[40px]" name="logo-full" />
+          <Icon className="w-[246px] h-[20px]" name="logo-full" />
         </Link>
 
         {!props.hideLinks && (
