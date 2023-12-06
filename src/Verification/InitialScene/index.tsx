@@ -1,11 +1,10 @@
 import { CredentialType, IDKitWidget, ISuccessResult } from '@worldcoin/idkit'
 import { Option } from 'Admin/types/option'
 import { Button } from 'common/Button'
-import { GradientText } from 'common/GradientText'
 import { GuildLabel } from 'common/GuildLabel'
 import { APIGuild } from 'discord-api-types/v10'
 import { generateGuildImage } from 'helpers'
-import { Dispatch, Fragment, memo, SetStateAction } from 'react'
+import { Dispatch, memo, SetStateAction } from 'react'
 import { CredentialsItem } from 'Verification/InitialScene/CredentialsItem'
 import { Scene } from 'Verification/types'
 
@@ -21,21 +20,16 @@ export const InitialScene = memo(function Initial(props: {
   credentials: Array<CredentialType.Device | CredentialType.Orb>
 }) {
   return (
-    <Fragment>
-      <div className="flex justify-center items-center w-full">
+    <>
+      <div className="grow">
         <GuildLabel image={generateGuildImage(props.guild.id, props.guild.icon)} name={props.guild.name} />
-      </div>
 
-      <div className="grid gap-y-12">
-        <div className="grid gap-y-2">
-          <p className="font-bold text-12 text-center uppercase tracking-[0.2em]">Welcome!</p>
-          <GradientText as="h1" className="justify-self-center font-bold text-24 text-center max-w-[360px]">
-            Please verify you are a unique person with World ID
-          </GradientText>
-        </div>
+        <h1 className="max-w-[420px] mt-14 leading-8 text-24">
+          Please verify you are a unique human with World ID
+        </h1>
 
-        <div className="grid gap-y-6">
-          <div className="font-bold text-12 uppercase tracking-[0.2em]">How to verify?</div>
+        <div className="grid gap-y-4 mt-8 mb-20">
+          <div className="leading-5">How to verify?</div>
 
           {props.credentials.includes(CredentialType.Device) && (
             <CredentialsItem
@@ -55,24 +49,24 @@ export const InitialScene = memo(function Initial(props: {
             />
           )}
         </div>
-
-        {props.app_id && props.action && props.signal && (
-          <IDKitWidget
-            bridge_url="https://staging-bridge.worldcoin.org" // FIXME: use production bridge
-            credential_types={props.credentials}
-            app_id={props.app_id}
-            action={props.action}
-            signal={props.signal}
-            onSuccess={props.complete}
-          >
-            {({ open }: { open: () => void }) => (
-              <Button type="button" onClick={open}>
-                Verify your identity
-              </Button>
-            )}
-          </IDKitWidget>
-        )}
       </div>
-    </Fragment>
+
+      {props.app_id && props.action && props.signal && (
+        <IDKitWidget
+          bridge_url="https://staging-bridge.worldcoin.org" // FIXME: use production bridge
+          credential_types={props.credentials}
+          app_id={props.app_id}
+          action={props.action}
+          signal={props.signal}
+          onSuccess={props.complete}
+        >
+          {({ open }: { open: () => void }) => (
+            <Button type="button" variant="contained" color="primary" onClick={open}>
+              Verify your identity
+            </Button>
+          )}
+        </IDKitWidget>
+      )}
+    </>
   )
 })

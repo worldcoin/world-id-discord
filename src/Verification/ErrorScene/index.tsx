@@ -1,8 +1,6 @@
 import { CredentialType, IDKitWidget, ISuccessResult } from '@worldcoin/idkit'
 import { Button } from 'common/Button'
-import { GradientText } from 'common/GradientText'
 import { GuildLabel } from 'common/GuildLabel'
-import { Icon } from 'common/Icon'
 import { APIGuild } from 'discord-api-types/v10'
 import { generateGuildImage } from 'helpers'
 import Image from 'next/image'
@@ -31,25 +29,26 @@ export const ErrorScene = memo(function ErrorScene(props: {
   error: VerificationError
 }) {
   return (
-    <div className="grid gap-y-6 justify-items-center">
-      <div className="relative w-24 h-24">
-        <Image src="/images/verification/alert.svg" fill alt={''} />
-      </div>
+    <>
+      <div className="grow">
+        <GuildLabel image={generateGuildImage(props.guild.id, props.guild.icon)} name={props.guild.name} />
 
-      <GuildLabel image={generateGuildImage(props.guild.id, props.guild.icon)} name={props.guild.name} />
-
-      {props.error !== null && (
-        <div className="grid gap-y-2">
-          <p className="font-bold text-12 text-center uppercase tracking-[0.2em]">Uh, oh!</p>
-          <GradientText
-            as="h1"
-            className="justify-self-center font-bold text-24 text-center max-w-[360px] from-e06258 to-ff8a81"
-          >
-            {texts[props.error].heading}
-          </GradientText>
-          <p className="text-bcc5f9 text-14 text-center">{texts[props.error].description}</p>
+        <div className="relative w-12 h-12 mt-14">
+          <Image src="/images/verification/alert.svg" fill alt={''} />
         </div>
-      )}
+
+        <h1 className="mt-6 leading-8 font-semibold text-24">
+          {(props.error !== null && texts[props.error].heading) || (
+            <>Something went wrong</>
+          )}
+        </h1>
+
+        <p className="mt-3 leading-6 font-rubik text-grey-400">
+          {(props.error !== null && texts[props.error].description) || (
+            <>We couldn’t complete the verification process. Please try it again.</>
+          )}
+        </p>
+      </div>
 
       {props.error !== VerificationError.AlreadyVerified && props.app_id && props.action && props.signal && (
         <IDKitWidget
@@ -61,18 +60,12 @@ export const ErrorScene = memo(function ErrorScene(props: {
           onSuccess={props.complete}
         >
           {({ open }: { open: () => void }) => (
-            <Button
-              type="button"
-              className="mt-6 py-0 w-full grid grid-flow-col gap-x-2 items-center justify-center"
-              variant="flat"
-              onClick={open}
-            >
-              <Icon name="reload" className="w-6 h-6" />
-              Try Again!
+            <Button type="button" variant="contained" color="primary" onClick={open}>
+              Try again
             </Button>
           )}
         </IDKitWidget>
       )}
-    </div>
+    </>
   )
 })

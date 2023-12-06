@@ -1,7 +1,6 @@
 import { CredentialType, ISuccessResult } from '@worldcoin/idkit'
 import { Option } from 'Admin/types/option'
 import { Header } from 'common/Header'
-import { InfoLine } from 'common/InfoLine'
 import { Layout } from 'common/Layout'
 import { Modal } from 'common/Modal'
 import { VerificationCompletePayload, VerificationCompleteResponsePayload } from 'common/types/verification-complete'
@@ -75,7 +74,7 @@ export const Verification = memo(function Verification(props: {
       <Image src="/images/background.svg" fill alt="background" className="object-cover" />
       <Header hideLinks onTop />
 
-      <Modal loading={loading} className="p-12 grid gap-y-6 max-w-[500px]">
+      <Modal loading={loading} className="p-7 flex flex-col max-w-[500px] min-h-[555px]">
         {scene === Scene.Initial && (
           <InitialScene
             action={guildId}
@@ -103,11 +102,6 @@ export const Verification = memo(function Verification(props: {
           />
         )}
       </Modal>
-
-      <InfoLine
-        className="fixed bottom-0 inset-x-0 z-50"
-        text="The Discord Bouncer helps prevent spam and increase the quality of the community by making sure everyone who joins is a human. "
-      />
     </Layout>
   )
 })
