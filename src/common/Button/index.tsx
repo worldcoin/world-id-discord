@@ -1,40 +1,41 @@
-import cn from 'classnames'
-import { AnchorHTMLAttributes, ButtonHTMLAttributes, DetailedHTMLProps, memo, ReactNode } from 'react'
+import { tv, type VariantProps } from 'tailwind-variants'
+import { memo } from 'react'
 
-type ButtonBaseProps = {
-  children?: ReactNode
-  className?: string
-  variant?: 'primary' | 'flat'
-}
-
-type LinkProps = ButtonBaseProps & DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>
-type ButtonProps = ButtonBaseProps & DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
-
-const getClassNames = (props: ButtonBaseProps) => {
-  const variant = props.variant || 'primary'
-
-  return cn(
-    'text-center leading-[1.2] rounded-2xl p-6 min-w-[250px] font-semibold drop-shadow-button',
-    'cursor-pointer hover:opacity-75 transition-opacity',
-    { 'bg-gradient-81.5 from-4940e0 to-a39dff': variant === 'primary' },
-    props.className,
-  )
-}
-
-export const Link = memo(function Link(props: LinkProps) {
-  return (
-    <a {...props} className={getClassNames(props)}>
-      {props.children}
-    </a>
-  )
+const button = tv({
+  base: 'w-full py-2.5 leading-5 font-sora rounded-lg disabled:opacity-20 disabled:cursor-not-allowed',
+  variants: {
+    variant: {
+      contained: '',
+      outlined: '',
+    },
+    color: {
+      primary: '',
+      neutral: '',
+    }
+  },
+  compoundVariants: [
+    {
+      variant: 'contained',
+      color: 'primary',
+      class: 'text-white bg-primary bg-gradient-to-b from-white/20 to-white/0',
+    },
+    {
+      variant: 'outlined',
+      color: 'neutral',
+      class: 'text-white border border-grey-700',
+    }
+  ]
 })
 
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & VariantProps<typeof button>
+
 export const Button = memo(function Button(props: ButtonProps) {
-  const { variant, className, ...restProps } = props
+  const { className, variant, color, ...otherProps } = props
 
   return (
-    <button {...restProps} className={getClassNames({ variant, className })}>
-      {props.children}
-    </button>
+    <button
+      className={button({ className, variant, color })}
+      {...otherProps}
+    />
   )
 })

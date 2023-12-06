@@ -23,6 +23,9 @@ export const Admin = memo(function Admin(props: {
   guild: APIGuild
   initialConfig: BotConfig<'initial'>
 }) {
+
+  const [initialConfig, setInitialConfig] = useState<BotConfig<'initial'>>(props.initialConfig)
+
   const [roles, setRoles] = useState<Array<Option>>(() => {
     return props.roles.map((role) => ({
       label: role.name,
@@ -30,15 +33,15 @@ export const Admin = memo(function Admin(props: {
     }))
   })
 
-  const [selectedDeviceRoles, setSelectedDeviceRoles] = useState<Array<Option>>(props.initialConfig?.device.roles || [])
-  const [selectedOrbRoles, setSelectedOrbRoles] = useState<Array<Option>>(props.initialConfig?.orb.roles || [])
+  const [selectedDeviceRoles, setSelectedDeviceRoles] = useState<Array<Option>>(initialConfig.device.roles || [])
+  const [selectedOrbRoles, setSelectedOrbRoles] = useState<Array<Option>>(initialConfig.orb.roles || [])
   const [savingInProgress, setSavingInProgress] = useState(false)
   const [savedSuccessfully, setSavedSuccessfully] = useState<boolean | null>(null)
-  const [isBotEnabled, setIsBotEnabled] = useState(props.initialConfig?.enabled || false)
+  const [isBotEnabled, setIsBotEnabled] = useState(initialConfig.enabled || false)
   const [isDeviceVerificationEnabled, setIsDeviceVerificationEnabled] = useState(
-    props.initialConfig?.device.enabled || false,
+    initialConfig.device.enabled || false,
   )
-  const [isOrbVerificationEnabled, setIsOrbVerificationEnabled] = useState(props.initialConfig?.orb.enabled || false)
+  const [isOrbVerificationEnabled, setIsOrbVerificationEnabled] = useState(initialConfig.orb.enabled || false)
   const [errorMessage, setErrorMessage] = useState<SaveConfigError>(SaveConfigError.Unknown)
 
   // NOTE: Removes saving status message from page after 3 seconds
@@ -83,17 +86,17 @@ export const Admin = memo(function Admin(props: {
 
   const formIsClean = useMemo(() => {
     return (
-      isBotEnabled === props.initialConfig?.enabled &&
-      isDeviceVerificationEnabled === props.initialConfig?.device.enabled &&
-      selectedDeviceRoles.length === props.initialConfig?.device.roles.length &&
-      isOrbVerificationEnabled === props.initialConfig?.orb.enabled &&
-      selectedOrbRoles.length === props.initialConfig?.orb.roles.length
+      isBotEnabled === initialConfig.enabled &&
+      isDeviceVerificationEnabled === initialConfig.device.enabled &&
+      selectedDeviceRoles.length === initialConfig.device.roles.length &&
+      isOrbVerificationEnabled === initialConfig.orb.enabled &&
+      selectedOrbRoles.length === initialConfig.orb.roles.length
     )
   }, [
     isBotEnabled,
     isDeviceVerificationEnabled,
     isOrbVerificationEnabled,
-    props.initialConfig,
+    initialConfig,
     selectedDeviceRoles.length,
     selectedOrbRoles.length,
   ])
@@ -117,6 +120,18 @@ export const Admin = memo(function Admin(props: {
       .then((response) => {
         if (response.ok) {
           setSavedSuccessfully(true)
+          //console.log('SET INITIAL CONFIG', botConfig, initialConfig)
+          setInitialConfig({
+            ...botConfig,
+            device: {
+              ...botConfig.device,
+              roles: selectedDeviceRoles,
+            },
+            orb: {
+              ...botConfig.orb,
+              roles: selectedOrbRoles,
+            }
+          })
         } else {
           setErrorMessage(SaveConfigError.Unknown)
           setSavedSuccessfully(false)
@@ -132,12 +147,12 @@ export const Admin = memo(function Admin(props: {
   }, [botConfig, selectedOrbRoles.length])
 
   const resetChanges = useCallback(() => {
-    setSelectedDeviceRoles(props.initialConfig?.device.roles || [])
-    setSelectedOrbRoles(props.initialConfig?.orb.roles || [])
-    setIsBotEnabled(props.initialConfig?.enabled || false)
-    setIsDeviceVerificationEnabled(props.initialConfig?.device.enabled || false)
-    setIsOrbVerificationEnabled(props.initialConfig?.orb.enabled || false)
-  }, [props.initialConfig])
+    setSelectedDeviceRoles(initialConfig.device.roles || [])
+    setSelectedOrbRoles(initialConfig.orb.roles || [])
+    setIsBotEnabled(initialConfig.enabled || false)
+    setIsDeviceVerificationEnabled(initialConfig.device.enabled || false)
+    setIsOrbVerificationEnabled(initialConfig.orb.enabled || false)
+  }, [initialConfig])
 
   const guildImage = useMemo(() => {
     return generateGuildImage(props.guild.id, props.guild.icon)
@@ -166,7 +181,7 @@ export const Admin = memo(function Admin(props: {
           <StyledCheckbox isOn={isBotEnabled} setIsOn={setIsBotEnabled} className="absolute top-6 right-6" />
         </div>
 
-        <div className="grid grid-cols-[100%] gap-y-6 p-6 pb-4">
+        <div className="grid grid-cols-[100%] gap-y-6 p-6">
           <div className="grid gap-y-2">
             <span>Verification levels - Credentials</span>
 
@@ -209,46 +224,50 @@ export const Admin = memo(function Admin(props: {
               />
             </div>
           </div>
+        </div>
 
-          <div className="grid justify-items-center gap-y-4 mt-12">
-            <div className="grid grid-cols-2 gap-x-4 w-full">
-              <Button
-                className="w-full font-sora !bg-none !bg-white/10 disabled:opacity-20 disabled:cursor-not-allowed"
-                disabled={formIsClean || savingInProgress}
-                onClick={resetChanges}
-              >
-                Cancel
-              </Button>
-
-              <Button
-                className="w-full font-sora disabled:opacity-20 disabled:cursor-not-allowed"
-                disabled={formIsClean || savingInProgress}
-                onClick={saveChanges}
-              >
-                {savingInProgress ? 'Saving...' : 'Save changes'}
-              </Button>
-            </div>
-
-            <span
-              className={cn(
-                'transition-visibility/opacity col-start-1 row-start-2',
-                { 'visible opacity-100': savedSuccessfully === true },
-                { 'invisible opacity-0': savedSuccessfully !== true },
-              )}
+        <div className="grid justify-items-center p-6 pb-0 border-t border-grey-700">
+          <div className="grid grid-cols-2 gap-x-4 w-full">
+            <Button
+              className=""
+              variant="outlined"
+              color="neutral"
+              disabled={formIsClean || savingInProgress}
+              onClick={resetChanges}
             >
-              Your changes have been successfully saved!
-            </span>
+              Cancel
+            </Button>
 
-            <span
-              className={cn(
-                'transition-visibility/opacity col-start-1 row-start-2 text-red-500',
-                { 'visible opacity-100': savedSuccessfully === false },
-                { 'invisible opacity-0': savedSuccessfully !== false },
-              )}
+            <Button
+              className=""
+              variant="contained"
+              color="primary"
+              disabled={formIsClean || savingInProgress}
+              onClick={saveChanges}
             >
-              {errorMessage}
-            </span>
+              {savingInProgress ? 'Saving...' : 'Save changes'}
+            </Button>
           </div>
+
+          <span
+            className={cn(
+              'transition-visibility/opacity col-start-1 row-start-2 text-sm leading-6',
+              { 'visible opacity-100': savedSuccessfully === true },
+              { 'invisible opacity-0': savedSuccessfully !== true },
+            )}
+          >
+            Your changes have been successfully saved!
+          </span>
+
+          <span
+            className={cn(
+              'transition-visibility/opacity col-start-1 row-start-2 text-red-500 text-sm leading-6',
+              { 'visible opacity-100': savedSuccessfully === false },
+              { 'invisible opacity-0': savedSuccessfully !== false },
+            )}
+          >
+            {errorMessage}
+          </span>
         </div>
       </Modal>
     </Layout>
