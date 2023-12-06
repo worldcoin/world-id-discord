@@ -25,7 +25,7 @@ export const SuccessScene = memo(function SuccessScene(props: { guild: APIGuild;
       <div className="flex flex-wrap gap-x-1 justify-center mt-4">
         {props.assignedRoles.map((role) => (
           <div
-            className="grid grid-cols-auto/fr items-center gap-x-2 py-1.5 px-2.5 bg-ffffff/10 rounded-lg"
+            className="grid grid-cols-auto/fr items-center gap-x-2 py-1.5 px-2.5 bg-white/10 rounded-lg"
             key={role.id}
           >
             <Icon path="/icons/gradient-human.png" className="h-4 w-4 z-50" noMask />

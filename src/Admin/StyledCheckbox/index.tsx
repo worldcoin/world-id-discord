@@ -27,7 +27,7 @@ export const StyledCheckbox = memo(function StyledCheckbox(props: {
       <span
         className={cn(
           'relative rounded-full p-0.5 w-10 h-6 cursor-pointer select-none',
-          'before:absolute before:h-[20px] before:aspect-square before:top-2px before:bg-ffffff',
+          'before:absolute before:h-[20px] before:aspect-square before:top-2px before:bg-white',
           'before:rounded-full before:transition-all before:ease-in-out',
           {
             'bg-gradient-81.5 from-4940e0 to-a39dff before:left-[calc(100%-2px)] before:-translate-x-full': props.isOn,

@@ -12,7 +12,7 @@ export const Modal = memo(function Modal(props: { loading?: boolean; children: R
       )}
     >
       {props.loading && (
-        <div className="z-50 flex items-center justify-center absolute inset-0 bg-000000/80">
+        <div className="z-50 flex items-center justify-center absolute inset-0 bg-black/80">
           <Icon className="w-16 h-16 animate animate-ping" name="logo" />
         </div>
       )}
