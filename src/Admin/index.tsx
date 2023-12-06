@@ -141,7 +141,7 @@ export const Admin = memo(function Admin(props: {
         setSavedSuccessfully(false)
         setSavingInProgress(false)
       })
-  }, [botConfig, selectedOrbRoles.length])
+  }, [botConfig, selectedDeviceRoles, selectedOrbRoles])
 
   const resetChanges = useCallback(() => {
     setSelectedDeviceRoles(initialConfig.device.roles || [])
