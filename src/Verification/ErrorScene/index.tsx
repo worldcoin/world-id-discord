@@ -38,9 +38,7 @@ export const ErrorScene = memo(function ErrorScene(props: {
         </div>
 
         <h1 className="mt-6 leading-8 font-semibold text-24">
-          {(props.error !== null && texts[props.error].heading) || (
-            <>Something went wrong</>
-          )}
+          {(props.error !== null && texts[props.error].heading) || <>Something went wrong</>}
         </h1>
 
         <p className="mt-3 leading-6 font-rubik text-grey-400">

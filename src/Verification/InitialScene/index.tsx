@@ -24,9 +24,7 @@ export const InitialScene = memo(function Initial(props: {
       <div className="grow">
         <GuildLabel image={generateGuildImage(props.guild.id, props.guild.icon)} name={props.guild.name} />
 
-        <h1 className="max-w-[420px] mt-14 leading-8 text-24">
-          Please verify you are a unique human with World ID
-        </h1>
+        <h1 className="max-w-[420px] mt-14 leading-8 text-24">Please verify you are a unique human with World ID</h1>
 
         <div className="grid gap-y-4 mt-8 mb-20">
           <div className="leading-5">How to verify?</div>

@@ -23,7 +23,6 @@ export const Admin = memo(function Admin(props: {
   guild: APIGuild
   initialConfig: BotConfig<'initial'>
 }) {
-
   const [initialConfig, setInitialConfig] = useState<BotConfig<'initial'>>(props.initialConfig)
 
   const [roles, setRoles] = useState<Array<Option>>(() => {
@@ -38,9 +37,7 @@ export const Admin = memo(function Admin(props: {
   const [savingInProgress, setSavingInProgress] = useState(false)
   const [savedSuccessfully, setSavedSuccessfully] = useState<boolean | null>(null)
   const [isBotEnabled, setIsBotEnabled] = useState(initialConfig.enabled || false)
-  const [isDeviceVerificationEnabled, setIsDeviceVerificationEnabled] = useState(
-    initialConfig.device.enabled || false,
-  )
+  const [isDeviceVerificationEnabled, setIsDeviceVerificationEnabled] = useState(initialConfig.device.enabled || false)
   const [isOrbVerificationEnabled, setIsOrbVerificationEnabled] = useState(initialConfig.orb.enabled || false)
   const [errorMessage, setErrorMessage] = useState<SaveConfigError>(SaveConfigError.Unknown)
 
@@ -130,7 +127,7 @@ export const Admin = memo(function Admin(props: {
             orb: {
               ...botConfig.orb,
               roles: selectedOrbRoles,
-            }
+            },
           })
         } else {
           setErrorMessage(SaveConfigError.Unknown)

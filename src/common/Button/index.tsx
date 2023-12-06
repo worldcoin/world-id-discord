@@ -11,7 +11,7 @@ const button = tv({
     color: {
       primary: '',
       neutral: '',
-    }
+    },
   },
   compoundVariants: [
     {
@@ -23,8 +23,8 @@ const button = tv({
       variant: 'outlined',
       color: 'neutral',
       class: 'text-white border border-grey-700',
-    }
-  ]
+    },
+  ],
 })
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & VariantProps<typeof button>
@@ -32,10 +32,5 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & VariantProps<
 export const Button = memo(function Button(props: ButtonProps) {
   const { className, variant, color, ...otherProps } = props
 
-  return (
-    <button
-      className={button({ className, variant, color })}
-      {...otherProps}
-    />
-  )
+  return <button className={button({ className, variant, color })} {...otherProps} />
 })

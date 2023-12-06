@@ -14,17 +14,13 @@ export const SuccessScene = memo(function SuccessScene(props: { guild: APIGuild;
         <Image src="/images/verification/verified.svg" fill alt={''} />
       </div>
 
-      <h1 className="mt-6 leading-8 font-semibold text-24">
-        Thank you for verifying!
-      </h1>
+      <h1 className="mt-6 leading-8 font-semibold text-24">Thank you for verifying!</h1>
 
       <p className="mt-3 leading-6 font-rubik text-grey-400">
         You can now close this window and return to Discord. Happy messaging!
       </p>
 
-      <h2 className="mt-8 leading-5 font-semibold">
-        Enjoy your new roles!
-      </h2>
+      <h2 className="mt-8 leading-5 font-semibold">Enjoy your new roles!</h2>
 
       <div className="flex flex-wrap gap-x-1 justify-center mt-4">
         {props.assignedRoles.map((role) => (
