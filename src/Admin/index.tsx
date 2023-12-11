@@ -1,13 +1,11 @@
 import cn from 'classnames'
 import { Button } from 'common/Button'
 import { GuildLabel } from 'common/GuildLabel'
-import { Header } from 'common/Header'
 import { Layout } from 'common/Layout'
 import { Modal } from 'common/Modal'
 import { BotConfig } from 'common/types'
 import { APIGuild, APIRole } from 'discord-api-types/v10'
 import { generateGuildImage } from 'helpers'
-import Image from 'next/image'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { RolesSelector } from './RolesSelector'
 import { StyledCheckbox } from './StyledCheckbox'
@@ -164,10 +162,7 @@ export const Admin = memo(function Admin(props: {
   }, [selectedOrbRoles])
 
   return (
-    <Layout title="Configuration" className="bg-0d1020 flex justify-center items-center relative min-h-screen">
-      <Image src="/images/admin/background.svg" alt="Background" fill className="object-cover" />
-      <Header hideLinks onTop />
-
+    <Layout title="Configuration" className="bg-black flex justify-center items-center relative min-h-screen">
       <Modal loading={false}>
         <div className="relative grid auto-cols-max items-center p-6 border-b border-gray-700">
           <div className="grid gap-y-3 justify-items-start w-full">

@@ -3,7 +3,7 @@ import { Option } from 'Admin/types/option'
 import cn from 'classnames'
 import { Icon, IconType } from 'common/Icon'
 import { APIRole } from 'discord-api-types/v10'
-import { Dispatch, memo, SetStateAction, useCallback, useState } from 'react'
+import { Dispatch, SetStateAction, memo, useCallback, useState } from 'react'
 import { Selector } from './Selector'
 
 export const RolesSelector = memo(function RolesSelector(props: {
@@ -50,7 +50,9 @@ export const RolesSelector = memo(function RolesSelector(props: {
             <span className="text-16 font-semibold">{props.name}</span>
 
             {props.highestSecurity && (
-              <span className="ml-2 px-3 leading-6 text-12 text-928bf9 bg-6c64ee/20 rounded-lg">Highest security</span>
+              <span className="ml-2 px-3 leading-6 text-12 text-928bf9 bg-6c64ee/20 rounded-full">
+                Highest security
+              </span>
             )}
           </div>
 

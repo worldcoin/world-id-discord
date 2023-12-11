@@ -9,7 +9,7 @@ export const Layout = memo(function Layout(props: { className?: string; children
         <title>{props.title ? `${props.title} | Discord Bouncer` : 'Discord Bouncer'}</title>
       </Head>
 
-      <div className={cn('bg-0d0e11 text-white min-h-screen', props.className)}>{props.children}</div>
+      <div className={cn('bg-black text-white min-h-screen', props.className)}>{props.children}</div>
     </Fragment>
   )
 })

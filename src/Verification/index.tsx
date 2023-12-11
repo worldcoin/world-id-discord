@@ -1,11 +1,9 @@
 import { CredentialType, ISuccessResult } from '@worldcoin/idkit'
 import { Option } from 'Admin/types/option'
-import { Header } from 'common/Header'
 import { Layout } from 'common/Layout'
 import { Modal } from 'common/Modal'
 import { VerificationCompletePayload, VerificationCompleteResponsePayload } from 'common/types/verification-complete'
 import { APIGuild, APIRole } from 'discord-api-types/v10'
-import Image from 'next/image'
 import { memo, useCallback, useState } from 'react'
 import { ErrorScene } from './ErrorScene'
 import { InitialScene } from './InitialScene'
@@ -71,9 +69,6 @@ export const Verification = memo(function Verification(props: {
 
   return (
     <Layout title="Verification" className="flex justify-center items-center relative py-28">
-      <Image src="/images/background.svg" fill alt="background" className="object-cover" />
-      <Header hideLinks onTop />
-
       <Modal loading={loading} className="p-7 flex flex-col max-w-[500px] min-h-[555px]">
         {scene === Scene.Initial && (
           <InitialScene
@@ -88,6 +83,7 @@ export const Verification = memo(function Verification(props: {
             credentials={props.credentials}
           />
         )}
+
         {scene === Scene.Success && <SuccessScene guild={props.guild} assignedRoles={assignedRoles} />}
 
         {scene === Scene.Error && (
