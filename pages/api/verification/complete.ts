@@ -38,7 +38,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
 
   let roleIds: string[]
 
-  if (result.credential_type !== 'orb') {
+  if (!botConfig[result.credential_type].enabled) {
     return await sendErrorResponse(
       res,
       token,
