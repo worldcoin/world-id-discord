@@ -191,8 +191,8 @@ export const Admin = memo(function Admin(props: {
             <div className="grid gap-y-8">
               <RolesSelector
                 icon="mobile-device"
-                name="Phone Number"
-                description="A single-use code will be delivered via SMS or phone call. Basic level of attack prevention. Ensures a single number can only be used by one account in your server."
+                name="Device"
+                description="A single-use code will be delivered via SMS or phone call. Basic level of attack prevention. Ensures a single number can only be used by one account in your server"
                 roles={roles}
                 setRoles={setRoles}
                 selectedRoles={selectedDeviceRoles}
@@ -216,7 +216,7 @@ export const Admin = memo(function Admin(props: {
                 setSelectedRoles={setSelectedOrbRoles}
                 isEnabled={isOrbVerificationEnabled}
                 setIsEnabled={setIsOrbVerificationEnabled}
-                copyLabel="Copy from Phone Number"
+                copyLabel="Copy from Device"
                 copy={copyRolesFromDevice}
               />
             </div>

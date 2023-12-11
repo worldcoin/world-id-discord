@@ -32,8 +32,8 @@ export const InitialScene = memo(function Initial(props: {
           {props.credentials.includes(CredentialType.Device) && (
             <CredentialsItem
               icon="mobile-device-huge"
-              heading="Phone number"
-              description="A single-use code will be delivered to you via SMS"
+              heading="Device"
+              description="A single-use code will be delivered to you via SMS."
               roles={props.roles?.device || []}
             />
           )}
