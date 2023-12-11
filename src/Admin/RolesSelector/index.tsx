@@ -29,7 +29,6 @@ export const RolesSelector = memo(function RolesSelector(props: {
     fetch('/api/admin/roles', {})
       .then((res) => res.json())
       .then((data) => {
-        console.log(data)
         const roles = data.roles as APIRole[]
         const options = roles.map((role) => ({
           label: role.name,

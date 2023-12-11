@@ -115,7 +115,7 @@ export const Admin = memo(function Admin(props: {
       .then((response) => {
         if (response.ok) {
           setSavedSuccessfully(true)
-          //console.log('SET INITIAL CONFIG', botConfig, initialConfig)
+
           setInitialConfig({
             ...botConfig,
             device: {
