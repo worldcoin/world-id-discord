@@ -1,6 +1,6 @@
 <img src="./public/images/logo.png" alt="World ID Discord Bot logo" width="100" />
 
-# Discord Bouncer
+# Discord x Worldcoin
 
 This project is a demonstration of serverless Discord Bot that uses [IDKit](https://github.com/worldcoin/idkit-js/) to verify humans. Verified humans get a special role assigned which can then be used to manage special permissions.
 
