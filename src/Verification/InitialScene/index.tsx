@@ -33,7 +33,7 @@ export const InitialScene = memo(function Initial(props: {
             <CredentialsItem
               icon="mobile-device-huge"
               heading="Device"
-              description="A single-use code will be delivered to you via SMS."
+              description="Unique mobile device verification."
               roles={props.roles?.device || []}
             />
           )}
@@ -42,7 +42,7 @@ export const InitialScene = memo(function Initial(props: {
             <CredentialsItem
               icon="orb-huge"
               heading="The Orb"
-              description="Completely private iris imaging with a device called an orb"
+              description="Completely privacy-preserving biometric verification with the Orb."
               roles={props.roles?.orb || []}
             />
           )}

@@ -187,7 +187,7 @@ export const Admin = memo(function Admin(props: {
               <RolesSelector
                 icon="mobile-device"
                 name="Device"
-                description="A single-use code will be delivered via SMS or phone call. Basic level of attack prevention. Ensures a single number can only be used by one account in your server"
+                description="Verifies that a user has a unique mobile device. Medium-strength bot resistance with a simple experience for users."
                 roles={roles}
                 setRoles={setRoles}
                 selectedRoles={selectedDeviceRoles}
