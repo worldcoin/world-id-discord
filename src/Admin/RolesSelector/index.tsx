@@ -19,12 +19,12 @@ export const RolesSelector = memo(function RolesSelector(props: {
   selectedRoles: Array<Option>
   setSelectedRoles: Dispatch<SetStateAction<Array<Option>>>
   isEnabled: boolean
-  setIsEnabled: Dispatch<SetStateAction<boolean>>
+  setIsEnabled?: Dispatch<SetStateAction<boolean>>
 }) {
   const [isFetching, setIsFetching] = useState(false)
 
   const refetchRoles = useCallback(() => {
-    props.setIsEnabled(true) // NOTE: We keep it enabled by default
+    props.setIsEnabled?.(true) // NOTE: We keep it enabled by default
     setIsFetching(true)
     fetch('/api/admin/roles', {})
       .then((res) => res.json())
@@ -55,7 +55,13 @@ export const RolesSelector = memo(function RolesSelector(props: {
             )}
           </div>
 
-          <StyledCheckbox isOn={props.isEnabled} setIsOn={props.setIsEnabled} />
+          <StyledCheckbox
+            isOn={props.isEnabled}
+            setIsOn={props.setIsEnabled ?? (() => {})}
+            className={cn({
+              'grayscale pointer-events-none': !props.setIsEnabled,
+            })}
+          />
         </div>
 
         <span className="max-w-[580px] font-rubik text-14 text-grey-400">{props.description}</span>
@@ -72,7 +78,7 @@ export const RolesSelector = memo(function RolesSelector(props: {
           selected={props.selectedRoles}
           setSelected={props.setSelectedRoles}
           isEnabled={props.isEnabled}
-          setIsEnabled={props.setIsEnabled}
+          setIsEnabled={props.setIsEnabled ?? (() => {})}
           placeholder="Choose a role"
           info="You can create more roles in your Discord server settings"
           disabled={isFetching}

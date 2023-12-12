@@ -1,8 +1,9 @@
-import { CredentialType, IDKitWidget, ISuccessResult } from '@worldcoin/idkit'
+import { IDKitWidget, ISuccessResult } from '@worldcoin/idkit'
+import { CredentialType } from '@worldcoin/idkit-core'
 import { Button } from 'common/Button'
 import { GuildLabel } from 'common/GuildLabel'
 import { APIGuild } from 'discord-api-types/v10'
-import { generateGuildImage } from 'helpers'
+import { credential_types_to_verification_level, generateGuildImage } from 'helpers'
 import Image from 'next/image'
 import { memo } from 'react'
 import { VerificationError } from 'Verification/types'
@@ -20,7 +21,7 @@ const texts = {
 }
 
 export const ErrorScene = memo(function ErrorScene(props: {
-  app_id: string
+  app_id: `app_${string}`
   action: string
   signal: string | null
   guild: APIGuild
@@ -51,7 +52,7 @@ export const ErrorScene = memo(function ErrorScene(props: {
       {props.error !== VerificationError.AlreadyVerified && props.app_id && props.action && props.signal && (
         <IDKitWidget
           bridge_url="https://staging-bridge.worldcoin.org" // FIXME: use production bridge
-          credential_types={props.credentials}
+          verification_level={credential_types_to_verification_level(props.credentials)}
           app_id={props.app_id}
           action={props.action}
           signal={props.signal}

@@ -11,7 +11,7 @@ import {
 } from '@aws-sdk/client-dynamodb'
 
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
-import { CredentialType } from '@worldcoin/idkit'
+import { CredentialType } from '@worldcoin/idkit-core'
 import { BotConfig } from 'common/types'
 
 export type TableConfig = {

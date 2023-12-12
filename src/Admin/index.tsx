@@ -36,7 +36,7 @@ export const Admin = memo(function Admin(props: {
   const [savedSuccessfully, setSavedSuccessfully] = useState<boolean | null>(null)
   const [isBotEnabled, setIsBotEnabled] = useState(initialConfig.enabled || false)
   const [isDeviceVerificationEnabled, setIsDeviceVerificationEnabled] = useState(initialConfig.device.enabled || false)
-  const [isOrbVerificationEnabled, setIsOrbVerificationEnabled] = useState(initialConfig.orb.enabled || false)
+  const [isOrbVerificationEnabled] = useState(true)
   const [errorMessage, setErrorMessage] = useState<SaveConfigError>(SaveConfigError.Unknown)
 
   // NOTE: Removes saving status message from page after 3 seconds
@@ -146,7 +146,6 @@ export const Admin = memo(function Admin(props: {
     setSelectedOrbRoles(initialConfig.orb.roles || [])
     setIsBotEnabled(initialConfig.enabled || false)
     setIsDeviceVerificationEnabled(initialConfig.device.enabled || false)
-    setIsOrbVerificationEnabled(initialConfig.orb.enabled || false)
   }, [initialConfig])
 
   const guildImage = useMemo(() => {
@@ -210,7 +209,7 @@ export const Admin = memo(function Admin(props: {
                 selectedRoles={selectedOrbRoles}
                 setSelectedRoles={setSelectedOrbRoles}
                 isEnabled={isOrbVerificationEnabled}
-                setIsEnabled={setIsOrbVerificationEnabled}
+                setIsEnabled={undefined}
                 copyLabel="Copy from Device"
                 copy={copyRolesFromDevice}
               />

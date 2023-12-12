@@ -1,4 +1,5 @@
-import { CredentialType, ISuccessResult } from '@worldcoin/idkit'
+import { ISuccessResult } from '@worldcoin/idkit'
+import { CredentialType } from '@worldcoin/idkit-core/'
 import { Option } from 'Admin/types/option'
 import { Layout } from 'common/Layout'
 import { Modal } from 'common/Modal'
@@ -16,7 +17,7 @@ export const Verification = memo(function Verification(props: {
   guildId: string
   userId: string
   token: string
-  appId: string
+  appId: `app_${string}`
   credentials: Array<CredentialType>
 }) {
   const { guildId, userId, appId, token } = props

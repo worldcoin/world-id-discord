@@ -1,4 +1,5 @@
 import { EmbedBuilder } from '@discordjs/builders'
+import { CredentialType, verification_level_to_credential_types } from '@worldcoin/idkit-core'
 import { VerificationCompletePayload } from 'common/types/verification-complete'
 import { APIRole } from 'discord-api-types/v10'
 import { NextApiRequest, NextApiResponse } from 'next'
@@ -36,9 +37,14 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
     return await sendErrorResponse(res, token, 400, false, 'The bot is currently disabled for this server.')
   }
 
+  const credential_types = verification_level_to_credential_types(result.verification_level) as CredentialType[]
+
+  // REVIEW: How do we choose the credential type at this step when we have only verification level in the success payload?
+  const credential_type = credential_types[0]
+
   let roleIds: string[]
 
-  if (!botConfig[result.credential_type].enabled) {
+  if (!botConfig[credential_type].enabled) {
     return await sendErrorResponse(
       res,
       token,
@@ -48,12 +54,12 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
     )
   }
 
-  roleIds = botConfig[result.credential_type].roles
+  roleIds = botConfig[credential_type].roles
 
   const nullifierHashResult = await getNullifierHash({
     guild_id: guildId,
     nullifier_hash: result.nullifier_hash,
-    credential_type: result.credential_type,
+    credential_type: credential_type,
   })
 
   const knownNullifierHash = nullifierHashResult.data?.nullifier_hash === result.nullifier_hash
@@ -72,7 +78,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
   const NullifierSaveResult = await saveNullifier({
     guild_id: guildId,
     nullifier_hash: result.nullifier_hash,
-    credential_type: result.credential_type,
+    credential_type: credential_type,
     user_id: userId,
   })
 

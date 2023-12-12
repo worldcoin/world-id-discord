@@ -1,4 +1,4 @@
-import { CredentialType } from '@worldcoin/idkit'
+import { CredentialType } from '@worldcoin/idkit-core'
 import { findRoles } from 'helpers'
 import { GetServerSideProps } from 'next'
 import { getGuildData } from 'services/discord'
