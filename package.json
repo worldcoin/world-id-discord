@@ -40,7 +40,7 @@
   "eslintConfig": {
     "extends": "@ottofeller/eslint-config-ofmt/eslint.quality.cjs"
   },
-  "name": "discord-bouncer",
+  "name": "world-id-discord",
   "engines": {
     "node": ">=18"
   },

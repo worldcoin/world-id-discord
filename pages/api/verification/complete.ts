@@ -68,7 +68,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
       token,
       500,
       false,
-      'Looks like this server is not properly configured for Discord Bouncer. Please contact your server admin.',
+      'Looks like this server is not properly configured for Discord Integration. Please contact your server admin.',
     )
   }
 
