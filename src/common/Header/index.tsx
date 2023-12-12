@@ -1,8 +1,8 @@
 import cn from 'classnames'
+import { Icon } from 'common/Icon'
 import Link from 'next/link'
 import { memo, useEffect, useState } from 'react'
 import { useScrollDirection } from 'react-use-scroll-direction'
-import { Icon } from 'common/Icon'
 
 export const Header = memo(function Header(props: { hideLinks?: boolean; onTop?: boolean }) {
   const { isScrollingUp, isScrollingDown } = useScrollDirection()
@@ -40,14 +40,13 @@ export const Header = memo(function Header(props: { hideLinks?: boolean; onTop?:
 
         {!props.hideLinks && (
           <div className="grid grid-flow-col auto-cols-max gap-x-6 text-13 font-medium">
-            {/* FIXME: add link */}
-            <a className="hover:opacity-75 transition-opacity" href="#!">
-              About Discord Bouncer
+            <a className="hover:opacity-75 transition-opacity" href="https://worldcoin.org/apps/discord">
+              About Discord Integration
             </a>
 
             <a
               className="hover:opacity-75 transition-opacity"
-              href="https://github.com/worldcoin/discord-bouncer"
+              href="https://github.com/worldcoin/world-id-discord"
               target="_blank"
               rel="noreferrer"
             >
