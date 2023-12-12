@@ -18,6 +18,10 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
 
   const { guildId, userId, token, result, appId } = req.body
 
+  if (!guildId || !userId || !token || !result || !appId) {
+    return await sendErrorResponse(res, '', 400, false, 'Missing required parameters.')
+  }
+
   let credential_type: CredentialType | undefined
 
   if (result.verification_level === VerificationLevel.Orb) {
