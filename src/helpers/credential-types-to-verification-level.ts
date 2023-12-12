@@ -1,7 +1,7 @@
 import { CredentialType, VerificationLevel } from '@worldcoin/idkit-core'
 
 /**
- * @dev use to convert credential types to verification level
+ * @dev use to convert credential types to minimum verification level to pass to IDKit
  * @param credential_types
  * @returns
  */
