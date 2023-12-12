@@ -32,6 +32,7 @@ export const Verification = memo(function Verification(props: {
         setLoading(true)
 
         const payload: VerificationCompletePayload = {
+          appId,
           guildId,
           userId,
           token,
@@ -65,7 +66,7 @@ export const Verification = memo(function Verification(props: {
         setLoading(false)
       }
     },
-    [guildId, userId, token],
+    [appId, guildId, userId, token],
   )
 
   return (

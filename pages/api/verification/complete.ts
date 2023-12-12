@@ -1,5 +1,5 @@
 import { EmbedBuilder } from '@discordjs/builders'
-import { CredentialType, verification_level_to_credential_types } from '@worldcoin/idkit-core'
+import { CredentialType, VerificationLevel } from '@worldcoin/idkit-core'
 import { VerificationCompletePayload } from 'common/types/verification-complete'
 import { APIRole } from 'discord-api-types/v10'
 import { NextApiRequest, NextApiResponse } from 'next'
@@ -12,9 +12,45 @@ interface NextApiRequestWithBody extends NextApiRequest {
 
 //eslint-disable-next-line complexity -- FIXME: refactor this function
 export default async function handler(req: NextApiRequestWithBody, res: NextApiResponse) {
-  const { guildId, userId, token, result } = req.body
+  if (!process.env.DEVELOPER_PORTAL_URL) {
+    return await sendErrorResponse(res, '', 500, false, 'Developer portal URL is not set.')
+  }
 
-  // FIXME: check result signature
+  const { guildId, userId, token, result, appId } = req.body
+
+  let credential_type: CredentialType | undefined
+
+  if (result.verification_level === VerificationLevel.Orb) {
+    credential_type = CredentialType.Orb
+  } else {
+    credential_type = CredentialType.Device
+  }
+
+  try {
+    const verificationResponse = await fetch(`${process.env.DEVELOPER_PORTAL_URL}/api/v1/verify/${appId}`, {
+      method: 'POST',
+
+      headers: {
+        'Content-Type': 'application/json',
+      },
+
+      body: JSON.stringify({
+        action: guildId,
+        proof: result.proof,
+        signal: userId,
+        nullifier_hash: result.nullifier_hash,
+        merkle_root: result.merkle_root,
+        credential_type,
+      }),
+    })
+
+    if (!verificationResponse.ok) {
+      throw new Error('Error while verifying proof')
+    }
+  } catch (error) {
+    console.error(error)
+    return await sendErrorResponse(res, token, 500, true, 'Proof is not valid. Please try again.')
+  }
 
   const guild = await getGuildData(guildId)
   if (!guild) {
@@ -36,11 +72,6 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
   if (!botConfig.enabled) {
     return await sendErrorResponse(res, token, 400, false, 'The bot is currently disabled for this server.')
   }
-
-  const credential_types = verification_level_to_credential_types(result.verification_level) as CredentialType[]
-
-  // REVIEW: How do we choose the credential type at this step when we have only verification level in the success payload?
-  const credential_type = credential_types[0]
 
   let roleIds: string[]
 

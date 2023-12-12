@@ -6,6 +6,7 @@ export type VerificationCompletePayload = {
   userId: string
   token: string
   result: ISuccessResult
+  appId: `app_${string}`
 }
 
 export type VerificationCompleteResponsePayload = {
