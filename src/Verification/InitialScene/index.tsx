@@ -52,7 +52,6 @@ export const InitialScene = memo(function Initial(props: {
 
       {props.app_id && props.action && props.signal && (
         <IDKitWidget
-          bridge_url="https://staging-bridge.worldcoin.org" // FIXME: use production bridge
           verification_level={credential_types_to_verification_level(props.credentials)}
           app_id={props.app_id}
           action={props.action}
