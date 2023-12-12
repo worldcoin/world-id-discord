@@ -2,7 +2,7 @@ import { Head, Html, Main, NextScript } from 'next/document'
 
 export default function Document() {
   return (
-    <Html lang="en">
+    <Html lang="en" style={{ backgroundColor: '#000000' }}>
       <Head>
         <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
         <meta name="theme-color" content="#0d1020" />

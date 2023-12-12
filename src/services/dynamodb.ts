@@ -11,7 +11,7 @@ import {
 } from '@aws-sdk/client-dynamodb'
 
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
-import { CredentialType } from '@worldcoin/idkit'
+import { CredentialType } from '@worldcoin/idkit-core'
 import { BotConfig } from 'common/types'
 
 export type TableConfig = {
@@ -105,6 +105,14 @@ export const verifyBotConfig = (botConfig: BotConfig): { status: boolean; error?
 
   if (!botConfig.hasOwnProperty('enabled')) {
     return { status: false, error: new Error('enabled is required') }
+  }
+
+  if (!botConfig.device.hasOwnProperty('enabled')) {
+    return { status: false, error: new Error('Device verification enabled is required') }
+  }
+
+  if (botConfig.device.roles.length === 0 && botConfig.device.enabled) {
+    return { status: false, error: new Error('Set at least one role to Device verification method') }
   }
 
   if (!botConfig.orb.hasOwnProperty('enabled')) {

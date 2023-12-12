@@ -1,4 +1,5 @@
 import { EmbedBuilder } from '@discordjs/builders'
+import { CredentialType, VerificationLevel } from '@worldcoin/idkit-core'
 import { VerificationCompletePayload } from 'common/types/verification-complete'
 import { APIRole } from 'discord-api-types/v10'
 import { NextApiRequest, NextApiResponse } from 'next'
@@ -11,9 +12,48 @@ interface NextApiRequestWithBody extends NextApiRequest {
 
 //eslint-disable-next-line complexity -- FIXME: refactor this function
 export default async function handler(req: NextApiRequestWithBody, res: NextApiResponse) {
-  const { guildId, userId, token, result } = req.body
+  if (!process.env.DEVELOPER_PORTAL_URL) {
+    console.log('DEVELOPER_PORTAL_URL env is missing')
+    return await sendErrorResponse(res, '', 500, false, 'Something went wrong.')
+  }
 
-  // FIXME: check result signature
+  const { guildId, userId, token, result, appId } = req.body
+
+  if (!guildId || !userId || !token || !result || !appId) {
+    return await sendErrorResponse(res, '', 400, false, 'Missing required parameters.')
+  }
+
+  try {
+    const verificationResponse = await fetch(`${process.env.DEVELOPER_PORTAL_URL}/api/v1/verify/${appId}`, {
+      method: 'POST',
+
+      headers: {
+        'Content-Type': 'application/json',
+      },
+
+      body: JSON.stringify({
+        action: guildId,
+        proof: result.proof,
+        signal: userId,
+        nullifier_hash: result.nullifier_hash,
+        merkle_root: result.merkle_root,
+        verification_level: result.verification_level,
+      }),
+    })
+
+    if (!verificationResponse.ok) {
+      throw new Error('Error while verifying proof')
+    }
+
+    const verificationResult = await verificationResponse.json()
+
+    if (!verificationResult.success) {
+      throw new Error('Error while verifying proof')
+    }
+  } catch (error) {
+    console.error(error)
+    return await sendErrorResponse(res, token, 500, true, 'Proof is not valid. Please try again.')
+  }
 
   const guild = await getGuildData(guildId)
   if (!guild) {
@@ -36,9 +76,17 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
     return await sendErrorResponse(res, token, 400, false, 'The bot is currently disabled for this server.')
   }
 
+  let credential_type: CredentialType | undefined
+
+  if (result.verification_level === VerificationLevel.Orb) {
+    credential_type = CredentialType.Orb
+  } else {
+    credential_type = CredentialType.Device
+  }
+
   let roleIds: string[]
 
-  if (result.credential_type !== 'orb') {
+  if (!botConfig[credential_type].enabled) {
     return await sendErrorResponse(
       res,
       token,
@@ -48,12 +96,12 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
     )
   }
 
-  roleIds = botConfig[result.credential_type].roles
+  roleIds = botConfig[credential_type].roles
 
   const nullifierHashResult = await getNullifierHash({
     guild_id: guildId,
     nullifier_hash: result.nullifier_hash,
-    credential_type: result.credential_type,
+    credential_type: credential_type,
   })
 
   const knownNullifierHash = nullifierHashResult.data?.nullifier_hash === result.nullifier_hash
@@ -72,7 +120,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
   const NullifierSaveResult = await saveNullifier({
     guild_id: guildId,
     nullifier_hash: result.nullifier_hash,
-    credential_type: result.credential_type,
+    credential_type: credential_type,
     user_id: userId,
   })
 

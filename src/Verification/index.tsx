@@ -1,12 +1,10 @@
 import { ISuccessResult } from '@worldcoin/idkit'
+import { CredentialType } from '@worldcoin/idkit-core/'
 import { Option } from 'Admin/types/option'
-import { Header } from 'common/Header'
-import { InfoLine } from 'common/InfoLine'
 import { Layout } from 'common/Layout'
 import { Modal } from 'common/Modal'
 import { VerificationCompletePayload, VerificationCompleteResponsePayload } from 'common/types/verification-complete'
 import { APIGuild, APIRole } from 'discord-api-types/v10'
-import Image from 'next/image'
 import { memo, useCallback, useState } from 'react'
 import { ErrorScene } from './ErrorScene'
 import { InitialScene } from './InitialScene'
@@ -15,12 +13,12 @@ import { Scene, VerificationError } from './types'
 
 export const Verification = memo(function Verification(props: {
   guild: APIGuild
-  rolesToAssign: { orb: Array<Option> }
+  rolesToAssign: { device: Array<Option>; orb: Array<Option> }
   guildId: string
   userId: string
   token: string
-  appId: string
-  credentials: Array<'orb'>
+  appId: `app_${string}`
+  credentials: Array<CredentialType>
 }) {
   const { guildId, userId, appId, token } = props
   const [scene, setScene] = useState<Scene>(Scene.Initial)
@@ -34,6 +32,7 @@ export const Verification = memo(function Verification(props: {
         setLoading(true)
 
         const payload: VerificationCompletePayload = {
+          appId,
           guildId,
           userId,
           token,
@@ -67,15 +66,12 @@ export const Verification = memo(function Verification(props: {
         setLoading(false)
       }
     },
-    [guildId, userId, token],
+    [appId, guildId, userId, token],
   )
 
   return (
     <Layout title="Verification" className="flex justify-center items-center relative py-28">
-      <Image src="/images/background.svg" fill alt="background" className="object-cover" />
-      <Header hideLinks onTop />
-
-      <Modal loading={loading} className="p-12 grid gap-y-6 max-w-[500px]">
+      <Modal loading={loading} className="p-7 flex flex-col max-w-[500px] min-h-[555px]">
         {scene === Scene.Initial && (
           <InitialScene
             action={guildId}
@@ -89,6 +85,7 @@ export const Verification = memo(function Verification(props: {
             credentials={props.credentials}
           />
         )}
+
         {scene === Scene.Success && <SuccessScene guild={props.guild} assignedRoles={assignedRoles} />}
 
         {scene === Scene.Error && (
@@ -103,11 +100,6 @@ export const Verification = memo(function Verification(props: {
           />
         )}
       </Modal>
-
-      <InfoLine
-        className="fixed bottom-0 inset-x-0 z-50"
-        text="The Discord Bouncer helps prevent spam and increase the quality of the community by making sure everyone who joins is a human. "
-      />
     </Layout>
   )
 })

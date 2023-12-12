@@ -1,8 +1,8 @@
 import cn from 'classnames'
-import { Icon } from 'common/Icon'
 import Link from 'next/link'
 import { memo, useEffect, useState } from 'react'
 import { useScrollDirection } from 'react-use-scroll-direction'
+import { Icon } from 'common/Icon'
 
 export const Header = memo(function Header(props: { hideLinks?: boolean; onTop?: boolean }) {
   const { isScrollingUp, isScrollingDown } = useScrollDirection()
@@ -34,10 +34,8 @@ export const Header = memo(function Header(props: { hideLinks?: boolean; onTop?:
       )}
     >
       <div className="grid items-center justify-between grid-flow-col col-start-2">
-        <Link href="/" className="relative grid items-center grid-flow-col gap-x-4 auto-cols-max text-ffffff">
-          <Icon className="w-6 h-8" name="logo" />
-          <span className="hidden md:block text-20 uppercase font-semibold">DISCORD BOUNCER</span>
-          <span className="absolute right-0 -bottom-4 font-rubik text-12">Powered by World ID</span>
+        <Link href="/" className="relative grid items-center grid-flow-col gap-x-4 auto-cols-max text-white">
+          <Icon className="w-[246px] h-[20px]" name="logo-full" />
         </Link>
 
         {!props.hideLinks && (

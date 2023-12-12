@@ -35,33 +35,28 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        primary: {
+          DEFAULT: '#4940e0',
+        },
+        grey: {
+          400: '#9ba3ae',
+          500: '#657080',
+          700: '#3c424b',
+          900: '#191c20',
+        },
         ...mirrorHexColors([
-          '#000000',
-          '#060816',
-          '#0c0e10',
           '#0d0e11',
           '#0d1020',
-          '#0f1328',
           '#111318',
-          '#183c4a',
-          '#191c20',
-          '#1d976c',
-          '#242628',
-          '#28282d',
           '#3e4152',
           '#4940e0',
-          '#6673b9',
+          '#6c64ee',
+          '#726aee',
           '#928bf9',
           '#938cfa',
-          '#93f9b9',
-          '#96a0db',
           '#a39dff',
           '#bcc5f9',
-          '#e06258',
           '#f9f9f9',
-          '#ff6848',
-          '#ff8a81',
-          '#ffffff',
         ]),
       },
 
@@ -81,6 +76,9 @@ module.exports = {
       },
 
       fontSize: {
+        'caption': ['calc(14 * 1rem / 16)', {lineHeight: '140%', fontWeight: 700, letterSpacing: '0.2em'}],
+        'heading': ['calc(32 * 1rem / 16)', {lineHeight: '120%', fontWeight: 700}],
+        'heading-md': ['calc(48 * 1rem / 16)', {lineHeight: '120%', fontWeight: 700}],
         72: ['calc(72 * 1rem / 16)', {lineHeight: 'calc(86 * 1rem / 16)'}],
         64: ['calc(64 * 1rem / 16)', {lineHeight: 'calc(76.8 * 1rem / 16)'}],
         48: ['calc(48 * 1rem / 16)', {lineHeight: 'calc(57.6 * 1rem / 16)'}],

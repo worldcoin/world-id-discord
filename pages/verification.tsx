@@ -1,8 +1,10 @@
+import { CredentialType } from '@worldcoin/idkit-core'
 import { findRoles } from 'helpers'
 import { GetServerSideProps } from 'next'
 import { getGuildData } from 'services/discord'
 import { getBotConfig } from 'services/dynamodb'
 import { Verification } from 'Verification'
+
 export default Verification
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -31,13 +33,18 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   }
 
   const rolesToAssign = {
+    device: findRoles(botConfig.device.roles, guild.roles),
     orb: findRoles(botConfig.orb.roles, guild.roles),
   }
 
-  const credentials = [] as Array<'orb'>
+  const credentials = [] as Array<CredentialType>
+
+  if (botConfig.device.enabled) {
+    credentials.push(CredentialType.Device)
+  }
 
   if (botConfig.orb.enabled) {
-    credentials.push('orb')
+    credentials.push(CredentialType.Orb)
   }
 
   return {
