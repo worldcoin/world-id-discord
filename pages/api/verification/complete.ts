@@ -13,21 +13,14 @@ interface NextApiRequestWithBody extends NextApiRequest {
 //eslint-disable-next-line complexity -- FIXME: refactor this function
 export default async function handler(req: NextApiRequestWithBody, res: NextApiResponse) {
   if (!process.env.DEVELOPER_PORTAL_URL) {
-    return await sendErrorResponse(res, '', 500, false, 'Developer portal URL is not set.')
+    console.log('DEVELOPER_PORTAL_URL env is missing')
+    return await sendErrorResponse(res, '', 500, false, 'Something went wrong.')
   }
 
   const { guildId, userId, token, result, appId } = req.body
 
   if (!guildId || !userId || !token || !result || !appId) {
     return await sendErrorResponse(res, '', 400, false, 'Missing required parameters.')
-  }
-
-  let credential_type: CredentialType | undefined
-
-  if (result.verification_level === VerificationLevel.Orb) {
-    credential_type = CredentialType.Orb
-  } else {
-    credential_type = CredentialType.Device
   }
 
   try {
@@ -44,11 +37,17 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
         signal: userId,
         nullifier_hash: result.nullifier_hash,
         merkle_root: result.merkle_root,
-        credential_type,
+        verification_level: result.verification_level,
       }),
     })
 
     if (!verificationResponse.ok) {
+      throw new Error('Error while verifying proof')
+    }
+
+    const verificationResult = await verificationResponse.json()
+
+    if (!verificationResult.success) {
       throw new Error('Error while verifying proof')
     }
   } catch (error) {
@@ -75,6 +74,14 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
 
   if (!botConfig.enabled) {
     return await sendErrorResponse(res, token, 400, false, 'The bot is currently disabled for this server.')
+  }
+
+  let credential_type: CredentialType | undefined
+
+  if (result.verification_level === VerificationLevel.Orb) {
+    credential_type = CredentialType.Orb
+  } else {
+    credential_type = CredentialType.Device
   }
 
   let roleIds: string[]
