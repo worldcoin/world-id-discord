@@ -146,7 +146,6 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
   }
 
   if (nullifierHashResult.data && knownNullifierHash && knownUser) {
-    console.log('here')
     return await sendErrorResponse(res, token, 400, false, 'This user has already been verified.', 'already_verified')
   }
 
