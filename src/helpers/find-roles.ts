@@ -1,10 +1,14 @@
 import { APIRole } from 'discord-api-types/v10'
 
-export const findRoles = (configRoles: Array<string>, allRoles: Array<APIRole>) => {
+export const findRoles = (params: { configRoles?: Array<string>; allRoles: Array<APIRole> }) => {
+  if (!params.configRoles) {
+    return []
+  }
+
   const roles = []
 
-  for (const configRole of configRoles) {
-    const role = allRoles.find((r) => r.id === configRole)
+  for (const configRole of params.configRoles) {
+    const role = params.allRoles.find((r) => r.id === configRole)
 
     if (role) {
       roles.push({
