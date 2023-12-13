@@ -86,7 +86,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
 
   let roleIds: string[]
 
-  if (!botConfig[credential_type].enabled) {
+  if (!botConfig[credential_type]?.enabled) {
     return await sendErrorResponse(
       res,
       token,
@@ -96,7 +96,11 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
     )
   }
 
-  roleIds = botConfig[credential_type].roles
+  if (!botConfig[credential_type]?.roles) {
+    return await sendErrorResponse(res, token, 400, true, "Can't find any roles for this credential.")
+  }
+
+  roleIds = botConfig[credential_type]?.roles as string[]
 
   const nullifierHashResult = await getNullifierHash({
     guild_id: guildId,

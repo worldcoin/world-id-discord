@@ -30,12 +30,12 @@ export const Admin = memo(function Admin(props: {
     }))
   })
 
-  const [selectedDeviceRoles, setSelectedDeviceRoles] = useState<Array<Option>>(initialConfig.device.roles || [])
-  const [selectedOrbRoles, setSelectedOrbRoles] = useState<Array<Option>>(initialConfig.orb.roles || [])
+  const [selectedDeviceRoles, setSelectedDeviceRoles] = useState<Array<Option>>(initialConfig.device?.roles ?? [])
+  const [selectedOrbRoles, setSelectedOrbRoles] = useState<Array<Option>>(initialConfig.orb?.roles ?? [])
   const [savingInProgress, setSavingInProgress] = useState(false)
   const [savedSuccessfully, setSavedSuccessfully] = useState<boolean | null>(null)
   const [isBotEnabled, setIsBotEnabled] = useState(initialConfig.enabled || false)
-  const [isDeviceVerificationEnabled, setIsDeviceVerificationEnabled] = useState(initialConfig.device.enabled || false)
+  const [isDeviceVerificationEnabled, setIsDeviceVerificationEnabled] = useState(initialConfig.device?.enabled ?? false)
   const [isOrbVerificationEnabled] = useState(true)
   const [errorMessage, setErrorMessage] = useState<SaveConfigError>(SaveConfigError.Unknown)
 
@@ -54,7 +54,7 @@ export const Admin = memo(function Admin(props: {
     }
   }, [savedSuccessfully])
 
-  const botConfig: BotConfig = useMemo(
+  const botConfig = useMemo(
     () => ({
       enabled: isBotEnabled,
       guild_id: props.initialConfig.guild_id,
@@ -82,10 +82,10 @@ export const Admin = memo(function Admin(props: {
   const formIsClean = useMemo(() => {
     return (
       isBotEnabled === initialConfig.enabled &&
-      isDeviceVerificationEnabled === initialConfig.device.enabled &&
-      selectedDeviceRoles.length === initialConfig.device.roles.length &&
-      isOrbVerificationEnabled === initialConfig.orb.enabled &&
-      selectedOrbRoles.length === initialConfig.orb.roles.length
+      isDeviceVerificationEnabled === initialConfig.device?.enabled &&
+      selectedDeviceRoles.length === initialConfig.device?.roles.length &&
+      isOrbVerificationEnabled === initialConfig.orb?.enabled &&
+      selectedOrbRoles.length === initialConfig.orb?.roles.length
     )
   }, [
     isBotEnabled,
@@ -142,10 +142,10 @@ export const Admin = memo(function Admin(props: {
   }, [botConfig, selectedDeviceRoles, selectedOrbRoles])
 
   const resetChanges = useCallback(() => {
-    setSelectedDeviceRoles(initialConfig.device.roles || [])
-    setSelectedOrbRoles(initialConfig.orb.roles || [])
-    setIsBotEnabled(initialConfig.enabled || false)
-    setIsDeviceVerificationEnabled(initialConfig.device.enabled || false)
+    setSelectedDeviceRoles(initialConfig.device?.roles ?? [])
+    setSelectedOrbRoles(initialConfig.orb?.roles ?? [])
+    setIsBotEnabled(initialConfig.enabled ?? false)
+    setIsDeviceVerificationEnabled(initialConfig.device?.enabled ?? false)
   }, [initialConfig])
 
   const guildImage = useMemo(() => {

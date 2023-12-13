@@ -33,17 +33,17 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   }
 
   const rolesToAssign = {
-    device: findRoles(botConfig.device.roles, guild.roles),
-    orb: findRoles(botConfig.orb.roles, guild.roles),
+    device: findRoles({ configRoles: botConfig.device?.roles, allRoles: guild.roles }),
+    orb: findRoles({ configRoles: botConfig.orb?.roles, allRoles: guild.roles }),
   }
 
   const credentials = [] as Array<CredentialType>
 
-  if (botConfig.device.enabled) {
+  if (botConfig.device?.enabled) {
     credentials.push(CredentialType.Device)
   }
 
-  if (botConfig.orb.enabled) {
+  if (botConfig.orb?.enabled) {
     credentials.push(CredentialType.Orb)
   }
 
