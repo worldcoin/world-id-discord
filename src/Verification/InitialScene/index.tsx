@@ -56,7 +56,7 @@ export const InitialScene = memo(function Initial(props: {
           app_id={props.app_id}
           action={props.action}
           signal={props.signal}
-          action_description={`verify your uniqueness for ${props.guild.name}`}
+          action_description={'verify your uniqueness for' + props.guild.name}
           onSuccess={props.complete}
         >
           {({ open }: { open: () => void }) => (
