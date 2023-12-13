@@ -10,6 +10,23 @@ interface NextApiRequestWithBody extends NextApiRequest {
   body: VerificationCompletePayload
 }
 
+type VerifyResponse =
+  | {
+      uses: number
+      success: true
+      action: string
+      max_uses: number
+      nullifier_hash: string
+      created_at: string
+      verification_level: VerificationLevel
+    }
+  | {
+      success?: never
+      code: string
+      detail: string
+      attribute: string | null
+    }
+
 //eslint-disable-next-line complexity -- FIXME: refactor this function
 export default async function handler(req: NextApiRequestWithBody, res: NextApiResponse) {
   if (!process.env.DEVELOPER_PORTAL_URL) {
@@ -41,14 +58,25 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
       }),
     })
 
-    if (!verificationResponse.ok) {
-      throw new Error('Error while verifying proof')
-    }
-
-    const verificationResult = await verificationResponse.json()
+    const verificationResult = (await verificationResponse.json()) as VerifyResponse
 
     if (!verificationResult.success) {
-      throw new Error('Error while verifying proof')
+      if (verificationResult.code === 'max_verifications_reached') {
+        return await sendErrorResponse(
+          res,
+          token,
+          400,
+          false,
+          'This user has already been verified.',
+          'already_verified',
+        )
+      }
+
+      throw new Error(verificationResult.detail)
+    }
+
+    if (!verificationResponse.ok) {
+      throw new Error("We couldn't verify your proof. Please try again.")
     }
   } catch (error) {
     console.error(error)
