@@ -173,7 +173,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
     const posthog = PostHogClient()
 
     const captureResult = await posthog.capture({
-      event: 'Discord Integration verification',
+      event: 'discord integration verification',
       distinctId: userId,
 
       properties: {
