@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (body.isFirstConnection) {
     const captureResult = await posthog.capture({
-      event: 'Discord integration guild connected',
+      event: 'discord integration app added',
       distinctId: userId,
 
       properties: {
