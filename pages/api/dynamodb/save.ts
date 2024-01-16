@@ -28,7 +28,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       properties: {
         guild_id: botConfig.guild_id,
-        $current_url: `${process.env.NEXTAUTH_URL}/api/dynamodb/save`,
       },
     })
 
@@ -43,9 +42,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     properties: {
       guild_id: botConfig.guild_id,
-      device: JSON.stringify(botConfig.device),
-      orb: JSON.stringify(botConfig.orb),
-      $current_url: `${process.env.NEXTAUTH_URL}/api/dynamodb/save`,
+      device: !!botConfig.device,
+      orb: !!botConfig.orb,
     },
   })
 
