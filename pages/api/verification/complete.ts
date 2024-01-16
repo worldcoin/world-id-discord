@@ -179,7 +179,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
       properties: {
         guild_id: guildId,
         credential_type,
-        assigned_roles: assignedRoles.join(', '),
+        roles_count: assignedRoles.length,
       },
     })
 
