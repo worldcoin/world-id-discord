@@ -38,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const captureResult = await posthog.capture({
-    event: 'Discord integration guild config updated',
+    event: 'discord integration config updated',
     distinctId: userId,
 
     properties: {
