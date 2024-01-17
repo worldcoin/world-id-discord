@@ -42,8 +42,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     properties: {
       guild_id: botConfig.guild_id,
-      device: !!botConfig.device,
-      orb: !!botConfig.orb,
+      is_enabled: botConfig.enabled,
+      is_device_enabled: botConfig.device?.enabled,
+      is_orb_enabled: botConfig.orb?.enabled,
     },
   })
 
