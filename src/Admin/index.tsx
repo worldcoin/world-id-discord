@@ -20,6 +20,8 @@ export const Admin = memo(function Admin(props: {
   roles: APIRole[]
   guild: APIGuild
   initialConfig: BotConfig<'initial'>
+  isFirstConnection: boolean
+  userId: string
 }) {
   const [initialConfig, setInitialConfig] = useState<BotConfig<'initial'>>(props.initialConfig)
 
@@ -107,10 +109,12 @@ export const Admin = memo(function Admin(props: {
 
     fetch('/api/dynamodb/save', {
       method: 'POST',
+
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(botConfig),
+
+      body: JSON.stringify({ botConfig, isFirstConnection: props.isFirstConnection, userId: props.userId }),
     })
       .then((response) => {
         if (response.ok) {
@@ -139,7 +143,7 @@ export const Admin = memo(function Admin(props: {
         setSavedSuccessfully(false)
         setSavingInProgress(false)
       })
-  }, [botConfig, selectedDeviceRoles, selectedOrbRoles])
+  }, [botConfig, props.isFirstConnection, props.userId, selectedDeviceRoles, selectedOrbRoles])
 
   const resetChanges = useCallback(() => {
     setSelectedDeviceRoles(initialConfig.device?.roles ?? [])

@@ -23,12 +23,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const guild = await getGuildData(session.user.guildId)
   const roles = await getAvailableGuildRoles(session.user.guildId)
-
   const botConfig = (await getBotConfig(session.user.guildId)).data
+  const isFirstConnection = !Boolean(botConfig)
 
   return {
     props: {
-      session,
+      isFirstConnection,
+      userId: session.user.id,
       roles,
       guild,
       initialConfig: createInitialConfig({ botConfig, roles, guild_id: guild.id }),

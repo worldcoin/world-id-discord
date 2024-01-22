@@ -5,6 +5,7 @@ import { APIRole } from 'discord-api-types/v10'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { assignGuildMemberRole, editInteractionMessage, getGuildData, removeGuildMemberRole } from 'services/discord'
 import { getBotConfig, getNullifierHash, saveNullifier } from 'services/dynamodb'
+import { PostHogClient } from 'services/posthog'
 
 interface NextApiRequestWithBody extends NextApiRequest {
   body: VerificationCompletePayload
@@ -169,6 +170,24 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
     }
 
     const assignedRoles = guild.roles.filter((role) => roleIds.includes(role.id))
+    const posthog = PostHogClient()
+
+    const captureResult = await posthog.capture({
+      event: 'discord integration verification',
+      distinctId: userId,
+
+      properties: {
+        guild_id: guildId,
+        credential_type,
+        roles_count: assignedRoles.length,
+      },
+    })
+
+    if (!captureResult.success) {
+      console.error(captureResult.error)
+    }
+
+    await posthog.shutdown()
     return await sendSuccessResponse(res, token, assignedRoles)
   } catch (error) {
     console.error('Error while assigning roles: ', error)
