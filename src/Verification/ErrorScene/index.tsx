@@ -55,6 +55,7 @@ export const ErrorScene = memo(function ErrorScene(props: {
           app_id={props.app_id}
           action={props.action}
           signal={props.signal}
+          action_description={`verify in ${props.guild.name} server.`}
           onSuccess={props.complete}
         >
           {({ open }: { open: () => void }) => (
