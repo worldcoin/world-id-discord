@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import NextAuth from 'next-auth'
+import NextAuth, { AuthOptions } from 'next-auth'
 import DiscordProvider from 'next-auth/providers/discord'
 import { createGuildCommands } from 'services/discord'
 
@@ -8,15 +8,20 @@ const clientSecret = process.env.DISCORD_APP_SECRET!
 const scope = ['identify', 'bot', 'applications.commands'].join(' ')
 const permissions = '268435456'
 
+export const baseAuthOptions: Omit<AuthOptions, 'callbacks'> = {
+  providers: [
+    DiscordProvider({
+      clientId,
+      clientSecret,
+      authorization: { params: { scope, permissions } },
+    }),
+  ],
+}
+
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
-  return await NextAuth(req, res, {
-    providers: [
-      DiscordProvider({
-        clientId,
-        clientSecret,
-        authorization: { params: { scope, permissions } },
-      }),
-    ],
+  const authOptions: AuthOptions = {
+    ...baseAuthOptions,
+
     callbacks: {
       async signIn() {
         const guildId = req.query.guild_id as string
@@ -41,5 +46,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
         return session
       },
     },
-  })
+  }
+
+  return await NextAuth(req, res, authOptions)
 }
