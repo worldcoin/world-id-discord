@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth'
+import { getToken } from 'next-auth/jwt'
 import { baseAuthOptions } from './auth/[...nextauth]'
 
 export enum CreateActionErrorCodes {
@@ -24,7 +25,7 @@ export type CreateActionReturnType =
       message: string
     }
 
-export const createAction = async (req: NextApiRequest, res: NextApiResponse<CreateActionReturnType>) => {
+const createAction = async (req: NextApiRequest, res: NextApiResponse<CreateActionReturnType>) => {
   if (!process.env.DEVELOPER_PORTAL_URL || !process.env.APP_ID || !process.env.NEXT_SERVER_DEV_PORTAL_API_KEY) {
     console.log('Environment variables for /create-action endpoint are missing.')
 
@@ -37,7 +38,7 @@ export const createAction = async (req: NextApiRequest, res: NextApiResponse<Cre
 
   const session = await getServerSession(req, res, baseAuthOptions)
 
-  if (!session || !session.user.guildId) {
+  if (!session) {
     return res.status(401).json({
       success: false,
       code: CreateActionErrorCodes.Unauthorized,
@@ -45,11 +46,13 @@ export const createAction = async (req: NextApiRequest, res: NextApiResponse<Cre
     })
   }
 
-  const guildId = session.user.guildId
+  const token = await getToken({ req })
+  const guildId = token?.guildId
 
   const createActionResponse = await fetch(
     `${process.env.DEVELOPER_PORTAL_URL}/api/v2/create-action/${process.env.APP_ID}`,
     {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `ApiKey ${process.env.NEXT_SERVER_DEV_PORTAL_API_KEY}`,
@@ -89,3 +92,5 @@ export const createAction = async (req: NextApiRequest, res: NextApiResponse<Cre
 
   return res.status(200).json({ success: true })
 }
+
+export default createAction
