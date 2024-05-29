@@ -26,7 +26,7 @@ export type CreateActionReturnType =
     }
 
 const createAction = async (req: NextApiRequest, res: NextApiResponse<CreateActionReturnType>) => {
-  if (!process.env.DEVELOPER_PORTAL_URL || !process.env.APP_ID || !process.env.NEXT_SERVER_DEV_PORTAL_API_KEY) {
+  if (!process.env.DEVELOPER_PORTAL_URL || !process.env.APP_ID || !process.env.DEVELOPER_PORTAL_API_KEY) {
     console.log('Environment variables for /create-action endpoint are missing.')
 
     return res.status(500).json({
@@ -55,7 +55,7 @@ const createAction = async (req: NextApiRequest, res: NextApiResponse<CreateActi
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `ApiKey ${process.env.NEXT_SERVER_DEV_PORTAL_API_KEY}`,
+        Authorization: `ApiKey ${process.env.DEVELOPER_PORTAL_API_KEY}`,
       },
 
       body: JSON.stringify({
