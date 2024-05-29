@@ -7,6 +7,7 @@ import { BotConfig } from 'common/types'
 import { APIGuild, APIRole } from 'discord-api-types/v10'
 import { generateGuildImage } from 'helpers'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { CreateActionReturnType } from '~/pages/api/create-action'
 import { RolesSelector } from './RolesSelector'
 import { StyledCheckbox } from './StyledCheckbox'
 import type { Option } from './types/option'
@@ -98,8 +99,21 @@ export const Admin = memo(function Admin(props: {
     selectedOrbRoles.length,
   ])
 
-  const saveChanges = useCallback(() => {
+  const saveChanges = useCallback(async () => {
     setSavingInProgress(true)
+
+    try {
+      const createActionResponse = await fetch('/api/create-action')
+      const createActionResult = (await createActionResponse.json()) as CreateActionReturnType
+
+      if (!createActionResult.success && createActionResult.code !== 'already_exists') {
+        throw new Error(createActionResult.message)
+      }
+    } catch (error) {
+      console.error('Unable to create action', error)
+      setSavingInProgress(false)
+      return setSavedSuccessfully(false)
+    }
 
     if (selectedOrbRoles.length === 0) {
       setSavingInProgress(false)
@@ -107,42 +121,42 @@ export const Admin = memo(function Admin(props: {
       return setSavedSuccessfully(false)
     }
 
-    fetch('/api/dynamodb/save', {
-      method: 'POST',
+    try {
+      const dynamoDbSaveResponse = await fetch('/api/dynamodb/save', {
+        method: 'POST',
 
-      headers: {
-        'Content-Type': 'application/json',
-      },
+        headers: {
+          'Content-Type': 'application/json',
+        },
 
-      body: JSON.stringify({ botConfig, isFirstConnection: props.isFirstConnection, userId: props.userId }),
-    })
-      .then((response) => {
-        if (response.ok) {
-          setSavedSuccessfully(true)
-
-          setInitialConfig({
-            ...botConfig,
-            device: {
-              ...botConfig.device,
-              roles: selectedDeviceRoles,
-            },
-            orb: {
-              ...botConfig.orb,
-              roles: selectedOrbRoles,
-            },
-          })
-        } else {
-          setErrorMessage(SaveConfigError.Unknown)
-          setSavedSuccessfully(false)
-        }
-
-        setSavingInProgress(false)
+        body: JSON.stringify({ botConfig, isFirstConnection: props.isFirstConnection, userId: props.userId }),
       })
-      .catch((error) => {
-        console.error('Error:', error)
+
+      if (dynamoDbSaveResponse.ok) {
+        setSavedSuccessfully(true)
+
+        setInitialConfig({
+          ...botConfig,
+          device: {
+            ...botConfig.device,
+            roles: selectedDeviceRoles,
+          },
+          orb: {
+            ...botConfig.orb,
+            roles: selectedOrbRoles,
+          },
+        })
+      } else {
+        setErrorMessage(SaveConfigError.Unknown)
         setSavedSuccessfully(false)
-        setSavingInProgress(false)
-      })
+      }
+
+      setSavingInProgress(false)
+    } catch (error) {
+      console.error('Error:', error)
+      setSavedSuccessfully(false)
+      setSavingInProgress(false)
+    }
   }, [botConfig, props.isFirstConnection, props.userId, selectedDeviceRoles, selectedOrbRoles])
 
   const resetChanges = useCallback(() => {
