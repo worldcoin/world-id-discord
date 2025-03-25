@@ -18,14 +18,14 @@
     "discord-interactions": "^3.2.0",
     "eslint": "8.33.0",
     "eslint-config-next": "13.1.6",
-    "next": "13.1.6",
+    "next": "14.2.25",
     "next-auth": "^4.18.8",
     "posthog-node": "^3.5.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-use-scroll-direction": "^0.1.0",
     "tailwind-variants": "^0.1.18",
-    "typescript": "4.9.4"
+    "typescript": "^5"
   },
   "devDependencies": {
     "@ottofeller/eslint-config-ofmt": "1.5.2",
@@ -36,7 +36,8 @@
     "dotenv": "^16.0.3",
     "postcss": "^8.4.21",
     "tailwindcss": "^3.2.4",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "prettier": "^3.5.3"
   },
   "eslintConfig": {
     "extends": "@ottofeller/eslint-config-ofmt/eslint.quality.cjs"
