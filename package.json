@@ -36,7 +36,8 @@
     "dotenv": "^16.0.3",
     "postcss": "^8.4.21",
     "tailwindcss": "^3.2.4",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "prettier": "^3.5.3"
   },
   "eslintConfig": {
     "extends": "@ottofeller/eslint-config-ofmt/eslint.quality.cjs"
