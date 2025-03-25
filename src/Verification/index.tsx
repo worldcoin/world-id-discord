@@ -18,7 +18,7 @@ export const Verification = memo(function Verification(props: {
   userId: string
   token: string
   appId: `app_${string}`
-  credentials: Array<CredentialType>
+  credentials: Array<CredentialType.Device | CredentialType.Orb>
 }) {
   const { guildId, userId, appId, token } = props
   const [scene, setScene] = useState<Scene>(Scene.Initial)

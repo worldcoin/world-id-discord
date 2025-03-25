@@ -25,7 +25,7 @@
     "react-dom": "18.2.0",
     "react-use-scroll-direction": "^0.1.0",
     "tailwind-variants": "^0.1.18",
-    "typescript": "4.9.4"
+    "typescript": "^5"
   },
   "devDependencies": {
     "@ottofeller/eslint-config-ofmt": "1.5.2",
