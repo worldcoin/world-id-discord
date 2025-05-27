@@ -12,12 +12,8 @@ type EventMessageV1 = {
 }
 
 export const PostHogClient = () => {
-  if (!process.env.POSTHOG_API_KEY) {
-    throw new Error('POSTHOG_API_KEY env is missing')
-  }
-
-  if (!process.env.POSTHOG_HOST) {
-    throw new Error('POSTHOG_HOST env is missing')
+  if (!process.env.POSTHOG_API_KEY || !process.env.POSTHOG_HOST) {
+    throw new Error('PostHog environment is not configured properly')
   }
 
   let client = new PostHog(process.env.POSTHOG_API_KEY, { host: process.env.POSTHOG_HOST, flushAt: 1 })

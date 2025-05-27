@@ -1,5 +1,6 @@
 import { EmbedBuilder } from '@discordjs/builders'
 import { CredentialType, VerificationLevel } from '@worldcoin/idkit-core'
+import { verifyCloudProof } from '@worldcoin/idkit-core/backend'
 import { VerificationCompletePayload } from 'common/types/verification-complete'
 import { APIRole } from 'discord-api-types/v10'
 import { NextApiRequest, NextApiResponse } from 'next'
@@ -10,23 +11,6 @@ import { PostHogClient } from 'services/posthog'
 interface NextApiRequestWithBody extends NextApiRequest {
   body: VerificationCompletePayload
 }
-
-type VerifyResponse =
-  | {
-      uses: number
-      success: true
-      action: string
-      max_uses: number
-      nullifier_hash: string
-      created_at: string
-      verification_level: VerificationLevel
-    }
-  | {
-      success?: never
-      code: string
-      detail: string
-      attribute: string | null
-    }
 
 //eslint-disable-next-line complexity -- FIXME: refactor this function
 export default async function handler(req: NextApiRequestWithBody, res: NextApiResponse) {
@@ -42,24 +26,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
   }
 
   try {
-    const verificationResponse = await fetch(`${process.env.DEVELOPER_PORTAL_URL}/api/v1/verify/${appId}`, {
-      method: 'POST',
-
-      headers: {
-        'Content-Type': 'application/json',
-      },
-
-      body: JSON.stringify({
-        action: guildId,
-        proof: result.proof,
-        signal: userId,
-        nullifier_hash: result.nullifier_hash,
-        merkle_root: result.merkle_root,
-        verification_level: result.verification_level,
-      }),
-    })
-
-    const verificationResult = (await verificationResponse.json()) as VerifyResponse
+    const verificationResult = await verifyCloudProof(result, appId, guildId, userId)
 
     if (!verificationResult.success) {
       if (verificationResult.code === 'max_verifications_reached') {
@@ -74,10 +41,6 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
       }
 
       throw new Error(verificationResult.detail)
-    }
-
-    if (!verificationResponse.ok) {
-      throw new Error("We couldn't verify your proof. Please try again.")
     }
   } catch (error) {
     console.error(error)
@@ -170,24 +133,28 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
     }
 
     const assignedRoles = guild.roles.filter((role) => roleIds.includes(role.id))
-    const posthog = PostHogClient()
 
-    const captureResult = await posthog.capture({
-      event: 'discord integration verification',
-      distinctId: userId,
+    if (process.env.NODE_ENV === 'production') {
+      const posthog = PostHogClient()
 
-      properties: {
-        guild_id: guildId,
-        credential_type,
-        roles_count: assignedRoles.length,
-      },
-    })
+      const captureResult = await posthog.capture({
+        event: 'discord integration verification',
+        distinctId: userId,
 
-    if (!captureResult.success) {
-      console.error(captureResult.error)
+        properties: {
+          guild_id: guildId,
+          credential_type,
+          roles_count: assignedRoles.length,
+        },
+      })
+
+      if (!captureResult.success) {
+        console.error(captureResult.error)
+      }
+
+      await posthog.shutdown()
     }
 
-    await posthog.shutdown()
     return await sendSuccessResponse(res, token, assignedRoles)
   } catch (error) {
     console.error('Error while assigning roles: ', error)
