@@ -48,6 +48,38 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return res.status(200).json(payload)
   }
 
+  if (process.env.NEXT_PUBLIC_MAINTENANCE_MODE_ENABLED === 'true') {
+    const maintenanceEmbed = new EmbedBuilder()
+      .setColor([255, 165, 0])
+      .setTitle('🚧 Maintenance Mode')
+      .setDescription('The verification system is currently under maintenance. Please try again later.')
+      .addFields([
+        {
+          name: 'Status',
+          value: 'We are working to improve your experience',
+          inline: true,
+        },
+        {
+          name: 'Expected Resolution',
+          value: 'Please check back soon',
+          inline: true,
+        },
+      ])
+      .setFooter({
+        text: 'Thank you for your patience',
+      })
+
+    const payload: APIInteractionResponseChannelMessageWithSource = {
+      type: InteractionResponseType.ChannelMessageWithSource,
+      data: {
+        embeds: [maintenanceEmbed.toJSON()],
+        flags: MessageFlags.Ephemeral,
+      },
+    }
+
+    return res.status(200).json(payload)
+  }
+
   const verifyUrl = `${process.env.NEXTAUTH_URL}/verification?user_id=${data.member?.user.id}&guild_id=${data.guild_id}&token=${data.token}`
 
   const embed = new EmbedBuilder()
