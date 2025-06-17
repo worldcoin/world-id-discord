@@ -23,5 +23,8 @@ declare namespace NodeJS {
     // PostHog
     POSTHOG_API_KEY: string
     POSTHOG_HOST: string
+
+    // Maintenance flag
+    NEXT_PUBLIC_MAINTENANCE_MODE_ENABLED: 'true' | 'false'
   }
 }
