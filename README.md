@@ -20,7 +20,7 @@ To create your own bot:
 8. Press the `New Application` button, set the app name, apply policies, and press `Create`.
 9. At the `INTERACTIONS ENDPOINT URL` field paste.
    `<Your NGROK tunneled url>/api/interactions` and press `Save`.
-10. Create a `.env.local` file in your directory and fill it with envs from `.env.local.example`.
+10. Create a `.env.local` file in your directory and fill it with envs from `@/types/env.d.ts`.
 11. `APPLICATION ID` and `PUBLIC KEY` you can find in the `General Information` section on Discord Dev Portal.
 12. To get a bot token:
     - go to the `Bot` section
