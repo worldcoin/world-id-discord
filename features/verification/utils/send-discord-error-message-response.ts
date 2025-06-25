@@ -1,4 +1,4 @@
-import { editInteractionMessage } from '@/lib/discord/edit-interaction-messate'
+import { editInteractionMessage } from '@/lib/discord/edit-interaction-message'
 import { internalErrorResponse } from '@/utils/error-response'
 import { EmbedBuilder } from '@discordjs/builders'
 
