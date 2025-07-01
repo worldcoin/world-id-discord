@@ -45,5 +45,7 @@
   "Discord_Integration_Complete_Verification_One_Or_More_Roles_Not_Found": "One or more of the roles to be assigned do not exist on this server. Please contact a server administrator.",
   "Discord_Integration_Complete_Verification_Credential_Not_Enabled": "{credentialType} verification is not enabled for this server.",
   "Discord_Integration_Complete_Verification_Guild_Not_Found": "The Discord server was not found.",
-  "Discord_Integration_Switch_Server": "Switch server"
+  "Discord_Integration_Switch_Server": "Switch server",
+  "Discord_Integration_Saving": "Saving",
+  "Discord_Integration_Save_Changes": "Save changes"
 }

@@ -1,10 +1,13 @@
 'use client'
 
 import { Button } from '@/components/Button'
-import { useFormContext } from 'react-hook-form'
 import { ConfigFormValues } from '@/schemas/config-form'
+import { useTranslations } from 'next-intl'
+import { useFormContext } from 'react-hook-form'
 
 export const SubmitSection = () => {
+  const t = useTranslations()
+
   const {
     formState: { isDirty, isSubmitting },
     reset,
@@ -29,7 +32,9 @@ export const SubmitSection = () => {
           color="primary"
           disabled={!isDirty || isSubmitting}
         >
-          {isSubmitting ? 'Saving...' : 'Save changes'}
+          {isSubmitting
+            ? `t('Discord_Integration_Saving')...`
+            : t('Discord_Integration_Save_Changes')}
         </Button>
       </div>
     </section>
