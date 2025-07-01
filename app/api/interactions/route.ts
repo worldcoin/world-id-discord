@@ -1,6 +1,9 @@
 import { createInteractionsToken } from '@/features/interactions/create-interactions-token'
+import { fetchBotConfig } from '@/lib/discord-integration-api/fetch-bot-config'
+import { composeDiscordErrorMessage } from '@/utils/compose-discord-error-message'
 import { internalErrorResponse } from '@/utils/error-response'
 import { getAppUrl } from '@/utils/get-app-url'
+import { safeCall } from '@/utils/safe-call'
 import { ActionRowBuilder, ButtonBuilder, EmbedBuilder } from '@discordjs/builders'
 import {
   APIApplicationCommandInteraction,
@@ -59,6 +62,42 @@ export const POST = async (req: NextRequest) => {
   if (data.type === InteractionType.Ping) {
     const payload: APIInteractionResponsePong = {
       type: InteractionResponseType.Pong,
+    }
+
+    return NextResponse.json(payload)
+  }
+
+  if (!data.guild_id) {
+    console.error('Missing guild id')
+
+    return internalErrorResponse({
+      message: 'Invalid request',
+      code: 401,
+    })
+  }
+
+  const { data: botConfig, success, error } = await safeCall(fetchBotConfig)(data.guild_id)
+
+  if (!success || !botConfig) {
+    console.error('Error fetching bot config', error)
+
+    return internalErrorResponse({
+      message: 'Something went wrong while fetching the bot config.',
+      code: 500,
+    })
+  }
+
+  if (!botConfig.enabled) {
+    const errorMessage = composeDiscordErrorMessage(
+      'Admin has not enabled the integration for this server.'
+    )
+
+    const payload: APIInteractionResponseChannelMessageWithSource = {
+      type: InteractionResponseType.ChannelMessageWithSource,
+      data: {
+        embeds: [errorMessage.toJSON()],
+        flags: MessageFlags.Ephemeral,
+      },
     }
 
     return NextResponse.json(payload)

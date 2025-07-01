@@ -1,6 +1,6 @@
 import { editInteractionMessage } from '@/lib/discord/edit-interaction-message'
+import { composeDiscordErrorMessage } from '@/utils/compose-discord-error-message'
 import { internalErrorResponse } from '@/utils/error-response'
-import { EmbedBuilder } from '@discordjs/builders'
 
 type SendDiscordErrorMessageResponseInput = {
   token: string
@@ -27,13 +27,7 @@ export const sendDiscordErrorMessageResponse = async ({
     description.push(message)
   }
 
-  const embed = new EmbedBuilder()
-    .setColor([237, 66, 69])
-    .setTitle('Sorry we could not complete your verification')
-    .setDescription(description.join('\n'))
-    .setThumbnail(`${process.env.NEXTAUTH_URL}/images/api/interactions/verify-error.png`)
-    .setTimestamp(new Date())
-
+  const embed = composeDiscordErrorMessage(description.join('\n'))
   await editInteractionMessage(token, [embed.toJSON()])
 
   return internalErrorResponse({
