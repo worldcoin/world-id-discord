@@ -13,6 +13,15 @@ export const GET = async () => {
     return internalErrorResponse(genericError.unauthorized)
   }
 
-  const roles = await fetchAvailableGuildRoles(session.guild.id)
-  return NextResponse.json(roles)
+  try {
+    const roles = await fetchAvailableGuildRoles(session.guild.id)
+    return NextResponse.json(roles)
+  } catch (error) {
+    console.error('Error fetching roles', error)
+
+    return internalErrorResponse({
+      message: 'Something went wrong while fetching the roles.',
+      code: 500,
+    })
+  }
 }
