@@ -3,12 +3,7 @@
   "enabled": true,
   "language": "en-US",
   "allowCompoundWords": true,
-  "dictionaries": [
-    "typescript",
-    "node",
-    "npm",
-    "html"
-  ],
+  "dictionaries": ["typescript", "node", "npm", "html"],
   "enabledLanguageIds": [
     "typescript",
     "typescriptreact",
@@ -17,15 +12,5 @@
     "yaml",
     "json"
   ],
-  "words": [
-    "Geoip",
-    "idkit",
-    "merkle",
-    "msapplication",
-    "ofmt",
-    "olint",
-    "ottofeller",
-    "testid",
-    "unmarshall"
-  ]
+  "words": ["bgblur", "cmdk", "formatjs", "idkit", "merkle"]
 }

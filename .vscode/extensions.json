@@ -1,17 +1,9 @@
 {
   "recommendations": [
+    "streetsidesoftware.code-spell-checker",
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
-    "github.vscode-pull-request-github",
-    "streetsidesoftware.code-spell-checker",
-    "orta.vscode-jest",
-    "amazonwebservices.aws-toolkit-vscode",
-    "ms-azuretools.vscode-docker",
-    "Quidgest.vscode-velocity"
-  ],
-  "unwantedRecommendations": [
-    "DavidAnson.vscode-markdownlint",
-    "GoogleCloudTools.cloudcode",
-    "ms-kubernetes-tools.vscode-kubernetes-tools"
+    "bradlc.vscode-tailwindcss",
+    "csstools.postcss"
   ]
 }
