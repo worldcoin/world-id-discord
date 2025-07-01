@@ -33,7 +33,7 @@ export const SubmitSection = () => {
           disabled={!isDirty || isSubmitting}
         >
           {isSubmitting
-            ? `t('Discord_Integration_Saving')...`
+            ? `${t('Discord_Integration_Saving')}...`
             : t('Discord_Integration_Save_Changes')}
         </Button>
       </div>
