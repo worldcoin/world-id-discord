@@ -17,11 +17,11 @@ const rubik = Rubik({
 
 type RootLayoutProps = Readonly<{
   children: ReactNode
-  params: Promise<{ locale: Locale }>
+  params: Promise<{ locale: string }>
 }>
 
 export default async function RootLayout({ children, params }: RootLayoutProps) {
-  const { locale } = await params
+  const { locale } = (await params) as { locale: Locale }
 
   return (
     <html lang={locale} className="min-h-dvh h-full">
