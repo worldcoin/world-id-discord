@@ -7,6 +7,7 @@ import { VerificationLevels } from '@/features/admin/components/VerificationLeve
 import { ConfigForm } from '@/features/admin/providers/ConfigForm'
 import { fetchBotConfig } from '@/lib/discord-integration-api/fetch-bot-config'
 import { fetchAvailableGuildRoles } from '@/lib/discord/fetch-available-guild-roles'
+import { userIsGuildAdmin } from '@/lib/discord/user-is-guild-admin'
 import { authOptions } from '@/server/auth-options'
 import { generateMetaTitle } from '@/utils/generate-meta-title'
 import { prepareConfigFormInitialValues } from '@/utils/prepare-ui-bot-config'
@@ -23,17 +24,25 @@ export const generateMetadata = async () => {
 const Admin = async () => {
   const session = await getServerSession(authOptions)
 
-  if (!session?.guild.id) {
+  if (!session?.user?.id || !session?.guild?.id) {
     redirect(routes.signIn({ callbackUrl: routes.admin() }))
   }
 
-  const roles = await fetchAvailableGuildRoles(session?.guild.id)
-  const botConfig = await fetchBotConfig(session?.guild.id)
+  const isAdmin = await userIsGuildAdmin(session.user.id, session.guild.id).catch(() => false)
+
+  if (!isAdmin) {
+    redirect(routes.signIn({ callbackUrl: routes.admin() }))
+  }
+
+  const guildId = session.guild.id
+
+  const roles = await fetchAvailableGuildRoles(guildId)
+  const botConfig = await fetchBotConfig(guildId)
 
   const initialConfigFormValues = prepareConfigFormInitialValues({
     botConfig,
     roles,
-    guild_id: session?.guild.id,
+    guild_id: guildId,
   })
 
   return (

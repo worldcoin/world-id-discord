@@ -1,19 +1,18 @@
 import { fetchBotConfig } from '@/lib/discord-integration-api/fetch-bot-config'
 import { saveBotConfig } from '@/lib/discord-integration-api/save-bot-config'
-import { authOptions } from '@/server/auth-options'
 import { BotConfig } from '@/schemas/bot-config'
+import { ConfigFormValues } from '@/schemas/config-form'
+import { requireGuildAdmin } from '@/server/require-guild-admin'
 import { internalErrorResponse } from '@/utils/error-response'
 import { genericError } from '@/utils/generic-errors'
 import { safeCall } from '@/utils/safe-call'
-import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
-import { ConfigFormValues } from '@/schemas/config-form'
 
 export const GET = async () => {
-  const session = await getServerSession(authOptions)
+  const guard = await requireGuildAdmin()
 
-  if (!session || !session.user || !session.guild.id) {
-    return internalErrorResponse(genericError.unauthorized)
+  if (!guard.authorized) {
+    return guard.response
   }
 
   if (!process.env.DISCORD_INTEGRATION_API_URL) {
@@ -24,7 +23,7 @@ export const GET = async () => {
     success: fetchBotConfigSuccess,
     data: botConfig,
     error: fetchBotConfigError,
-  } = await safeCall(fetchBotConfig)(session.guild.id)
+  } = await safeCall(fetchBotConfig)(guard.guildId)
 
   if (!fetchBotConfigSuccess) {
     return internalErrorResponse({ message: fetchBotConfigError.message, code: 500 })
@@ -34,16 +33,16 @@ export const GET = async () => {
 }
 
 export const POST = async (request: Request) => {
-  const session = await getServerSession(authOptions)
+  const guard = await requireGuildAdmin()
 
-  if (!session || !session.user || !session.guild.id) {
-    return internalErrorResponse(genericError.unauthorized)
+  if (!guard.authorized) {
+    return guard.response
   }
 
   const body = (await request.json()) as ConfigFormValues
 
   const botConfig: BotConfig = {
-    guild_id: session.guild.id,
+    guild_id: guard.guildId,
     enabled: body.botEnabled,
 
     device: {
@@ -58,7 +57,7 @@ export const POST = async (request: Request) => {
   }
 
   const { success, error } = await safeCall(saveBotConfig)({
-    guildId: session.guild.id,
+    guildId: guard.guildId,
     botConfig,
   })
 

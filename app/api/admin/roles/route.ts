@@ -1,20 +1,17 @@
 import { fetchAvailableGuildRoles } from '@/lib/discord/fetch-available-guild-roles'
-import { authOptions } from '@/server/auth-options'
+import { requireGuildAdmin } from '@/server/require-guild-admin'
 import { internalErrorResponse } from '@/utils/error-response'
-import { genericError } from '@/utils/generic-errors'
-
-import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
 
 export const GET = async () => {
-  const session = await getServerSession(authOptions)
+  const guard = await requireGuildAdmin()
 
-  if (!session || !session.user || !session.guild.id) {
-    return internalErrorResponse(genericError.unauthorized)
+  if (!guard.authorized) {
+    return guard.response
   }
 
   try {
-    const roles = await fetchAvailableGuildRoles(session.guild.id)
+    const roles = await fetchAvailableGuildRoles(guard.guildId)
     return NextResponse.json(roles)
   } catch (error) {
     console.error('Error fetching roles', error)
