@@ -72,7 +72,6 @@ export const VerificationScreen = ({ configFormValues, guild }: VerificationScre
     }
 
     const input: VerificationCompleteInput = {
-      appId: process.env.NEXT_PUBLIC_APP_ID! as `app_${string}`,
       guildId,
       userId,
       token,

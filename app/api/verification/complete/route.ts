@@ -35,7 +35,15 @@ export const POST = async (request: NextRequest) => {
     })
   }
 
-  const { appId, guildId, userId, token, result, interactionsToken } = body
+  const { guildId, userId, token, result, interactionsToken } = body
+
+  if (!process.env.NEXT_PUBLIC_APP_ID) {
+    return sendDiscordErrorMessageResponse({
+      token: originalBody?.token,
+      code: 500,
+      message: t('Discord_Integration_Complete_Verification_Body_Error'),
+    })
+  }
 
   try {
     await verifyInteractionsToken({
@@ -170,7 +178,12 @@ export const POST = async (request: NextRequest) => {
   let cloudProofVerificationResult: IVerifyResponse | null = null
 
   try {
-    cloudProofVerificationResult = await verifyCloudProof(result, appId, guildId, userId)
+    cloudProofVerificationResult = await verifyCloudProof(
+      result,
+      process.env.NEXT_PUBLIC_APP_ID,
+      guildId,
+      userId
+    )
   } catch (error) {
     console.error('Error verifying proof', error)
 
