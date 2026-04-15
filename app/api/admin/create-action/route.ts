@@ -2,10 +2,9 @@ import {
   CreateActionErrorCode,
   DevPortalCreateActionResponse,
 } from '@/features/admin/types/create-action'
-import { authOptions } from '@/server/auth-options'
+import { requireGuildAdmin } from '@/server/require-guild-admin'
 import { internalErrorResponse } from '@/utils/error-response'
 import { genericError } from '@/utils/generic-errors'
-import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
 
 const DEVELOPER_PORTAL_URL = process.env.DEVELOPER_PORTAL_URL
@@ -17,13 +16,13 @@ export const POST = async () => {
     return internalErrorResponse(genericError.environmentIsMisconfigured)
   }
 
-  const session = await getServerSession(authOptions)
+  const guard = await requireGuildAdmin()
 
-  if (!session?.guild.id) {
-    return internalErrorResponse(genericError.unauthorized)
+  if (!guard.authorized) {
+    return guard.response
   }
 
-  const guildId = session.guild.id
+  const { guildId } = guard
 
   let createActionResponse: DevPortalCreateActionResponse | null = null
 
@@ -60,7 +59,6 @@ export const POST = async () => {
 
   if (!('action' in createActionResponse)) {
     if (createActionResponse.code === CreateActionErrorCode.ConstraintViolation) {
-      // NOTE: Action is already exists, so we can return success
       return NextResponse.json({ success: true })
     }
 

@@ -50,6 +50,8 @@ export const authOptions: AuthOptions = {
     },
 
     async session({ session, token }) {
+      session.user.id = token.sub
+
       const guildId = token.guildId
 
       if (guildId) {
