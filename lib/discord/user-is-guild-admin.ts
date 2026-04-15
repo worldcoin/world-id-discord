@@ -26,5 +26,8 @@ export const userIsGuildAdmin = async (
     }
   }
 
-  return (permissions & PermissionFlagsBits.Administrator) === PermissionFlagsBits.Administrator
+  const allowedGuildManagementPermissions =
+    PermissionFlagsBits.Administrator | PermissionFlagsBits.ManageGuild
+
+  return (permissions & allowedGuildManagementPermissions) !== BigInt(0)
 }
