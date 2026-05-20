@@ -12,5 +12,6 @@
     "yaml",
     "json"
   ],
-  "words": ["bgblur", "cmdk", "formatjs", "idkit", "merkle"]
+  "words": ["bgblur", "cmdk", "formatjs", "idkit", "merkle"],
+  "ignorePaths": ["package.json", "node_modules", ".next"]
 }
