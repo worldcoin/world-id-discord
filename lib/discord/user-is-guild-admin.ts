@@ -2,10 +2,7 @@ import { APIGuildMember, PermissionFlagsBits, Routes } from 'discord-api-types/v
 import { discordRestApi } from './discord-rest-api'
 import { getGuildData } from './get-guild-data'
 
-export const userIsGuildAdmin = async (
-  userId: string,
-  guildId: string
-): Promise<boolean> => {
+export const userIsGuildAdmin = async (userId: string, guildId: string): Promise<boolean> => {
   const [guild, member] = await Promise.all([
     getGuildData(guildId),
     discordRestApi.get(Routes.guildMember(guildId, userId)) as Promise<APIGuildMember>,
