@@ -40,6 +40,8 @@ updates:
       interval: 'monthly'
       time: '06:30'
       timezone: 'UTC'
+    cooldown:
+      default-days: 7
     open-pull-requests-limit: 1
     commit-message:
       prefix: 'chore(ci-deps)'
