@@ -1,8 +1,6 @@
 import { FlatCompat } from '@eslint/eslintrc'
-import js from '@eslint/js'
 import boundaries from 'eslint-plugin-boundaries'
 import { dirname } from 'path'
-import ts from 'typescript-eslint'
 import { fileURLToPath } from 'url'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -115,8 +113,6 @@ const boundariesConfig = {
 
 const eslintConfig = [
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
-  js.configs.recommended,
-  ...ts.configs.recommended,
   boundariesConfig,
   {
     ignores: ['.next/**/*', 'node_modules/**/*', 'public/**/*'],
