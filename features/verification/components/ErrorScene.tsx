@@ -16,6 +16,12 @@ const texts = {
       'You have already verified with this server and the server only supports one verification per person.',
   },
 
+  [VerificationError.VerificationRecordMissing]: {
+    heading: 'This World ID has already been used on this server.',
+    description:
+      "We couldn't find the verification record needed to restore your roles. Please contact a server administrator.",
+  },
+
   [VerificationError.Unknown]: {
     heading: "We couldn't complete the verification process.",
     description: 'Please try again.',
@@ -57,7 +63,7 @@ export const ErrorScene = ({ guild, complete, error, configFormValues }: ErrorSc
         </p>
       </div>
 
-      {error !== VerificationError.AlreadyVerified && appId && userId && guild.id && (
+      {error === VerificationError.Unknown && appId && userId && guild.id && (
         <IDKitWidget
           verification_level={calculateVerificationLevel(configFormValues)}
           app_id={appId}
