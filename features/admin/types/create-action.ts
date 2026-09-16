@@ -36,8 +36,7 @@ type DevPortalCreateActionErrorResponse = {
 }
 
 export type DevPortalCreateActionResponse =
-  | DevPortalCreateActionSuccessResponse
-  | DevPortalCreateActionErrorResponse
+  DevPortalCreateActionSuccessResponse | DevPortalCreateActionErrorResponse
 
 export type CreateActionResponse = {
   success: boolean

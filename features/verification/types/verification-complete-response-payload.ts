@@ -10,5 +10,4 @@ export type VerificationCompleteErrorResponsePayload =
   ErrorInternalApiResponse<VerificationError>
 
 export type VerificationCompleteResponsePayload =
-  | VerificationCompleteSuccessResponsePayload
-  | VerificationCompleteErrorResponsePayload
+  VerificationCompleteSuccessResponsePayload | VerificationCompleteErrorResponsePayload
