@@ -14,7 +14,6 @@ import { CredentialType } from '@/types/credential-type'
 import { safeCall } from '@/utils/safe-call'
 import { VerificationLevel } from '@worldcoin/idkit-core'
 import { IVerifyResponse, verifyCloudProof } from '@worldcoin/idkit-core/backend'
-import { APIRole } from 'discord-api-types/v10'
 import { getTranslations } from 'next-intl/server'
 import { NextRequest } from 'next/server'
 import { inspect } from 'util'
@@ -82,7 +81,8 @@ export const POST = async (request: NextRequest) => {
     })
   }
 
-  if (internalVerificationResult) {
+  // ANCHOR: The same World ID is already bound to another Discord user
+  if (internalVerificationResult && internalVerificationResult.user_id !== userId) {
     return sendDiscordErrorMessageResponse({
       token,
       code: 400,
@@ -116,13 +116,12 @@ export const POST = async (request: NextRequest) => {
     })
   }
 
-  let credentialType: CredentialType | undefined
-
-  if (result.verification_level === VerificationLevel.Orb) {
-    credentialType = CredentialType.Orb
-  } else {
-    credentialType = CredentialType.Device
-  }
+  // ANCHOR: Resolve credential type
+  const credentialType: CredentialType = internalVerificationResult
+    ? internalVerificationResult.signal_type
+    : result.verification_level === VerificationLevel.Orb
+      ? CredentialType.Orb
+      : CredentialType.Device
 
   if (!botConfig[credentialType]?.enabled) {
     return sendDiscordErrorMessageResponse({
@@ -174,6 +173,49 @@ export const POST = async (request: NextRequest) => {
     })
   }
 
+  //#region -- Handling users we already have a verification record for
+  if (internalVerificationResult) {
+    const userHasRolesResponse = await safeCall(userHasRoles)(userId, guildId, rolesToAssign)
+
+    if (!userHasRolesResponse.success) {
+      console.error('Error checking user roles', userHasRolesResponse.error)
+
+      return sendDiscordErrorMessageResponse({
+        token,
+        code: 500,
+        message: t('Discord_Integration_Complete_Verification_Unable_To_Verify_Proof'),
+      })
+    }
+
+    if (userHasRolesResponse.data) {
+      return sendDiscordErrorMessageResponse({
+        token,
+        code: 400,
+        errorCode: VerificationError.AlreadyVerified,
+        message: t('Discord_Integration_Complete_Verification_Already_Verified'),
+      })
+    }
+
+    try {
+      const assignedRoles = await assignRoles({
+        guild,
+        userId,
+        rolesToAssign,
+      })
+
+      return sendDiscordSuccessMessageResponse(token, assignedRoles)
+    } catch (error) {
+      console.error('Error while assigning roles', error)
+
+      return sendDiscordErrorMessageResponse({
+        token,
+        code: 500,
+        message: t('Discord_Integration_Complete_Verification_Unable_To_Verify_Proof'),
+      })
+    }
+  }
+  //#endregion
+
   // ANCHOR: Verify proof
   let cloudProofVerificationResult: IVerifyResponse | null = null
 
@@ -205,22 +247,19 @@ export const POST = async (request: NextRequest) => {
   //#region -- Handling successful verification
   if (cloudProofVerificationResult.success) {
     // ANCHOR: Save verification result to DB
-    const { success: saveVerificationResultSuccess, error: saveVerificationResultError } =
-      await safeCall(saveVerificationResult)({
-        guildId,
-        nullifierHash: result.nullifier_hash,
-        credentialType,
-        userId,
-      })
+    const saveVerificationResultResponse = await safeCall(saveVerificationResult)({
+      guildId,
+      nullifierHash: result.nullifier_hash,
+      credentialType,
+      userId,
+    })
 
-    if (!saveVerificationResultSuccess) {
-      console.error('Error saving verification result', saveVerificationResultError)
-
-      return sendDiscordErrorMessageResponse({
-        token,
-        code: 500,
-        message: t('Discord_Integration_Complete_Verification_Unable_To_Verify_Proof'),
-      })
+    if (!saveVerificationResultResponse.success) {
+      console.error(
+        'Error saving verification result',
+        saveVerificationResultResponse.error,
+        inspect(saveVerificationResultResponse.error.cause, { depth: 10 })
+      )
     }
 
     // ANCHOR: Assign roles
@@ -242,95 +281,30 @@ export const POST = async (request: NextRequest) => {
       })
     }
   }
-
   //#endregion
 
-  //#region -- Handling error when user is World ID verified and has roles
-  const alreadyWorldIdVerified =
-    !cloudProofVerificationResult.success &&
-    cloudProofVerificationResult.code === 'max_verifications_reached'
+  //#region -- Handling error when the World ID is consumed but we have no record of it
+  if (cloudProofVerificationResult.code === 'max_verifications_reached') {
+    console.error('Verification record is missing for a consumed nullifier', {
+      guildId,
+      userId,
+    })
 
-  const hasRoles = await userHasRoles(userId, guildId, rolesToAssign ?? [])
-
-  if (alreadyWorldIdVerified && hasRoles) {
     return sendDiscordErrorMessageResponse({
       token,
       code: 400,
-      message: t('Discord_Integration_Complete_Verification_Already_Verified'),
-      errorCode: VerificationError.AlreadyVerified,
+      errorCode: VerificationError.VerificationRecordMissing,
+      message: t('Discord_Integration_Complete_Verification_Verification_Record_Missing'),
     })
-  }
-  //#endregion
-
-  //#region -- Handling error when user is World ID verified, but roles are not assigned or we don't have a record of it
-  if (alreadyWorldIdVerified) {
-    // ANCHOR: If user is already verified by World ID but we don't have a record of it
-    // Trying to save the verification result again
-    if (!internalVerificationResult) {
-      const saveVerificationResultResponse = await safeCall(saveVerificationResult)({
-        guildId,
-        nullifierHash: result.nullifier_hash,
-        credentialType,
-        userId,
-      })
-
-      if (!saveVerificationResultResponse.success) {
-        console.error(
-          'Error saving verification result',
-          saveVerificationResultResponse.error,
-          inspect(saveVerificationResultResponse.error.cause, { depth: 10 })
-        )
-
-        return sendDiscordErrorMessageResponse({
-          token,
-          code: 500,
-          message: t('Discord_Integration_Complete_Verification_Unable_To_Verify_Proof'),
-        })
-      }
-    }
-
-    let assignedRoles: APIRole[] | null = null
-
-    // ANCHOR: If user is already verified by World ID but doesn't have the roles
-    // Trying to assign roles again
-    if (!hasRoles) {
-      try {
-        assignedRoles = await assignRoles({
-          guild,
-          userId,
-          rolesToAssign,
-        })
-      } catch (error) {
-        console.error('Error assigning roles', error)
-
-        return sendDiscordErrorMessageResponse({
-          token,
-          code: 500,
-          message: t('Discord_Integration_Complete_Verification_Unable_To_Verify_Proof'),
-        })
-      }
-    }
-
-    if (!assignedRoles) {
-      return sendDiscordErrorMessageResponse({
-        token,
-        code: 500,
-        message: t('Discord_Integration_Complete_Verification_Unable_To_Verify_Proof'),
-      })
-    }
-
-    return sendDiscordSuccessMessageResponse(token, assignedRoles)
   }
   //#endregion
 
   //#region -- Handling other verification errors
-  if (!cloudProofVerificationResult.success) {
-    return sendDiscordErrorMessageResponse({
-      token,
-      code: 400,
-      message: t('Discord_Integration_Complete_Verification_Unable_To_Verify_Proof'),
-      errorCode: VerificationError.Unknown,
-    })
-  }
+  return sendDiscordErrorMessageResponse({
+    token,
+    code: 400,
+    message: t('Discord_Integration_Complete_Verification_Unable_To_Verify_Proof'),
+    errorCode: VerificationError.Unknown,
+  })
   //#endregion
 }
