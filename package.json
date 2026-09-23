@@ -24,7 +24,7 @@
   "dependencies": {
     "@discordjs/builders": "^1.14.1",
     "@discordjs/rest": "^2.6.3",
-    "@formatjs/intl-localematcher": "^0.8.13",
+    "@formatjs/intl-localematcher": "^0.8.14",
     "@hookform/resolvers": "^5.9.1",
     "@radix-ui/react-dialog": "^1.1.23",
     "@radix-ui/react-label": "^2.1.15",
@@ -44,7 +44,7 @@
     "negotiator": "^1.1.0",
     "next": "^15.5.24",
     "next-auth": "^4.24.15",
-    "next-intl": "^4.14.2",
+    "next-intl": "^4.14.5",
     "posthog-node": "^4.18.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
