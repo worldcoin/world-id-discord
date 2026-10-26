@@ -26,6 +26,7 @@ const boundariesConfig = {
     'pnpm-lock.yaml',
     'README.md',
     'next.config.ts',
+    'vitest.config.ts',
     'middleware.ts',
     'i18n/**/*',
   ],
