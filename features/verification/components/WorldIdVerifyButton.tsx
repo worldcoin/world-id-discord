@@ -1,6 +1,7 @@
 'use client'
 
 import { Button } from '@/components/Button'
+import { resolveWorldIdEnvironment } from '@/lib/world-id/resolve-environment'
 import { ConfigFormValues } from '@/schemas/config-form'
 import { routes } from '@/utils/routes'
 import { IDKitRequestWidget, IDKitResult, RpContext } from '@worldcoin/idkit'
@@ -95,6 +96,7 @@ export const WorldIdVerifyButton = ({
           action={guild.id}
           action_description={`verify in ${guild.name} server.`}
           rp_context={rpContext}
+          environment={resolveWorldIdEnvironment()}
           allow_legacy_proofs
           preset={calculateVerificationPreset(configFormValues, userId)}
           onSuccess={onSuccess}

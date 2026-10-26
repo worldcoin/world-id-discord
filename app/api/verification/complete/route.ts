@@ -2,10 +2,12 @@ import { assignRoles } from '@/features/verification/server/assign-roles'
 import { verifyInteractionsToken } from '@/features/verification/server/verify-interactions-jwt'
 import {
   assertProofBinding,
+  assertProofEnvironment,
   credentialTypeFromIdentifier,
   getResultNullifier,
   normalizeNullifier,
   ProofBindingError,
+  ProofEnvironmentError,
   verifyWorldIdProof,
 } from '@/features/verification/server/verify-world-id-proof'
 import { VerificationError } from '@/features/verification/types/verification-error'
@@ -68,19 +70,25 @@ export const POST = async (request: NextRequest) => {
     })
   }
 
-  // ANCHOR: Assert the proof is bound to this guild and user
+  // ANCHOR: Assert the proof is bound to this guild, this user, and this environment
   // The v4 verify endpoint checks the proof against the forwarded action and
   // signal hash without knowing the intended values, so the binding the v2
   // endpoint enforced is asserted here instead. The claimed nullifier is
   // derived from the same (still unverified) payload, exactly as the v2 flow
-  // keyed its record lookup on the forwarded `nullifier_hash`.
+  // keyed its record lookup on the forwarded `nullifier_hash`. The result's
+  // environment is asserted here too, before the record lookup, so a staging
+  // or sandbox proof can neither be verified nor restore a recorded user's
+  // roles on a production deployment.
   let claimedNullifier: string | null
 
   try {
+    assertProofEnvironment(result)
     assertProofBinding(result, { guildId, userId })
     claimedNullifier = getResultNullifier(result)
   } catch (error) {
-    if (error instanceof ProofBindingError) {
+    if (error instanceof ProofEnvironmentError) {
+      console.error('Proof environment check failed', error)
+    } else if (error instanceof ProofBindingError) {
       console.error('Proof binding check failed', error)
     } else {
       console.error('Error checking proof binding', error)

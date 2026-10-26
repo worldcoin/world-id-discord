@@ -1,3 +1,4 @@
+import { resolveWorldIdEnvironment } from '@/lib/world-id/resolve-environment'
 import { resolveRpId } from '@/lib/world-id/resolve-rp-id'
 import { VerificationResultPayload } from '@/schemas/verification-complete'
 import { CredentialType } from '@/types/credential-type'
@@ -32,12 +33,35 @@ type DeveloperPortalVerifyResponse = {
   action?: string
   nullifier?: string
   protocol_version?: '3.0' | '4.0'
+  environment?: string
   code?: string
   detail?: string
   results?: WorldIdProofResultItem[]
 }
 
 const DEVELOPER_PORTAL_BASE_URL = 'https://developer.world.org'
+
+export class ProofEnvironmentError extends Error {}
+
+/**
+ * Asserts that a forwarded IDKit result was produced in the environment this
+ * deployment accepts.
+ *
+ * The Developer Portal verifies a proof in whichever environment the result
+ * names, and an RP registered in both production and staging would otherwise
+ * accept a World ID Simulator proof (environment `staging`) on a production
+ * deployment. IDKit 4 stamps every result with its environment; a result that
+ * names a different one is rejected before any verification call is made.
+ */
+export const assertProofEnvironment = (result: VerificationResultPayload) => {
+  const expected = resolveWorldIdEnvironment()
+
+  if (result.environment !== undefined && result.environment !== expected) {
+    throw new ProofEnvironmentError(
+      `Proof environment "${result.environment}" does not match the expected environment "${expected}"`
+    )
+  }
+}
 
 /**
  * Verifies an IDKit 4 result against the Developer Portal v4 verify endpoint.
@@ -46,6 +70,10 @@ const DEVELOPER_PORTAL_BASE_URL = 'https://developer.world.org'
  * `/api/v2/verify/{app_id}` endpoint. The v4 endpoint is keyed by RP id and
  * returns per-credential results; a top level `nullifier` (0x-prefixed hex) is
  * present on success.
+ *
+ * The result's `environment` is asserted against the deployment's expected
+ * environment before the call, pinned to that value in the forwarded body, and
+ * checked again on the response, as the IDKit integration guide requires.
  */
 export const verifyWorldIdProof = async (
   result: VerificationResultPayload
@@ -56,15 +84,27 @@ export const verifyWorldIdProof = async (
     throw new Error('World ID RP id is not configured')
   }
 
+  assertProofEnvironment(result)
+
+  const environment = resolveWorldIdEnvironment()
   const baseUrl = process.env.DEVELOPER_PORTAL_URL ?? DEVELOPER_PORTAL_BASE_URL
 
   const response = await fetch(new URL(`/api/v4/verify/${rpId}`, baseUrl), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(result),
+    body: JSON.stringify({ ...result, environment }),
   })
 
   const data = (await response.json()) as DeveloperPortalVerifyResponse
+
+  if (data.success && data.environment !== environment) {
+    return {
+      success: false,
+      code: 'environment_mismatch',
+      detail: `The proof was verified in environment "${data.environment ?? 'unknown'}", expected "${environment}".`,
+      results: data.results ?? [],
+    }
+  }
 
   if (data.success && data.action && data.nullifier && data.protocol_version) {
     return {

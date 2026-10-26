@@ -48,6 +48,7 @@ const portalSuccess = () =>
       action: GUILD_ID,
       nullifier: NULLIFIER,
       protocol_version: '3.0',
+      environment: 'production',
       results: [{ identifier: 'orb', success: true, nullifier: NULLIFIER }],
     }),
     { status: 200 }
@@ -62,6 +63,7 @@ const makeBody = (resultOverrides: Record<string, unknown> = {}) => ({
     protocol_version: '3.0',
     nonce: 'nonce-1',
     action: GUILD_ID,
+    environment: 'production',
     responses: [
       {
         identifier: 'orb',
@@ -90,6 +92,7 @@ beforeEach(() => {
   process.env.NEXT_PUBLIC_RP_ID = 'rp_test123'
   process.env.NEXTAUTH_URL = 'http://localhost:3000'
   delete process.env.NEXT_PUBLIC_APP_ID
+  delete process.env.NEXT_PUBLIC_WORLD_ID_ENVIRONMENT
 
   fetchMock.mockReset()
   fetchMock.mockResolvedValue(portalSuccess())
@@ -209,6 +212,60 @@ describe('POST /api/verification/complete', () => {
     expect(assignRoles).toHaveBeenCalledWith(
       expect.objectContaining({ userId: USER_ID, rolesToAssign: ['role-orb'] })
     )
+    expect(saveVerificationResult).not.toHaveBeenCalled()
+  })
+
+  it('does not grant roles for a staging proof on a production deployment', async () => {
+    const response = await post(makeBody({ environment: 'staging' }))
+
+    expect(response.status).toBe(400)
+    expect(fetchMock).not.toHaveBeenCalled()
+    expect(assignRoles).not.toHaveBeenCalled()
+    expect(saveVerificationResult).not.toHaveBeenCalled()
+  })
+
+  it('does not restore roles for a recorded user from a staging proof', async () => {
+    vi.mocked(fetchVerificationResult).mockResolvedValue({
+      guild_id: GUILD_ID,
+      nullifier_hash: NULLIFIER,
+      signal_type: CredentialType.Orb,
+      user_id: USER_ID,
+    })
+
+    const response = await post(makeBody({ environment: 'staging' }))
+
+    expect(response.status).toBe(400)
+    expect(fetchVerificationResult).not.toHaveBeenCalled()
+    expect(assignRoles).not.toHaveBeenCalled()
+  })
+
+  it('rejects an unknown environment value as a malformed body', async () => {
+    const response = await post(makeBody({ environment: 'prod' }))
+
+    expect(response.status).toBe(400)
+    expect(fetchMock).not.toHaveBeenCalled()
+    expect(assignRoles).not.toHaveBeenCalled()
+  })
+
+  it('does not grant roles when the portal verified the proof in another environment', async () => {
+    fetchMock.mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          success: true,
+          action: GUILD_ID,
+          nullifier: NULLIFIER,
+          protocol_version: '3.0',
+          environment: 'staging',
+          results: [{ identifier: 'orb', success: true, nullifier: NULLIFIER }],
+        }),
+        { status: 200 }
+      )
+    )
+
+    const response = await post(makeBody())
+
+    expect(response.status).toBe(400)
+    expect(assignRoles).not.toHaveBeenCalled()
     expect(saveVerificationResult).not.toHaveBeenCalled()
   })
 

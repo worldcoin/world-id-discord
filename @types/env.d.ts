@@ -21,6 +21,9 @@ declare namespace NodeJS {
     NEXT_PUBLIC_RP_ID: `rp_${string}` | undefined
     // RP signing key (hex). Server only; never expose to the client.
     RP_SIGNING_KEY: string | undefined
+    // World ID environment this deployment accepts proofs from. Defaults to
+    // production; set to staging only for testing with the World ID Simulator.
+    NEXT_PUBLIC_WORLD_ID_ENVIRONMENT: 'production' | 'staging' | 'sandbox' | undefined
     DEVELOPER_PORTAL_URL: string | undefined
     DEVELOPER_PORTAL_API_KEY: string | undefined
 
