@@ -21,6 +21,7 @@ export const routes = {
 
     verification: {
       complete: () => '/api/verification/complete' as const,
+      rpContext: () => '/api/verification/rp-context' as const,
     },
   },
 }

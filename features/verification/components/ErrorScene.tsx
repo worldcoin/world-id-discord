@@ -1,13 +1,11 @@
-import { Button } from '@/components/Button'
 import { GuildLabel } from '@/components/GuildLabel'
 import { ConfigFormValues } from '@/schemas/config-form'
-import { IDKitWidget, ISuccessResult } from '@worldcoin/idkit'
+import { IDKitResult } from '@worldcoin/idkit'
 import { APIGuild } from 'discord-api-types/v10'
 import Image from 'next/image'
-import { useSearchParams } from 'next/navigation'
 import { VerificationError } from '../types/verification-error'
-import { calculateVerificationLevel } from '../utils/calculate-verification-level'
 import { craftGuildImage } from '../utils/craft-guild-image'
+import { WorldIdVerifyButton } from './WorldIdVerifyButton'
 
 const texts = {
   [VerificationError.AlreadyVerified]: {
@@ -30,16 +28,19 @@ const texts = {
 
 type ErrorSceneProps = {
   guild: APIGuild
-  complete: (result: ISuccessResult) => Promise<void>
+  complete: (result: IDKitResult) => Promise<void>
   error: VerificationError
   configFormValues: ConfigFormValues
+  onContextError: () => void
 }
 
-export const ErrorScene = ({ guild, complete, error, configFormValues }: ErrorSceneProps) => {
-  const searchParams = useSearchParams()
-  const appId = process.env.NEXT_PUBLIC_APP_ID
-  const userId = searchParams.get('user_id')
-
+export const ErrorScene = ({
+  guild,
+  complete,
+  error,
+  configFormValues,
+  onContextError,
+}: ErrorSceneProps) => {
   return (
     <div className="grid grid-rows-[1fr_auto] h-full">
       <div className="grid justify-items-start content-start">
@@ -63,21 +64,14 @@ export const ErrorScene = ({ guild, complete, error, configFormValues }: ErrorSc
         </p>
       </div>
 
-      {error === VerificationError.Unknown && appId && userId && guild.id && (
-        <IDKitWidget
-          verification_level={calculateVerificationLevel(configFormValues)}
-          app_id={appId}
-          action={guild.id}
-          signal={userId}
-          action_description={`verify in ${guild.name} server.`}
+      {error === VerificationError.Unknown && guild.id && (
+        <WorldIdVerifyButton
+          configFormValues={configFormValues}
+          guild={guild}
+          label="Try again"
           onSuccess={complete}
-        >
-          {({ open }: { open: () => void }) => (
-            <Button type="button" variant="contained" color="primary" onClick={open}>
-              Try again
-            </Button>
-          )}
-        </IDKitWidget>
+          onContextError={onContextError}
+        />
       )}
     </div>
   )
