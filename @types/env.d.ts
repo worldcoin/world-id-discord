@@ -15,7 +15,12 @@ declare namespace NodeJS {
     NEXTAUTH_SECRET: string | undefined
 
     // Developer Portal
+    // Still required by IDKit 4 as the widget's app_id. Deprecated as the
+    // verification identifier; see NEXT_PUBLIC_RP_ID.
     NEXT_PUBLIC_APP_ID: `app_${string}` | undefined
+    NEXT_PUBLIC_RP_ID: `rp_${string}` | undefined
+    // RP signing key (hex). Server only; never expose to the client.
+    RP_SIGNING_KEY: string | undefined
     DEVELOPER_PORTAL_URL: string | undefined
     DEVELOPER_PORTAL_API_KEY: string | undefined
 
