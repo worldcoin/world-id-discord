@@ -1,5 +1,13 @@
 import { assignRoles } from '@/features/verification/server/assign-roles'
 import { verifyInteractionsToken } from '@/features/verification/server/verify-interactions-jwt'
+import {
+  assertProofBinding,
+  credentialTypeFromIdentifier,
+  getResultNullifier,
+  normalizeNullifier,
+  ProofBindingError,
+  verifyWorldIdProof,
+} from '@/features/verification/server/verify-world-id-proof'
 import { VerificationError } from '@/features/verification/types/verification-error'
 import { sendDiscordErrorMessageResponse } from '@/features/verification/utils/send-discord-error-message-response'
 import { sendDiscordSuccessMessageResponse } from '@/features/verification/utils/send-discord-success-message-response'
@@ -9,11 +17,10 @@ import { saveVerificationResult } from '@/lib/discord-integration-api/save-verif
 import { ensureGuildRolesExist } from '@/lib/discord/ensure-guild-roles-exist'
 import { getGuildData } from '@/lib/discord/get-guild-data'
 import { userHasRoles } from '@/lib/discord/user-has-roles'
+import { resolveRpId } from '@/lib/world-id/resolve-rp-id'
 import { verificationCompleteInputSchema } from '@/schemas/verification-complete'
 import { CredentialType } from '@/types/credential-type'
 import { safeCall } from '@/utils/safe-call'
-import { VerificationLevel } from '@worldcoin/idkit-core'
-import { IVerifyResponse, verifyCloudProof } from '@worldcoin/idkit-core/backend'
 import { getTranslations } from 'next-intl/server'
 import { NextRequest } from 'next/server'
 import { inspect } from 'util'
@@ -36,7 +43,7 @@ export const POST = async (request: NextRequest) => {
 
   const { guildId, userId, token, result, interactionsToken } = body
 
-  if (!process.env.NEXT_PUBLIC_APP_ID) {
+  if (!resolveRpId()) {
     return sendDiscordErrorMessageResponse({
       token: originalBody?.token,
       code: 500,
@@ -61,6 +68,39 @@ export const POST = async (request: NextRequest) => {
     })
   }
 
+  // ANCHOR: Assert the proof is bound to this guild and user
+  // The v4 verify endpoint checks the proof against the forwarded action and
+  // signal hash without knowing the intended values, so the binding the v2
+  // endpoint enforced is asserted here instead. The claimed nullifier is
+  // derived from the same (still unverified) payload, exactly as the v2 flow
+  // keyed its record lookup on the forwarded `nullifier_hash`.
+  let claimedNullifier: string | null
+
+  try {
+    assertProofBinding(result, { guildId, userId })
+    claimedNullifier = getResultNullifier(result)
+  } catch (error) {
+    if (error instanceof ProofBindingError) {
+      console.error('Proof binding check failed', error)
+    } else {
+      console.error('Error checking proof binding', error)
+    }
+
+    return sendDiscordErrorMessageResponse({
+      token,
+      code: 400,
+      message: t('Discord_Integration_Complete_Verification_Unable_To_Verify_Proof'),
+    })
+  }
+
+  if (!claimedNullifier) {
+    return sendDiscordErrorMessageResponse({
+      token,
+      code: 400,
+      message: t('Discord_Integration_Complete_Verification_Unable_To_Verify_Proof'),
+    })
+  }
+
   // ANCHOR: Fetch verification result from DB to check if we have a record of it
   const {
     success: verificationResultFetchSuccess,
@@ -68,7 +108,7 @@ export const POST = async (request: NextRequest) => {
     error: verificationResultFetchError,
   } = await safeCall(fetchVerificationResult)({
     guildId,
-    nullifierHash: result.nullifier_hash,
+    nullifierHash: claimedNullifier,
   })
 
   if (!verificationResultFetchSuccess) {
@@ -117,11 +157,21 @@ export const POST = async (request: NextRequest) => {
   }
 
   // ANCHOR: Resolve credential type
+  const claimedCredentialType = credentialTypeFromIdentifier(
+    result.responses[0]?.identifier ?? ''
+  )
+
+  if (!internalVerificationResult && !claimedCredentialType) {
+    return sendDiscordErrorMessageResponse({
+      token,
+      code: 400,
+      message: t('Discord_Integration_Complete_Verification_Unable_To_Verify_Proof'),
+    })
+  }
+
   const credentialType: CredentialType = internalVerificationResult
     ? internalVerificationResult.signal_type
-    : result.verification_level === VerificationLevel.Orb
-      ? CredentialType.Orb
-      : CredentialType.Device
+    : claimedCredentialType!
 
   if (!botConfig[credentialType]?.enabled) {
     return sendDiscordErrorMessageResponse({
@@ -217,15 +267,10 @@ export const POST = async (request: NextRequest) => {
   //#endregion
 
   // ANCHOR: Verify proof
-  let cloudProofVerificationResult: IVerifyResponse | null = null
+  let proofVerification: Awaited<ReturnType<typeof verifyWorldIdProof>> | null = null
 
   try {
-    cloudProofVerificationResult = await verifyCloudProof(
-      result,
-      process.env.NEXT_PUBLIC_APP_ID,
-      guildId,
-      userId
-    )
+    proofVerification = await verifyWorldIdProof(result)
   } catch (error) {
     console.error('Error verifying proof', error)
 
@@ -236,75 +281,82 @@ export const POST = async (request: NextRequest) => {
     })
   }
 
-  if (!cloudProofVerificationResult) {
+  if (!proofVerification.success) {
+    console.error('Proof verification failed', {
+      code: proofVerification.code,
+      detail: proofVerification.detail,
+    })
+
     return sendDiscordErrorMessageResponse({
       token,
       code: 400,
       message: t('Discord_Integration_Complete_Verification_Unable_To_Verify_Proof'),
+      errorCode: VerificationError.Unknown,
     })
   }
 
-  //#region -- Handling successful verification
-  if (cloudProofVerificationResult.success) {
-    // ANCHOR: Save verification result to DB
-    const saveVerificationResultResponse = await safeCall(saveVerificationResult)({
+  // ANCHOR: Cross-check the verified proof against what was claimed
+  // Roles are only ever assigned for the credential the Developer Portal
+  // actually verified, under the canonical nullifier it returned.
+  const verifiedResult = proofVerification.results.find(item => item.success)
+  const verifiedCredentialType = verifiedResult
+    ? credentialTypeFromIdentifier(verifiedResult.identifier)
+    : null
+  const verifiedNullifier = normalizeNullifier(proofVerification.nullifier)
+
+  if (
+    proofVerification.action !== guildId ||
+    verifiedCredentialType !== credentialType ||
+    !verifiedNullifier ||
+    verifiedNullifier !== claimedNullifier
+  ) {
+    console.error('Verified proof does not match the claimed proof', {
       guildId,
-      nullifierHash: result.nullifier_hash,
-      credentialType,
-      userId,
-    })
-
-    if (!saveVerificationResultResponse.success) {
-      console.error(
-        'Error saving verification result',
-        saveVerificationResultResponse.error,
-        inspect(saveVerificationResultResponse.error.cause, { depth: 10 })
-      )
-    }
-
-    // ANCHOR: Assign roles
-    try {
-      const assignedRoles = await assignRoles({
-        guild,
-        userId,
-        rolesToAssign,
-      })
-
-      return sendDiscordSuccessMessageResponse(token, assignedRoles)
-    } catch (error) {
-      console.error('Error while assigning roles', error)
-
-      return sendDiscordErrorMessageResponse({
-        token,
-        code: 500,
-        message: t('Discord_Integration_Complete_Verification_Unable_To_Verify_Proof'),
-      })
-    }
-  }
-  //#endregion
-
-  //#region -- Handling error when the World ID is consumed but we have no record of it
-  if (cloudProofVerificationResult.code === 'max_verifications_reached') {
-    console.error('Verification record is missing for a consumed nullifier', {
-      guildId,
-      userId,
+      verifiedAction: proofVerification.action,
     })
 
     return sendDiscordErrorMessageResponse({
       token,
       code: 400,
-      errorCode: VerificationError.VerificationRecordMissing,
-      message: t('Discord_Integration_Complete_Verification_Verification_Record_Missing'),
+      message: t('Discord_Integration_Complete_Verification_Unable_To_Verify_Proof'),
+      errorCode: VerificationError.Unknown,
     })
   }
-  //#endregion
 
-  //#region -- Handling other verification errors
-  return sendDiscordErrorMessageResponse({
-    token,
-    code: 400,
-    message: t('Discord_Integration_Complete_Verification_Unable_To_Verify_Proof'),
-    errorCode: VerificationError.Unknown,
+  //#region -- Handling successful verification
+  // ANCHOR: Save verification result to DB
+  const saveVerificationResultResponse = await safeCall(saveVerificationResult)({
+    guildId,
+    nullifierHash: verifiedNullifier,
+    credentialType,
+    userId,
   })
+
+  if (!saveVerificationResultResponse.success) {
+    console.error(
+      'Error saving verification result',
+      saveVerificationResultResponse.error,
+      inspect(saveVerificationResultResponse.error.cause, { depth: 10 })
+    )
+  }
+
+  // ANCHOR: Assign roles
+  try {
+    const assignedRoles = await assignRoles({
+      guild,
+      userId,
+      rolesToAssign,
+    })
+
+    return sendDiscordSuccessMessageResponse(token, assignedRoles)
+  } catch (error) {
+    console.error('Error while assigning roles', error)
+
+    return sendDiscordErrorMessageResponse({
+      token,
+      code: 500,
+      message: t('Discord_Integration_Complete_Verification_Unable_To_Verify_Proof'),
+    })
+  }
   //#endregion
 }
