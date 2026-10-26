@@ -133,6 +133,28 @@ describe('POST /api/verification/complete', () => {
     expect(assignRoles).toHaveBeenCalledWith(
       expect.objectContaining({ userId: USER_ID, rolesToAssign: ['role-orb'] })
     )
+    expect(vi.mocked(saveVerificationResult).mock.invocationCallOrder[0]).toBeLessThan(
+      vi.mocked(assignRoles).mock.invocationCallOrder[0]
+    )
+  })
+
+  it('does not grant roles when saving a valid verification fails', async () => {
+    vi.mocked(saveVerificationResult).mockRejectedValue(new Error('Integration API unavailable'))
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    try {
+      const response = await post(makeBody())
+
+      expect(response.status).toBe(500)
+      expect(fetchMock).toHaveBeenCalledOnce()
+      expect(saveVerificationResult).toHaveBeenCalledWith(
+        expect.objectContaining({ guildId: GUILD_ID, nullifierHash: NULLIFIER, userId: USER_ID })
+      )
+      expect(assignRoles).not.toHaveBeenCalled()
+      expect(editInteractionMessage).toHaveBeenCalledOnce()
+    } finally {
+      consoleError.mockRestore()
+    }
   })
 
   it('does not grant roles for an invalid proof', async () => {

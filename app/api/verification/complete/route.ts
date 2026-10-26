@@ -346,6 +346,12 @@ export const POST = async (request: NextRequest) => {
       saveVerificationResultResponse.error,
       inspect(saveVerificationResultResponse.error.cause, { depth: 10 })
     )
+
+    return sendDiscordErrorMessageResponse({
+      token,
+      code: 500,
+      message: t('Discord_Integration_Complete_Verification_Unable_To_Verify_Proof'),
+    })
   }
 
   // ANCHOR: Assign roles
