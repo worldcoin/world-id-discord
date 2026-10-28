@@ -1,29 +1,30 @@
 'use client'
 
-import { Button } from '@/components/Button'
 import { GuildLabel } from '@/components/GuildLabel'
 import { OrbIcon } from '@/components/icons/Orb'
 import { SmartPhoneIcon } from '@/components/icons/SmartPhone'
 import { ConfigFormValues } from '@/schemas/config-form'
-import { IDKitWidget, ISuccessResult } from '@worldcoin/idkit'
+import { IDKitResult } from '@worldcoin/idkit'
 import { APIGuild } from 'discord-api-types/v10'
 import { useTranslations } from 'next-intl'
-import { useSearchParams } from 'next/navigation'
-import { calculateVerificationLevel } from '../utils/calculate-verification-level'
 import { craftGuildImage } from '../utils/craft-guild-image'
 import { CredentialsItem } from './CredentialsItem'
+import { WorldIdVerifyButton } from './WorldIdVerifyButton'
 
 type InitialSceneProps = {
   configFormValues: ConfigFormValues
-  complete: (result: ISuccessResult) => Promise<void>
+  complete: (result: IDKitResult) => Promise<void>
   guild: APIGuild
+  onContextError: () => void
 }
 
-export const InitialScene = ({ configFormValues, complete, guild }: InitialSceneProps) => {
+export const InitialScene = ({
+  configFormValues,
+  complete,
+  guild,
+  onContextError,
+}: InitialSceneProps) => {
   const t = useTranslations()
-  const searchParams = useSearchParams()
-  const userId = searchParams.get('user_id')
-  const appId = process.env.NEXT_PUBLIC_APP_ID
 
   return (
     <div className="grid grid-rows-[1fr_auto] h-full content-start">
@@ -62,21 +63,14 @@ export const InitialScene = ({ configFormValues, complete, guild }: InitialScene
         </div>
       </div>
 
-      {appId && userId && guild.id && (
-        <IDKitWidget
-          verification_level={calculateVerificationLevel(configFormValues)}
-          app_id={appId}
-          action={guild.id}
-          signal={userId}
-          action_description={`verify in ${guild?.name ?? ''} server.`}
+      {guild.id && (
+        <WorldIdVerifyButton
+          configFormValues={configFormValues}
+          guild={guild}
+          label={t('Discord_Integration_Verify_InitialScene_Button')}
           onSuccess={complete}
-        >
-          {({ open }) => (
-            <Button type="button" variant="contained" color="primary" onClick={open}>
-              {t('Discord_Integration_Verify_InitialScene_Button')}
-            </Button>
-          )}
-        </IDKitWidget>
+          onContextError={onContextError}
+        />
       )}
     </div>
   )

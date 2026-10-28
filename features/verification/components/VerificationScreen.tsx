@@ -6,7 +6,7 @@ import { VerificationCompleteInput } from '@/schemas/verification-complete'
 import { ExternalFetchError } from '@/utils/external-fetch-error'
 import { routes } from '@/utils/routes'
 import { fetcher } from '@/utils/swr-fetcher'
-import { ISuccessResult } from '@worldcoin/idkit'
+import { IDKitResult } from '@worldcoin/idkit'
 import { APIGuild } from 'discord-api-types/v10'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -65,7 +65,7 @@ export const VerificationScreen = ({ configFormValues, guild }: VerificationScre
   const token = searchParams.get('token')
   const interactionsToken = searchParams.get('interactions_token')
 
-  const complete = async (result: ISuccessResult) => {
+  const complete = async (result: IDKitResult) => {
     if (!guildId || !userId || !token || !interactionsToken) {
       setVerificationError(VerificationError.Unknown)
       return setScene(Scene.Error)
@@ -80,6 +80,11 @@ export const VerificationScreen = ({ configFormValues, guild }: VerificationScre
     }
 
     await completeVerification(input)
+  }
+
+  const handleContextError = () => {
+    setVerificationError(VerificationError.Unknown)
+    setScene(Scene.Error)
   }
 
   useEffect(() => {
@@ -102,7 +107,12 @@ export const VerificationScreen = ({ configFormValues, guild }: VerificationScre
       )}
 
       {scene === Scene.Initial && (
-        <InitialScene configFormValues={configFormValues} complete={complete} guild={guild} />
+        <InitialScene
+          configFormValues={configFormValues}
+          complete={complete}
+          guild={guild}
+          onContextError={handleContextError}
+        />
       )}
 
       {scene === Scene.Success && data?.assignedRoles && (
@@ -115,6 +125,7 @@ export const VerificationScreen = ({ configFormValues, guild }: VerificationScre
           complete={complete}
           error={verificationError}
           configFormValues={configFormValues}
+          onContextError={handleContextError}
         />
       )}
     </div>
