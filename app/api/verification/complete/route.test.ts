@@ -139,7 +139,9 @@ describe('POST /api/verification/complete', () => {
   })
 
   it('does not grant roles when saving a valid verification fails', async () => {
-    vi.mocked(saveVerificationResult).mockRejectedValue(new Error('Integration API unavailable'))
+    vi.mocked(saveVerificationResult).mockRejectedValue(
+      new Error('Integration API unavailable')
+    )
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
 
     try {
@@ -148,7 +150,11 @@ describe('POST /api/verification/complete', () => {
       expect(response.status).toBe(500)
       expect(fetchMock).toHaveBeenCalledOnce()
       expect(saveVerificationResult).toHaveBeenCalledWith(
-        expect.objectContaining({ guildId: GUILD_ID, nullifierHash: NULLIFIER, userId: USER_ID })
+        expect.objectContaining({
+          guildId: GUILD_ID,
+          nullifierHash: NULLIFIER,
+          userId: USER_ID,
+        })
       )
       expect(assignRoles).not.toHaveBeenCalled()
       expect(editInteractionMessage).toHaveBeenCalledOnce()
